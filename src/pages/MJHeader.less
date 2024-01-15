@@ -1,0 +1,27 @@
+.headerBox {
+    width: 100%;
+    display: grid;
+    height: 64px;
+    align-items: center;
+    grid-template-columns: repeat(5, 1fr);
+
+    .logo-box {
+        height: inherit;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        img {
+            border-radius: 50%;
+        }
+
+        span {
+            font-size: large;
+        }
+    }
+
+    .btns-box {
+        display: flex;
+        gap: 12px
+    }
+}
