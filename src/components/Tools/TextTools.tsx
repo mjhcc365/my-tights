@@ -132,7 +132,13 @@ const TextTools = () => {
     }
 
     return <div className="text-tool-panel">
-        <Select style={{ width: 100 }} value={(activeObject as any)?.fontFamily} options={ALL_FONTS} onChange={handleChange} />
+        <Select style={{ width: 100 }}
+            value={(activeObject as any)?.fontFamily}
+            options={ALL_FONTS}
+            optionRender={(ele) => {
+                return <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>
+            }}
+            onChange={handleChange} />
         <Select style={{ width: 75 }} value={(activeObject as any)?.fontSize} onChange={handleChangeSize} options={ALL_SIZE} />
         <Select style={{ width: 100 }} placeholder="图层" options={Layers} onChange={handleChangeLayer} />
         <ColorPicker format="rgb" value={(activeObject as any)?.fill} onChange={handleChangeColor} />

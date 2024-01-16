@@ -35,13 +35,6 @@ const ShapeTools = () => {
 
     const onRadiusChange = (v: any) => {
         console.log(v)
-        // setActiveObject((draft: any) => {
-        //     draft.strokeWidth = v
-        // })
-        // store.canvas?.getActiveObject()?.set({
-        //     strokeWidth: v,
-        // })
-        // store.canvas?.renderAll()
     }
 
 

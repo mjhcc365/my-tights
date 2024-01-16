@@ -55,6 +55,7 @@ class EditorStore {
             const { canvas, zoomRatio, canvasWidth, canvasHeight } = data || {};
             this.canvas?.loadFromJSON(canvas, () => {
                 console.log("==>加载成功")
+                this.canvas?.renderAll()
             })
             this.zoomRatio = zoomRatio || 5;
             this.canvas?.setHeight(canvasHeight);
@@ -73,7 +74,7 @@ class EditorStore {
     temporaryStorage = () => {
         const data = {
             // elementsMap: this.elementsMap,
-            canvas: this.canvas?.toJSON(['groupId', 'selectable']),
+            canvas: this.canvas?.toJSON(['groupId', 'selectable', "hbsType", 'fontFamily']),
             zoomRatio: this.zoomRatio,
             canvasWidth: this.canvas?.getWidth(),
             canvasHeight: this.canvas?.getHeight()

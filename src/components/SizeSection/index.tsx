@@ -1,5 +1,5 @@
 
-import { InputNumber, Select, ColorPicker, Form, Flex } from "antd"
+import { InputNumber, Select, ColorPicker, Form, Flex, Button } from "antd"
 import { useContext } from "react";
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
@@ -49,7 +49,6 @@ const SizeSection = () => {
     const onChange = () => {
         form.validateFields().then((v) => {
             const { backType } = v;
-            console.log("===>", v, backType)
             switch (backType) {
                 case "grid":
                     console.log("===>grid")
@@ -106,7 +105,7 @@ const SizeSection = () => {
         clearGridBack()
 
         form.validateFields().then((v) => {
-            const { lineGap = 9, lineColor } = v
+            const { lineGap = 3.5 * store.zoomRatio, lineColor } = v
             // 定义网格线的间距
             const group = new fabric.Group([], {
                 hbsId: nanoid(),
@@ -152,8 +151,66 @@ const SizeSection = () => {
         })
     }
 
+    // 
+    const onAddCircle = () => {
+        const cw = store.canvas?.getWidth() || 0
+        const ch = store.canvas?.getHeight() || 0
+        const middle = Math.floor(ch / 2)
+        const LEFT_GAP = 8.5
 
+        const lineh = new fabric.Line([
+            LEFT_GAP * store.zoomRatio, 0, LEFT_GAP * store.zoomRatio, ch
+        ], {
+            stroke: "#F5F5F5",
+            strokeWidth: 2,
+            strokeDashArray: [2, 2]
+        })
+        const linev = new fabric.Line([
+            0, middle, cw, middle
+            // LEFT_GAP * store.zoomRatio, 0, LEFT_GAP * store.zoomRatio, ch
+        ], {
+            stroke: "#F5F5F5",
+            strokeWidth: 2,
+            strokeDashArray: [2, 2]
+        })
 
+        const group = new fabric.Group([lineh, linev], {
+            selectable: false
+        })
+
+        const CIRCLE_R = 2.5;
+        const CIRCLE_GAP = 19;
+        const CIRCLE_GROUP_GAP = 19;
+        const CIRCLR_LEFT = 2.5
+
+        // 下面三个○
+        // 19-
+
+        // const topGroup = new fabric.Group([])
+        // const bottomGroup = new fabric.Group([])
+        for (let i = 0; i <= 2; i++) {
+            const c = new fabric.Circle({
+                radius: CIRCLE_R * store.zoomRatio,
+                top: middle + (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) * store.zoomRatio,
+                left: CIRCLR_LEFT * store.zoomRatio,
+                fill: "#F5F5F5",
+            })
+            group.addWithUpdate(c)
+        }
+
+        for (let i = 0; i <= 2; i++) {
+            const c = new fabric.Circle({
+                radius: CIRCLE_R * store.zoomRatio,
+                top: middle - ((CIRCLE_GROUP_GAP / 2 + CIRCLE_R) + CIRCLE_GAP * i) * store.zoomRatio,
+                left: CIRCLR_LEFT * store.zoomRatio,
+                fill: "#F5F5F5",
+            })
+            group.addWithUpdate(c)
+        }
+
+        store.canvas?.add(group);
+        store.canvas?.renderAll()
+    }
 
     return <div className="size-section">
         <Form name="validate_other"
@@ -173,6 +230,8 @@ const SizeSection = () => {
                     <InputNumber disabled />
                 </FormItem>
             </Flex>
+            <hr />
+            <div className="section-title">活页孔</div>
             <FormItem style={{ flex: 1 }} label="孔数" name="holesNum">
                 <Select options={[{
                     value: "6",
@@ -194,7 +253,7 @@ const SizeSection = () => {
                     }]} disabled />
                 </FormItem>
             </Flex>
-
+            <hr />
             <div className="section-title">画布填充</div>
             <FormItem label="背景类型" name="backType">
                 <Select style={{ width: "100%" }} options={[{
@@ -226,8 +285,9 @@ const SizeSection = () => {
                     <ColorPicker onChange={onSetColorBack} allowClear />
                 </FormItem>
             </Flex>
-
-
+            <Flex gap={12}>
+                <Button onClick={onAddCircle}>添加辅助线</Button>
+            </Flex>
         </Form>
     </div>
 }

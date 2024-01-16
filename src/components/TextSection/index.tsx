@@ -18,7 +18,8 @@ const TextSectioin = () => {
             fontSize: 20,
             hbsId: nanoid(),
             hbsType: "textbox",
-            fill: "rgb(255,134,211)"
+            fill: "rgb(255,134,211)",
+            selectable: true
         } as any)
         store.canvas.add(text)
     }
