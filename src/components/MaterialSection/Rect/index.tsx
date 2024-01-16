@@ -3,6 +3,8 @@ import { useContext } from "react"
 import { fabric } from "fabric"
 import { MainContext } from "@/pages/store"
 
+import "./index.less"
+
 
 const Rect = () => {
     const { store } = useContext(MainContext)
@@ -17,11 +19,37 @@ const Rect = () => {
         store?.canvas?.add(rect)
     }
 
-    return <div>
+
+    const onAddTriangle = () => {
+        const triangle = new fabric.Triangle({
+            width: 80, // 底边长度
+            height: 100,// 底边到对角的距离
+        })
+        store?.canvas?.add(triangle)
+    }
+
+    const onAddCircle = () => {
+        // 创建圆形
+        let circle = new fabric.Circle({
+            radius: 50 // 半径
+        })
+        store?.canvas?.add(circle)
+    }
+
+    const onAddEllipse = () => {
+        let ellipse = new fabric.Ellipse({
+            rx: 50,
+            ry: 30
+        })
+        store?.canvas?.add(ellipse)
+    }
+
+
+    return <div className="shap-tool-contain">
         <Button onClick={onAddRect}>矩形</Button>
-        <Button onClick={onAddRect}>三角形</Button>
-        <Button onClick={onAddRect}>圆形</Button>
-        <Button onClick={onAddRect}>椭圆形</Button>
+        <Button onClick={onAddTriangle}>三角形</Button>
+        <Button onClick={onAddCircle}>圆形</Button>
+        <Button onClick={onAddEllipse}>椭圆形</Button>
         {/* <Button onClick={onAddRect}>添加一个椭圆形</Button> */}
     </div>
 }

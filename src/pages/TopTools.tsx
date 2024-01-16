@@ -1,6 +1,7 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react"
+// import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import TextTools from "@/components/Tools/TextTools"
 import ImageTools from "@/components/Tools/ImageTools"
+import ShapeTools from "@/components/Tools/ShapeTools"
 
 import "./TopTools.less"
 import { MainContext } from "./store"
@@ -15,6 +16,12 @@ const TopTools = (props: { activeObject: fabric.Object | null }) => {
                 return <TextTools />
             case "image":
                 return <ImageTools />
+            case "ellipse":
+            case "circle":
+            case "triangle":
+            case "rect":
+            case "line":
+                return <ShapeTools />
             default:
                 return null
         }

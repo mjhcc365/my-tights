@@ -134,9 +134,10 @@ const SizeSection = () => {
             }
 
             store.canvas?.add(group)
+            group?.sendToBack();// 置于底层
+            group?.center()
             store.canvas?.renderAll()
-            // group?.sendToBack();// 置于底层
-            // group?.center()
+
         })
     }
 
