@@ -2,31 +2,31 @@ import { useContext, useMemo, useState } from "react"
 import { Select, Slider, Button, InputNumber, Popover } from "antd"
 import { DeleteOutlined } from "@ant-design/icons"
 import { fabric } from "fabric"
-import { MainContext } from "@/pages/store"
+import { MainContext } from "@/store/store"
 import "./TextTools.less"
 import { Layers } from "./types"
 
 const TextTools = () => {
-    const { store, activeObject, setActiveObject } = useContext(MainContext);
+    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const textObj: any = useMemo(() => {
-        return store.canvas?.getActiveObject() || null
+        return canvas?.getActiveObject() || null
     }, [])
 
     const handleChangeLayer = (value: string) => {
-        if (!store.canvas) return
+        if (!canvas) return
         switch (value) {
             case "top":
-                store.canvas?.getActiveObject()?.bringToFront();
+                canvas?.getActiveObject()?.bringToFront();
                 break;
             case "pre": // 
-                store.canvas?.getActiveObject()?.bringForward();
+                canvas?.getActiveObject()?.bringForward();
                 break;
             case "next": // 下一层
-                store.canvas?.getActiveObject()?.sendBackwards();
+                canvas?.getActiveObject()?.sendBackwards();
                 break;
             case "bottom": // 底层
-                store.canvas?.getActiveObject()?.sendToBack();
+                canvas?.getActiveObject()?.sendToBack();
                 break;
             default:
                 return
@@ -34,9 +34,9 @@ const TextTools = () => {
     }
 
     const handleDelEle = () => {
-        if (textObj && store.canvas) {
-            store.canvas.remove(textObj)
-            store.canvas.renderAll();
+        if (textObj && canvas) {
+            canvas.remove(textObj)
+            canvas.renderAll();
         }
     }
 
@@ -44,10 +44,10 @@ const TextTools = () => {
         setActiveObject((draft: any) => {
             draft.width = v
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             width: v
         })
-        store.canvas?.renderAll();
+        canvas?.renderAll();
 
     }
 
@@ -55,10 +55,10 @@ const TextTools = () => {
         setActiveObject((draft: any) => {
             draft.height = v
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             height: v
         })
-        store.canvas?.renderAll();
+        canvas?.renderAll();
     }
 
     // const handleRadius = () => {
@@ -73,29 +73,29 @@ const TextTools = () => {
     //         top: -rectHeight / 2,
     //     })
 
-    //     store.canvas?.getActiveObject()?.set({
+    //       canvas?.getActiveObject()?.set({
     //         clipPath: rect
     //     })
-    //     store.canvas?.renderAll();
-    //     console.log("==>", store.canvas?.getActiveObject())
+    //       canvas?.renderAll();
+    //     console.log("==>",   canvas?.getActiveObject())
     // }
 
     const handleOpacity = (v: any) => {
         setActiveObject((draft: any) => {
             draft.opacity = v
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             opacity: v
         })
-        store.canvas?.renderAll();
+        canvas?.renderAll();
     }
 
     // const handleClip = () => {
     //     // activeObject
-    //     store.canvas?.getActiveObject()?.set({
+    //       canvas?.getActiveObject()?.set({
     //         __isCropping: true, clipPath: undefined, cropPath: undefined
     //     })
-    //     store.canvas?.renderAll()
+    //       canvas?.renderAll()
     // }
 
 

@@ -12,7 +12,7 @@ import {
     HighlightOutlined,
     BgColorsOutlined
 } from "@ant-design/icons"
-import { MainContext } from "@/pages/store"
+import { MainContext } from "@/store/store"
 import { SYS_FONTS, WEB_FONTS, Layers } from "./types"
 import "./TextTools.less"
 
@@ -29,22 +29,22 @@ const ALL_SIZE = [{
 // interface TextToolsStates extends fabric.TextOptions { }
 
 const TextTools = () => {
-    const { store, activeObject, setActiveObject } = useContext(MainContext);
+    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const handleChangeLayer = (value: string) => {
-        if (!store.canvas) return
+        if (!canvas) return
         switch (value) {
             case "top":
-                store.canvas?.getActiveObject()?.bringToFront();
+                canvas?.getActiveObject()?.bringToFront();
                 break;
             case "pre": // 
-                store.canvas?.getActiveObject()?.bringForward();
+                canvas?.getActiveObject()?.bringForward();
                 break;
             case "next": // 下一层
-                store.canvas?.getActiveObject()?.sendBackwards();
+                canvas?.getActiveObject()?.sendBackwards();
                 break;
             case "bottom": // 底层
-                store.canvas?.getActiveObject()?.sendToBack();
+                canvas?.getActiveObject()?.sendToBack();
                 break;
             default:
                 return
@@ -52,56 +52,56 @@ const TextTools = () => {
     }
 
     const handleChange = (value: string) => {
-        if (activeObject && store.canvas) {
+        if (activeObject && canvas) {
             setActiveObject((draft: any) => {
                 draft.fontFamily = value
             })
-            store.canvas.getActiveObject()?.set({ fontFamily: value } as any)
-            store.canvas.renderAll();
+            canvas.getActiveObject()?.set({ fontFamily: value } as any)
+            canvas.renderAll();
         }
     }
 
     const handleChangeSize = (value: string) => {
-        if (activeObject && store.canvas) {
+        if (activeObject && canvas) {
             setActiveObject((draft: any) => {
                 draft.fontSize = parseInt(value)
             })
-            store.canvas.getActiveObject()?.set({ fontSize: parseInt(value) } as any)
-            store.canvas.renderAll();
+            canvas.getActiveObject()?.set({ fontSize: parseInt(value) } as any)
+            canvas.renderAll();
         }
     }
 
     const handleDelEle = () => {
-        if (activeObject && store.canvas) {
-            store.canvas.remove(store.canvas.getActiveObject())
-            store.canvas.renderAll();
+        if (activeObject && canvas) {
+            canvas.remove(canvas.getActiveObject())
+            canvas.renderAll();
             setActiveObject(() => null)
         }
     }
 
     // 加粗
     const handleChangeFontWight = () => {
-        if (activeObject && store.canvas) {
+        if (activeObject && canvas) {
             const nextValue = (activeObject as any)?.fontWeight === 'bold' ? 'normal' : 'bold';
             setActiveObject((draft: any) => {
                 draft.fontWeight = nextValue
             })
-            store.canvas.getActiveObject()?.set({ fontWeight: nextValue } as any)
-            console.log("==>", store.canvas.getActiveObject())
-            store.canvas.renderAll();
+            canvas.getActiveObject()?.set({ fontWeight: nextValue } as any)
+            console.log("==>", canvas.getActiveObject())
+            canvas.renderAll();
         }
     }
 
     // 斜体
     const handleChangeFontStyle = () => {
-        if (activeObject && store.canvas) {
+        if (activeObject && canvas) {
             const nextValue = (activeObject as any)?.fontStyle === 'italic' ? 'normal' : 'italic';
             setActiveObject((draft: any) => {
                 draft.fontStyle = nextValue
             })
-            store.canvas.getActiveObject()?.set({ fontStyle: nextValue } as any)
-            console.log("==>", store.canvas.getActiveObject())
-            store.canvas.renderAll();
+            canvas.getActiveObject()?.set({ fontStyle: nextValue } as any)
+            console.log("==>", canvas.getActiveObject())
+            canvas.renderAll();
         }
     }
 
@@ -110,8 +110,8 @@ const TextTools = () => {
         setActiveObject((draft: any) => {
             draft.underline = nextValue
         })
-        store.canvas.getActiveObject()?.set({ underline: nextValue })
-        store.canvas.renderAll();
+        canvas.getActiveObject()?.set({ underline: nextValue })
+        canvas.renderAll();
     }
 
     const handleChangeLinethrough = () => {
@@ -119,16 +119,16 @@ const TextTools = () => {
         setActiveObject((draft: any) => {
             draft.linethrough = nextValue
         })
-        store.canvas.getActiveObject()?.set({ linethrough: nextValue })
-        store.canvas.renderAll();
+        canvas.getActiveObject()?.set({ linethrough: nextValue })
+        canvas.renderAll();
     }
 
     const handleChangeColor = (v) => {
         setActiveObject((draft: any) => {
             draft.fill = v.toRgbString()
         })
-        store.canvas.getActiveObject()?.set({ fill: v.toRgbString() })
-        store.canvas.renderAll();
+        canvas.getActiveObject()?.set({ fill: v.toRgbString() })
+        canvas.renderAll();
     }
 
     return <div className="text-tool-panel">

@@ -1,15 +1,15 @@
 import { Button } from "antd";
 import { useContext, useState } from "react";
 import imgUrl from '@/assets/logo.png'
-import { MainContext } from "./store";
+import { MainContext } from "../store/store";
 import "./MJHeader.less"
 
 const MJHeader = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const handleClickPic = () => {
-        var dataURL = store.canvas?.toDataURL({
+        var dataURL = canvas?.toDataURL({
             format: 'png', // 指定导出格式，可以是 'png', 'jpeg', 'webp' 等
             quality: 0.8,
         })
@@ -27,7 +27,7 @@ const MJHeader = () => {
 
 
     const handleOnSave = () => {
-        store.temporaryStorage()
+        temporaryStorage()
     }
 
     const handleReset = () => {
@@ -37,7 +37,7 @@ const MJHeader = () => {
     const handleClick = () => { }
 
     const handleClickJson = () => {
-        var jsonString = JSON.stringify(store.canvas.toJSON());
+        var jsonString = JSON.stringify(canvas.toJSON());
         // 创建一个下载链接
         var downloadLink = document.createElement('a');
         downloadLink.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonString);

@@ -1,7 +1,7 @@
 import { fabric } from "fabric"
 import { useContext, useRef } from "react"
 import { nanoid } from "nanoid"
-import { MainContext } from "@/pages/store"
+import { MainContext } from "@/store/store"
 import BlackImg from "@/assets/black.jpg"
 // import ColorImg from "@/assets/color.jpg"
 // import PenImg from "@/assets/pen.jpg"
@@ -10,11 +10,11 @@ import "./index.less"
 
 
 const PictureSection = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
     const imgRef = useRef(null)
 
     const handleAddPicture = () => {
-        if (!store.canvas) return
+        if (!canvas) return
         const Image = new fabric.Image(imgRef.current || "", {
             top: 20,
             left: 90,
@@ -24,7 +24,7 @@ const PictureSection = () => {
             hbsId: nanoid(),
             hbsType: "group"
         } as any)
-        store.canvas.add(Image)
+        canvas.add(Image)
     }
 
     return <div className="temp-content">

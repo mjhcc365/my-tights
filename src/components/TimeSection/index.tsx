@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 
 import Year from "./Year"
+import Week from "./WeekTool"
 
 
 
@@ -20,7 +21,7 @@ const items: TabsProps['items'] = [
     {
         key: '3',
         label: '周',
-        children: '周',
+        children: <Week />,
     },
     {
         key: '4',
@@ -36,7 +37,7 @@ const TimeSection = () => {
     }
     return <div style={{ height: "calc(100vh - 64px)" }}>
         <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="3"
             items={items}
             onChange={onChange}
             indicatorSize={(origin) => origin - 16}

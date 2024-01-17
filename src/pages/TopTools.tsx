@@ -4,7 +4,7 @@ import ImageTools from "@/components/Tools/ImageTools"
 import ShapeTools from "@/components/Tools/ShapeTools"
 
 import "./TopTools.less"
-import { MainContext } from "./store"
+import { MainContext } from "../store/store"
 
 const TopTools = (props: { activeObject: fabric.Object | null }) => {
     const type = props.activeObject?.type

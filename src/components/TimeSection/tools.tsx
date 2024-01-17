@@ -1,15 +1,15 @@
-import { MainContext } from "@/pages/store"
+import { MainContext } from "@/store/store"
 import { useContext } from "react"
 import { fabric } from "fabric"
 import { nanoid } from "nanoid"
 
 export const useDraw = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
 
     const drawMonth = () => {
-        if (!store.canvas) return
-        const cWidth = store.canvas?.getWidth();
-        const cheight = store?.canvas?.getHeight();
+        if (!canvas) return
+        const cWidth = canvas?.getWidth();
+        const cheight = canvas?.getHeight();
 
         const group = new fabric.Group([], {
             hbsId: nanoid()
@@ -26,8 +26,8 @@ export const useDraw = () => {
             group.addWithUpdate(line)
         }
         // 竖线
-        store?.canvas.add(group);
-        store?.canvas.renderAll()
+        canvas.add(group);
+        canvas.renderAll()
     }
 
     return {

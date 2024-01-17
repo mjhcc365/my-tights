@@ -1,7 +1,7 @@
 import { Button } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/pages/store"
+import { MainContext } from "@/store/store"
 import svg from "@/assets/iconfont/weixin.svg"
 
 

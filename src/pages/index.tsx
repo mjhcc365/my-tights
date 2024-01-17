@@ -3,13 +3,11 @@ import { Layout, } from 'antd';
 import { useEffect, useRef } from "react"
 import { fabric } from 'fabric'; // v5
 import { observer } from "mobx-react-lite"
-
 import "@/assets/iconfont/iconfont"
-
 
 import MJHeader from "./MJHeader"
 import TopTools from "./TopTools"
-import { useCanvas, MainContext } from "./store"
+import { useCanvas, MainContext, MJ_DATA } from "../store/store"
 import { layoutStyle, headerStyle, siderStyle, contentStyle } from "./styles"
 import LeftSiderBox from "@/pages/LeftSiderBox";
 import "./index.less"
@@ -17,14 +15,25 @@ import "./index.less"
 const { Header, Sider, Content } = Layout;
 
 const HomePage = () => {
-  const { canvasRef, store, activeObject, setActiveObject } = useCanvas()
+  const {
+    canvas,
+    setCanvas,
+    canvasRef,
+    activeObject,
+    setActiveObject,
+    init,
+    zoomRatio,
+    setZoomRatio
+  } = useCanvas();
+
+
   const canvasBoxRef = useRef<HTMLInputElement>(null)
 
 
   const handleEnter = () => {
-    console.log("-->", store.canvas)
-    if (!store.canvas) return
-    const curActice = store.canvas.getActiveObject()
+    console.log("-->", canvas)
+    if (!canvas) return
+    const curActice = canvas.getActiveObject()
     // if (curActice) {
     //   store.canvas.remove(curActice)
     // }
@@ -42,34 +51,22 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    const cWidth = Math.floor((80 * 5 || 0));
-    const cHeight = Math.floor((120 * 5 || 0))
-    const options = {
-      backgroundColor: '#fff',
-      width: cWidth,
-      height: cHeight,
-      absolutePositioned: true,
-      selectable: false,
-    }
-    const canvas = new fabric.Canvas(canvasRef.current, options);
-    store.setCanvas(canvas)
-    store.init()
+
+    const newCanvas = init()
     document.addEventListener('keydown', onKeyDown)
-    store?.canvas?.on("mouse:down", () => {
+    newCanvas?.on("mouse:down", () => {
       console.log("==>mouse:down")
-      setActiveObject(store.canvas?.getActiveObject()?.toObject() || null)
-      // store.setAObject(store.canvas?.getActiveObject() || null)
-      // store.setActiveObject(store.canvas?.getActiveObject() || null)
+      setActiveObject(newCanvas?.getActiveObject()?.toObject() || null)
     })
+    setCanvas(() => newCanvas)
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-
     }
   }, []);
 
 
   return (
-    <MainContext.Provider value={{ store, activeObject, setActiveObject }}>
+    <MainContext.Provider value={{ zoomRatio, canvas, activeObject, setActiveObject }}>
       <div className='main'>
         <Layout style={layoutStyle}>
           <Header style={headerStyle}><MJHeader /></Header>

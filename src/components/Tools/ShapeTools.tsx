@@ -1,4 +1,4 @@
-import { MainContext } from "@/pages/store";
+import { MainContext } from "@/store/store";
 import { useContext } from "react";
 import { ColorPicker, Tooltip, Popover, Slider, Button } from "antd";
 import { BorderOuterOutlined, DeleteOutlined } from "@ant-design/icons"
@@ -7,30 +7,30 @@ import "./TextTools.less"
 import "./ShapeTools.less"
 
 const ShapeTools = () => {
-    const { store, activeObject, setActiveObject } = useContext(MainContext)
+    const { canvas, activeObject, setActiveObject } = useContext(MainContext)
 
     const onAddBorder = () => {
         setActiveObject((draft: any) => {
             draft.stroke = "#eee";
             draft.strokeWidth = 5
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             stroke: "#eee",
             strokeWidth: 5,
             strokeDashArray: undefined,// 虚线：[5, 5] 点线：[2, 2] 长短交替：[10, 5]
 
         })
-        store.canvas?.renderAll()
+        canvas?.renderAll()
     }
 
     const onStrokeWidthChange = (v) => {
         setActiveObject((draft: any) => {
             draft.strokeWidth = v
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             strokeWidth: v,
         })
-        store.canvas?.renderAll()
+        canvas?.renderAll()
     }
 
     const onRadiusChange = (v: any) => {
@@ -42,10 +42,10 @@ const ShapeTools = () => {
         setActiveObject((draft: any) => {
             draft.stroke = v.toHexString()
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             stroke: v.toHexString(),
         })
-        store.canvas?.renderAll()
+        canvas?.renderAll()
     }
 
 
@@ -53,17 +53,17 @@ const ShapeTools = () => {
         setActiveObject((draft: any) => {
             draft.fill = v.toHexString()
         })
-        store.canvas?.getActiveObject()?.set({
+        canvas?.getActiveObject()?.set({
             fill: v.toHexString(),
         })
-        store.canvas?.renderAll()
+        canvas?.renderAll()
 
     }
 
     const handleDelEle = () => {
-        if (activeObject && store.canvas) {
-            store.canvas.remove(store.canvas.getActiveObject())
-            store.canvas.renderAll();
+        if (activeObject && canvas) {
+            canvas.remove(canvas.getActiveObject())
+            canvas.renderAll();
             setActiveObject(() => null)
         }
     }

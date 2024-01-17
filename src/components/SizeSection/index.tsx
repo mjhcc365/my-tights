@@ -1,48 +1,21 @@
 
-import { InputNumber, Select, ColorPicker, Form, Flex, Button } from "antd"
+import { InputNumber, Select, ColorPicker, Form, Flex, Button, Switch } from "antd"
 import { useContext } from "react";
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
-import { MainContext, HBSType } from "@/pages/store"
+import { MainContext, HBSType } from "@/store/store"
+import usePaperStore, { PaperTempOptions, PaperBackOptions, A7TempConfig, PaperConfig } from "@/store/usePaperStore"
 import { SIZE_ALL, getConfigByType, SIZE_Type } from "./type"
 
 import "./index.less"
-import { useForm } from "antd/es/form/Form";
 
 const FormItem = Form.Item
 
-interface BackStyleType {
-    backSizeType: SIZE_Type;
-    backgroundColor: string;
-    lineColor: string;
-    lineGap: number; // 网格之间的间距
-    canvasWidth: number;
-    canvasHeight: number;
-    holesNum: number;
-    holesSize: number;
-    holesLeft: number;
-    holesStep: number; // 圆心距
-    holesGap: number | null; // 两组圆之间的距离
-    backType: "grid" | "dots" | "lines" | "color"
-}
-
-const initialValues = {
-    backSizeType: SIZE_Type.a7,
-    backgroundColor: "#fff",
-    canvasWidth: 80,
-    canvasHeight: 120,
-    holesNum: 6,
-    holesSize: 5,
-    holesLeft: 12,
-    holesStep: 19, // 圆心距
-    holesGap: 15,// 两组圆之间的距离
-    backType: "grid",
-    lineColor: "#f5f5f5",
-    lineGap: 3.5, // 网格之间的间距
-}
 
 const SizeSection = () => {
-    const { store } = useContext(MainContext);
+    const { canvas, zoomRatio } = useContext(MainContext);
+
+    const { paperConfig, setPaperConfig, drawBackPaper } = usePaperStore()
 
     const [form] = Form.useForm();
 
@@ -70,42 +43,41 @@ const SizeSection = () => {
     }
 
     const clearGridBack = () => {
-        store.canvas?.getObjects().forEach((ele: any) => {
+        canvas?.getObjects().forEach((ele: any) => {
             if (ele.hbsType === HBSType.back) {
-                store.canvas?.remove(ele)
+                canvas?.remove(ele)
             }
         })
     }
 
 
     const handleSizeChange = (type: string) => {
-        const { width, height, holes } = getConfigByType(type) as any
-        const { holesNum = 6,
-            holesStep = 19,
-            holesSize = 5,
-        } = holes
+        // const { width, height, holes } = getConfigByType(type) as any
+        // const { holesNum = 6,
+        //     holesStep = 19,
+        //     holesSize = 5,
+        // } = holes
 
-        form.setFieldsValue({
-            canvasWidth: width,
-            canvasHeight: height,
-            holesNum,
-            holesSize,
-            holesStep,
-        })
-        store.canvas?.setWidth(width * store.zoomRatio)
-        store.canvas?.setHeight(height * store.zoomRatio);
-        onChange()
+        // form.setFieldsValue({
+        //     canvasWidth: width,
+        //     canvasHeight: height,
+        //     holesNum,
+        //     holesSize,
+        //     holesStep,
+        // })
+        // canvas?.setWidth(width * zoomRatio)
+        // canvas?.setHeight(height * zoomRatio);
+        // onChange()
     }
 
     // 绘制网格背景
     const onSetGridsBack = () => {
-        const { canvas } = store;
         const cWidth: number = canvas?.getWidth() || 0
         const cHeight: number = canvas?.getHeight() || 0
         clearGridBack()
 
         form.validateFields().then((v) => {
-            const { lineGap = 3.5 * store.zoomRatio, lineColor } = v
+            const { lineGap = 3.5 * zoomRatio, lineColor } = v
             // 定义网格线的间距
             const group = new fabric.Group([], {
                 hbsId: nanoid(),
@@ -114,7 +86,7 @@ const SizeSection = () => {
                 lockMovementX: true,
                 lockMovementY: true,
             } as any)
-            // store.canvas?.add(group)
+            // canvas?.add(group)
             // 绘制横向网格线
             for (var i = 0; i <= cHeight; i += lineGap) {
                 const cline = new fabric.Line([0, i, cWidth, i], {
@@ -132,34 +104,47 @@ const SizeSection = () => {
                 group.addWithUpdate(vline);
             }
 
-            store.canvas?.add(group)
+            canvas?.add(group)
             group?.sendToBack();// 置于底层
             group?.center()
-            store.canvas?.renderAll()
+            canvas?.renderAll()
 
         })
     }
 
     // 设置背景颜色
     const onSetColorBack = () => {
-        if (!store.canvas) return
+        if (!canvas) return
         form.validateFields().then((v) => {
             const { backgroundColor } = v
             const newColor: string = typeof backgroundColor === "string" ? backgroundColor : backgroundColor.toHexString();
-            store.canvas?.setBackgroundColor(newColor, () => { })
-            store.canvas?.renderAll()
+            canvas?.setBackgroundColor(newColor, () => { })
+            canvas?.renderAll()
+        })
+    }
+
+    const delHoles = () => {
+        canvas?.getObjects().forEach((ele: any) => {
+            if (ele.hbsType === "holes") {
+                canvas?.remove(ele)
+            }
         })
     }
 
     // 
-    const onAddCircle = () => {
-        const cw = store.canvas?.getWidth() || 0
-        const ch = store.canvas?.getHeight() || 0
+    const onAddCircle = (v: boolean) => {
+        console.log("==>v", v);
+        if (!v) {
+            delHoles()
+            return
+        }
+        const cw = canvas?.getWidth() || 0
+        const ch = canvas?.getHeight() || 0
         const middle = Math.floor(ch / 2)
         const LEFT_GAP = 8.5
 
         const lineh = new fabric.Line([
-            LEFT_GAP * store.zoomRatio, 0, LEFT_GAP * store.zoomRatio, ch
+            LEFT_GAP * zoomRatio, 0, LEFT_GAP * zoomRatio, ch
         ], {
             stroke: "#F5F5F5",
             strokeWidth: 2,
@@ -167,7 +152,7 @@ const SizeSection = () => {
         })
         const linev = new fabric.Line([
             0, middle, cw, middle
-            // LEFT_GAP * store.zoomRatio, 0, LEFT_GAP * store.zoomRatio, ch
+            // LEFT_GAP * zoomRatio, 0, LEFT_GAP * zoomRatio, ch
         ], {
             stroke: "#F5F5F5",
             strokeWidth: 2,
@@ -175,24 +160,20 @@ const SizeSection = () => {
         })
 
         const group = new fabric.Group([lineh, linev], {
-            selectable: false
-        })
+            selectable: false,
+            hbsType: "holes"
+        } as any)
 
         const CIRCLE_R = 2.5;
         const CIRCLE_GAP = 19;
         const CIRCLE_GROUP_GAP = 19;
         const CIRCLR_LEFT = 2.5
 
-        // 下面三个○
-        // 19-
-
-        // const topGroup = new fabric.Group([])
-        // const bottomGroup = new fabric.Group([])
         for (let i = 0; i <= 2; i++) {
             const c = new fabric.Circle({
-                radius: CIRCLE_R * store.zoomRatio,
-                top: middle + (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) * store.zoomRatio,
-                left: CIRCLR_LEFT * store.zoomRatio,
+                radius: CIRCLE_R * zoomRatio,
+                top: middle + (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) * zoomRatio,
+                left: CIRCLR_LEFT * zoomRatio,
                 fill: "#F5F5F5",
             })
             group.addWithUpdate(c)
@@ -200,96 +181,96 @@ const SizeSection = () => {
 
         for (let i = 0; i <= 2; i++) {
             const c = new fabric.Circle({
-                radius: CIRCLE_R * store.zoomRatio,
-                top: middle - ((CIRCLE_GROUP_GAP / 2 + CIRCLE_R) + CIRCLE_GAP * i) * store.zoomRatio,
-                left: CIRCLR_LEFT * store.zoomRatio,
+                radius: CIRCLE_R * zoomRatio,
+                top: middle - ((CIRCLE_GROUP_GAP / 2 + CIRCLE_R) + CIRCLE_GAP * i) * zoomRatio,
+                left: CIRCLR_LEFT * zoomRatio,
                 fill: "#F5F5F5",
             })
             group.addWithUpdate(c)
         }
 
-        store.canvas?.add(group);
-        store.canvas?.renderAll()
+        canvas?.add(group);
+        canvas?.renderAll()
     }
 
     return <div className="size-section">
-        <Form name="validate_other"
-            form={form}
-            initialValues={initialValues}
-            style={{ maxWidth: 600 }}
-        >
+        <Flex vertical={true} gap="middle" >
             <div className="section-title">画布尺寸</div>
-            <FormItem label="尺寸" name="backSizeType">
-                <Select onChange={handleSizeChange} options={SIZE_ALL} />
-            </FormItem>
-            <Flex gap={12}>
-                <FormItem label="宽度" name="canvasWidth">
-                    <InputNumber disabled />
-                </FormItem>
-                <FormItem label="高度" name="canvasHeight">
-                    <InputNumber disabled />
-                </FormItem>
+            <Flex align="center" gap="small">
+                <div>尺寸：</div>
+                <Select value={paperConfig.curTempType} style={{ flex: 1 }} onChange={handleSizeChange} options={PaperTempOptions} />
             </Flex>
-            <hr />
-            <div className="section-title">活页孔</div>
-            <FormItem style={{ flex: 1 }} label="孔数" name="holesNum">
-                <Select options={[{
+            <Flex gap="small">
+                <Flex align="center" gap="small">
+                    <div>宽度:</div>
+                    <InputNumber value={paperConfig.width} disabled />
+                </Flex>
+                <Flex align="center" gap="small">
+                    <div>高度:</div>
+                    <InputNumber value={paperConfig.height} disabled />
+                </Flex>
+            </Flex>
+            <div className="section-title">背景颜色
+                <Switch value={paperConfig.showBackColor} onChange={onAddCircle} />
+            </div>
+            <Flex align="center" gap="small">
+                <div>背景颜色:</div>
+                <ColorPicker
+                    style={{
+                        flex: 1
+                    }}
+                    value={paperConfig.backgroundColor}
+                    onChange={onSetColorBack} />
+            </Flex>
+            <div className="section-title">活页孔 <Switch value={paperConfig.showHole} onChange={onAddCircle} /></div>
+            <div className="section-title">画布填充 <Switch value={paperConfig.showBackTexture} onChange={onAddCircle} /></div>
+
+            <Flex align="center" gap="small">
+                <div>背景类型:</div>
+                <Select
+                    style={{ flex: 1 }}
+                    value={paperConfig.backConfig}
+                    options={PaperBackOptions}
+                    onChange={() => { }}
+                />
+            </Flex>
+            <Flex align="center" gap="small">
+                <div>线条颜色:</div>
+                <ColorPicker
+                    style={{ flex: 1 }}
+                    value={paperConfig.lineConfig.stroke} onChange={onChange} allowClear />
+            </Flex>
+            <Flex align="center" gap="small" >
+                <div>线条类型:</div>
+                {/* <ColorPicker value={paperConfig.lineConfig?.strokeWidth} onChange={onChange} allowClear /> */}
+            </Flex>
+
+        </Flex>
+
+        {/* <FormItem style={{ flex: 1 }} label="孔数" name="holesNum">
+                <Select value={`${paperConfig.sideHoles?.holesNum}`} options={[{
                     value: "6",
                     label: "六孔"
                 }]} disabled />
             </FormItem>
             <Flex gap={12}>
-                <FormItem style={{ flex: 1 }} label="孔距" name="holesStep">
-                    <Select options={[{
+                <FormItem style={{ flex: 1 }} label="孔距" name="holesGap">
+                    <Select value={paperConfig.sideHoles?.holesGap} options={[{
                         value: "6",
                         label: "六孔"
                     }]} disabled />
                 </FormItem>
-                <FormItem style={{ flex: 1 }} label="间距" name="holesGap">
-                    <Select options={[{
-                        value: "6",
-                        label: "六孔",
+                <FormItem style={{ flex: 1 }} label="间距" name="holesGroupGap">
+                    <Select
+                        value={paperConfig.sideHoles?.holesGroupGap}
+                        options={[{
+                            value: "6",
+                            label: "六孔",
 
-                    }]} disabled />
+                        }]} disabled />
                 </FormItem>
-            </Flex>
-            <hr />
-            <div className="section-title">画布填充</div>
-            <FormItem label="背景类型" name="backType">
-                <Select style={{ width: "100%" }} options={[{
-                    label: "网格背景",
-                    value: "grid"
-                },
-                {
-                    label: "点阵背景",
-                    value: "dots"
-                },
-                {
-                    label: "横线背景",
-                    value: "lines"
-                },
-                {
-                    label: "纯色背景",
-                    value: "color"
-                }]}
-                    onChange={onChange}
-                />
-            </FormItem>
-            <Flex gap={12}>
-                <FormItem label="线条颜色" name="lineColor">
-                    <ColorPicker onChange={onChange} allowClear />
-                </FormItem>
-            </Flex>
-            <Flex gap={12}>
-                <FormItem label="背景颜色" name="backgroundColor">
-                    <ColorPicker onChange={onSetColorBack} allowClear />
-                </FormItem>
-            </Flex>
-            <Flex gap={12}>
-                <Button onClick={onAddCircle}>添加辅助线</Button>
-            </Flex>
-        </Form>
-    </div>
+            </Flex>*/}
+    </div >
 }
 
 export default SizeSection
