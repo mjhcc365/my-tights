@@ -3,7 +3,7 @@ import { Layout, } from 'antd';
 import { useEffect, useRef } from "react"
 import { fabric } from 'fabric'; // v5
 // import { observer } from "mobx-react-lite"
-import "@/assets/iconfont/iconfont"
+import "@/assets/iconfont/iconfont.js"
 
 import MJHeader from "./MJHeader"
 import TopTools from "./TopTools"
@@ -85,10 +85,8 @@ const HomePage = () => {
                 background: "#f5f5f5",
                 position: "relative"
               }} ref={canvasBoxRef} >
-                <TopTools activeObject={activeObject} />
-                {/* <Rule /> */}
+                <TopTools />
                 <canvas ref={canvasRef} />
-
               </div>
             </Content>
           </Layout>

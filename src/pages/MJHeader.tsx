@@ -25,20 +25,21 @@ const MJHeader = () => {
         document.body.removeChild(downloadLink);
     }
 
-
     const handleOnSave = () => {
         temporaryStorage()
     }
 
     const handleReset = () => {
         localStorage.clear()
+        location.reload()
     }
-    const handleClickPDF = () => {
 
+    const handleClickPDF = () => {
 
     }
 
     const handleClickJson = () => {
+        if (!canvas) return
         var jsonString = JSON.stringify(canvas.toJSON());
         // 创建一个下载链接
         var downloadLink = document.createElement('a');
@@ -53,13 +54,9 @@ const MJHeader = () => {
 
     const onAddRule = () => {
         // const
-
-
-
     }
 
     const onDelRule = () => {
-
     }
 
     const handleClick = () => { }
@@ -72,8 +69,6 @@ const MJHeader = () => {
         <div className='btns-box'>
             <Button onClick={handleClick}>上一步</Button>
             <Button onClick={handleClick}>下一步</Button>
-            <Button onClick={onAddRule}>添加尺子</Button>
-            <Button onClick={onDelRule}>删除尺子</Button>
         </div>
         <div className='btns-box'>
             <Button onClick={handleClickPic}>下载图片</Button>

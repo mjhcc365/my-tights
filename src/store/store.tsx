@@ -51,7 +51,12 @@ export const useCanvas = () => {
 
     const temporaryStorage = () => {
         const data = {
-            canvas: canvas?.toJSON(['groupId', 'selectable', "hbsType", 'fontFamily']),
+            // lockRotation: true,
+            //     lockMovementX: true,
+            //     lockMovementY: true,
+            //     lockScalingX: true,
+            //     lockScalingY: true
+            canvas: canvas?.toJSON(['groupId', 'selectable', "hbsType", 'fontFamily', "lockRotation", "lockMovementX", "lockMovementY"]),
             zoomRatio: zoomRatio,
             canvasWidth: canvas?.getWidth(),
             canvasHeight: canvas?.getHeight()

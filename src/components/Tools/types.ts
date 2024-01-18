@@ -1,5 +1,3 @@
-// export import { SystemFont } from "@/types/common"
-
 export type SystemFont = {
     label: string
     value: string

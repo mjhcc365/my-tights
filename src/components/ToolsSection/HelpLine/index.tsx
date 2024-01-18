@@ -46,18 +46,12 @@ const HelpLine = () => {
             ], {
                 stroke: helpLine.stroke,
                 strokeWidth: helpLine.strokeWidth,
-                // strokeDashArray: [2, 2]
+                strokeDashArray: [2, 2]
             })
             hLines.push(line)
         }
 
-        const group = new fabric.Group(hLines, {
-            selectable: false,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingX: true,
-            lockScalingY: true
-        });
+        const group = new fabric.Group(hLines);
         canvas?.add(group)
         group?.sendToBack();// 置于底层
     }
@@ -77,18 +71,20 @@ const HelpLine = () => {
             ], {
                 stroke: helpLine.stroke,
                 strokeWidth: helpLine.strokeWidth,
-                // strokeDashArray: [2, 2]
+                strokeDashArray: [2, 2]
             })
             vLines.push(line)
         }
 
-        const group = new fabric.Group(vLines, {
-            selectable: false,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingX: true,
-            lockScalingY: true
-        });
+        // const group = new fabric.Group(vLines, {
+        //     selectable: false,
+        //     lockMovementX: true,
+        //     lockMovementY: true,
+        //     lockScalingX: true,
+        //     lockScalingY: true
+        // });
+
+        const group = new fabric.Group(vLines);
 
         canvas?.add(group)
         group?.sendToBack();// 置于底层
