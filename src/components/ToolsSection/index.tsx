@@ -1,33 +1,42 @@
 import { MainContext } from "@/store/store";
-import { Button } from "antd";
+import { Tabs } from "antd";
+import type { TabsProps } from 'antd';
 import { useContext } from "react";
 import { fabric } from "fabric"
 
-import rule from "@/assets/cm.svg"
+import HelpLine from "./HelpLine";
+import Rule from "./Rule";
 
+
+const items: TabsProps['items'] = [
+    {
+        key: '1',
+        label: '等分线',
+        children: <HelpLine />,
+    },
+    {
+        key: '2',
+        label: '尺子',
+        children: <Rule />
+    }
+];
 
 
 // TODO 添加等分线
 // 添加尺子
 const ToolsSection = () => {
-    const { canvas } = useContext(MainContext);
-
-    const onAddRule = () => {
-        fabric.loadSVGFromURL(rule, (objects, options) => {
-            // canvas?.add(objects[0]).renderAll();
-            const group = new fabric.Group(objects, {
-                lockScalingX: true,
-                lockScalingY: true,
-            })
-            canvas?.add(group).renderAll();
-            console.log("===>", objects, options)
-        })
+    const onChange = (key: string) => {
+        console.log(key);
     }
 
-    return <div>
-        <Button onClick={onAddRule}>添加尺子</Button>
-        <Button>添加等分线-七等分线-横向-可用部分</Button>
-        <Button>添加等分线-两等分线-竖向-可用部分</Button>
+    return <div style={{ height: "calc(100vh - 64px)" }}>
+        <Tabs
+            defaultActiveKey="1"
+            items={items}
+            onChange={onChange}
+            indicatorSize={(origin) => origin - 16}
+        />
+
     </div>
 }
 

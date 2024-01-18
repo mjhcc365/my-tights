@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react"
 import { Select, ColorPicker } from "antd"
+import { fabric } from "fabric"
 import {
     DeleteOutlined,
     BoldOutlined,
@@ -10,7 +11,8 @@ import {
     UnderlineOutlined,
     StrikethroughOutlined,
     HighlightOutlined,
-    BgColorsOutlined
+    BgColorsOutlined,
+    CopyOutlined
 } from "@ant-design/icons"
 import { MainContext } from "@/store/store"
 import { SYS_FONTS, WEB_FONTS, Layers } from "./types"
@@ -73,7 +75,7 @@ const TextTools = () => {
 
     const handleDelEle = () => {
         if (activeObject && canvas) {
-            canvas.remove(canvas.getActiveObject())
+            canvas.remove((canvas.getActiveObject()) as any)
             canvas.renderAll();
             setActiveObject(() => null)
         }
@@ -106,12 +108,12 @@ const TextTools = () => {
     }
 
     const handleChangeUnderline = () => {
-        const nextValue = !activeObject.underline
+        const nextValue = !(activeObject as any).underline
         setActiveObject((draft: any) => {
             draft.underline = nextValue
         })
-        canvas.getActiveObject()?.set({ underline: nextValue })
-        canvas.renderAll();
+        canvas?.getActiveObject()?.set({ underline: nextValue } as any)
+        canvas?.renderAll();
     }
 
     const handleChangeLinethrough = () => {
@@ -129,6 +131,21 @@ const TextTools = () => {
         })
         canvas.getActiveObject()?.set({ fill: v.toRgbString() })
         canvas.renderAll();
+    }
+
+    const handleCope = () => {
+        const active = canvas?.getActiveObject();
+        const clonedRect = fabric.util.object.clone(active);
+
+        clonedRect.set({
+            left: active.left + 60,
+            top: active.top
+        });
+        canvas.discardActiveObject()
+        canvas.add(clonedRect);
+        canvas?.renderAll();
+
+
     }
 
     return <div className="text-tool-panel">
@@ -151,6 +168,7 @@ const TextTools = () => {
         {/* <AlignLeftOutlined style={{ fontSize: "18px", color: "#434343" }} />
         <AlignCenterOutlined style={{ fontSize: "18px", color: "#434343" }} />
         <AlignRightOutlined style={{ fontSize: "18px", color: "#434343" }} /> */}
+        <CopyOutlined style={{ fontSize: "18px", color: "#434343" }} onClick={handleCope} />
         <DeleteOutlined style={{ fontSize: "18px", color: "#434343" }} onClick={handleDelEle} />
     </div>
 }
