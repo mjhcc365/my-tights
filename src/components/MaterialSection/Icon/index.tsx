@@ -6,11 +6,10 @@ import svg from "@/assets/iconfont/weixin.svg"
 
 
 const Icon = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
     const onAddIcon = () => {
         fabric.loadSVGFromURL(svg, (objects, options) => {
-            // console.log("==>", objects, options)
-            store?.canvas?.add(objects[0]).renderAll();
+            canvas?.add(objects[0]).renderAll();
         })
     }
     return <div>

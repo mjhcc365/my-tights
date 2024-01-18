@@ -7,7 +7,7 @@ import "./index.less"
 
 
 const Rect = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
 
     const onAddRect = () => {
         const rect = new fabric.Rect({
@@ -16,7 +16,7 @@ const Rect = () => {
             width: 60, // 矩形宽度
             height: 40 // 矩形高度
         })
-        store?.canvas?.add(rect)
+        canvas?.add(rect)
     }
 
 
@@ -25,7 +25,7 @@ const Rect = () => {
             width: 80, // 底边长度
             height: 100,// 底边到对角的距离
         })
-        store?.canvas?.add(triangle)
+        canvas?.add(triangle)
     }
 
     const onAddCircle = () => {
@@ -33,7 +33,7 @@ const Rect = () => {
         let circle = new fabric.Circle({
             radius: 50 // 半径
         })
-        store?.canvas?.add(circle)
+        canvas?.add(circle)
     }
 
     const onAddEllipse = () => {
@@ -41,7 +41,7 @@ const Rect = () => {
             rx: 50,
             ry: 30
         })
-        store?.canvas?.add(ellipse)
+        canvas?.add(ellipse)
     }
 
 

@@ -1,12 +1,12 @@
 import { Button } from "antd";
 import { useContext, useState } from "react";
 import imgUrl from '@/assets/logo.png'
+
 import { MainContext } from "../store/store";
 import "./MJHeader.less"
 
 const MJHeader = () => {
-    const { canvas } = useContext(MainContext)
-    const [showModal, setShowModal] = useState<boolean>(false)
+    const { canvas, temporaryStorage } = useContext(MainContext)
 
     const handleClickPic = () => {
         var dataURL = canvas?.toDataURL({
@@ -33,8 +33,10 @@ const MJHeader = () => {
     const handleReset = () => {
         localStorage.clear()
     }
+    const handleClickPDF = () => {
 
-    const handleClick = () => { }
+
+    }
 
     const handleClickJson = () => {
         var jsonString = JSON.stringify(canvas.toJSON());
@@ -49,24 +51,34 @@ const MJHeader = () => {
         document.body.removeChild(downloadLink);
     }
 
+    const onAddRule = () => {
+        // const
+
+
+
+    }
+
+    const onDelRule = () => {
+
+    }
+
+    const handleClick = () => { }
+
     return <div className='headerBox'>
         <div className='logo-box'>
             <img width={48} height={48} src={imgUrl} />
             <span style={{ color: "#1f1f1f" }}>胡百拾</span>
         </div>
-        <div>
-            {/* <Button onClick={handleSizeClick}>尺寸调整</Button> */}
-            {/* <Button onClick={handeAddAuxiliaryLine
-            }>添加辅助线</Button> */}
-        </div>
         <div className='btns-box'>
             <Button onClick={handleClick}>上一步</Button>
             <Button onClick={handleClick}>下一步</Button>
+            <Button onClick={onAddRule}>添加尺子</Button>
+            <Button onClick={onDelRule}>删除尺子</Button>
         </div>
         <div className='btns-box'>
             <Button onClick={handleClickPic}>下载图片</Button>
             <Button onClick={handleClickJson}>下载JSON</Button>
-            <Button onClick={handleClick}>下载PDF</Button>
+            <Button onClick={handleClickPDF}>下载PDF</Button>
             <Button onClick={handleOnSave}>暂存</Button>
             <Button onClick={handleReset}>清除</Button>
         </div>

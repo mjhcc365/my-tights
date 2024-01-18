@@ -79,6 +79,8 @@ interface MainContextInterface {
     activeObject: fabric.Object | null;
     setActiveObject: any;
     zoomRatio: number,
+    temporaryStorage: () => void
+
 }
 
 export const MainContext = createContext<MainContextInterface>({} as any)

@@ -7,6 +7,7 @@ import PictureSection from "../components/PictureSection";
 import MaterialSection from "@/components/MaterialSection";
 import SizeSection from "@/components/SizeSection";
 import TimeSection from "@/components/TimeSection";
+import ToolsSection from "@/components/ToolsSection"
 import { items, MENUKEY } from "./types";
 import "./LeftSiderBox.less";
 
@@ -35,6 +36,7 @@ const LeftSiderBox = () => {
             {menu === MENUKEY.picture && <PictureSection />}
             {menu === MENUKEY.size && <SizeSection />}
             {menu === MENUKEY.time && <TimeSection />}
+            {menu === MENUKEY.tools && <ToolsSection />}
         </div>
     </div>
 }

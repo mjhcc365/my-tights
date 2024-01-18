@@ -39,6 +39,6 @@ export const items: MenuItem[] = [
     getItem('素材', MENUKEY.material,), // 形状，线条，图标
     getItem('文字', MENUKEY.text,), // 艺术字体
     // getItem('照片', MENUKEY.picture,), // 自己的图片,网站提供一些图片
-    // getItem('工具', MENUKEY.tools,), // 
     getItem('时间', MENUKEY.time,), // 
+    getItem('工具', MENUKEY.tools,), // 
 ];

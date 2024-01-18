@@ -10,12 +10,12 @@ import { MainContext } from "@/store/store"
 
 
 const Emoji = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
     const onAddEmoji = (obj: { native: string }) => {
         const emoji = new fabric.Text(obj.native, {
             fontSize: 30,
         })
-        store?.canvas?.add(emoji)
+        canvas?.add(emoji)
         emoji.center()
     }
 

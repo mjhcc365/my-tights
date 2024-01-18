@@ -2,7 +2,7 @@
 import { Layout, } from 'antd';
 import { useEffect, useRef } from "react"
 import { fabric } from 'fabric'; // v5
-import { observer } from "mobx-react-lite"
+// import { observer } from "mobx-react-lite"
 import "@/assets/iconfont/iconfont"
 
 import MJHeader from "./MJHeader"
@@ -23,7 +23,8 @@ const HomePage = () => {
     setActiveObject,
     init,
     zoomRatio,
-    setZoomRatio
+    setZoomRatio,
+    temporaryStorage
   } = useCanvas();
 
 
@@ -66,7 +67,7 @@ const HomePage = () => {
 
 
   return (
-    <MainContext.Provider value={{ zoomRatio, canvas, activeObject, setActiveObject }}>
+    <MainContext.Provider value={{ zoomRatio, canvas, activeObject, setActiveObject, temporaryStorage }}>
       <div className='main'>
         <Layout style={layoutStyle}>
           <Header style={headerStyle}><MJHeader /></Header>
@@ -85,7 +86,9 @@ const HomePage = () => {
                 position: "relative"
               }} ref={canvasBoxRef} >
                 <TopTools activeObject={activeObject} />
+                {/* <Rule /> */}
                 <canvas ref={canvasRef} />
+
               </div>
             </Content>
           </Layout>
@@ -97,4 +100,4 @@ const HomePage = () => {
 }
 
 
-export default observer(HomePage)
+export default HomePage

@@ -5,7 +5,7 @@ import { MainContext } from "@/store/store"
 
 
 const Line = () => {
-    const { store } = useContext(MainContext)
+    const { canvas } = useContext(MainContext)
     const onAddLine = () => {
         const line = new fabric.Line([0, 100, 100, 100], {
             fill: 'red',     // 填充颜色（可选，如果不需要填充可以省略）
@@ -14,7 +14,7 @@ const Line = () => {
             selectable: true,
             // 边框宽度
         })
-        store?.canvas?.add(line)
+        canvas?.add(line)
     }
 
     return <div>

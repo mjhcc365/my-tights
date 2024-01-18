@@ -1,20 +1,159 @@
 import { useImmer } from "use-immer";
 import { fabric } from "fabric"
+import { nanoid } from "nanoid"
+
+import threeDots from "@/assets/backicon/three-dots.svg";
+import forDots from "@/assets/backicon/four-dots.svg";
+import lines from "@/assets/backicon/lines.svg";
+import rectangle from "@/assets/backicon/rectangle.svg";
+import note from "@/assets/backicon/note.svg";
+import triangle from "@/assets/backicon/triangle.svg";
+import hexagon from "@/assets/backicon/hexagon.svg";
+import { useContext } from "react";
+import { MainContext, HBSType } from "./store";
+
+export enum PaperBackType {
+    threeDots = "threeDots",
+    forDots = "forDots",
+    lines = "lines",
+    rectangle = "rectangle",
+    note = "note",
+    triangle = "triangle",
+    hexagon = "hexagon"
+}
+
+export const PaperBackArray = [
+    // {
+    //     value: PaperBackType.threeDots,
+    //     src: threeDots
+    // },
+    {
+        value: PaperBackType.forDots,
+        src: forDots
+    },
+    {
+        value: PaperBackType.lines,
+        src: lines
+    },
+    {
+        value: PaperBackType.rectangle,
+        src: rectangle
+    },
+    // {
+    //     value: PaperBackType.triangle,
+    //     src: triangle
+    // },
+    // {
+    //     value: PaperBackType.note,
+    //     src: note
+    // },
+    // {
+    //     value: PaperBackType.hexagon,
+    //     src: hexagon
+    // }
+]
 // 管理背景
 const usePaperStore = () => {
-    const [paperConfig, setPaperConfig] = useImmer(A7TempConfig)
-    // 画背景
-    const drawBackPaper = (paperConfig: PaperConfig) => { }
-
+    const [paperConfig, setPaperConfig] = useImmer(A7TempConfig);
+    const { canvas, zoomRatio } = useContext(MainContext)
     // 画网格
+    const drawGridTexture = (stroke: string) => {
+        const cWidth: number = canvas?.getWidth() || 0
+        const cHeight: number = canvas?.getHeight() || 0
+        const lineGap = paperConfig.lineConfig.gap * zoomRatio
+        // 定义网格线的间距
+        const lines = []
+        // 绘制横向网格线
+        for (var i = 0; i <= cHeight; i += lineGap) {
+            const cline = new fabric.Line([0, i, cWidth, i], {
+                stroke: stroke || paperConfig.lineConfig.stroke
+            });
+            lines.push(cline)
+        }
+        // 绘制纵向网格线
+        for (var j = 0; j <= cWidth; j += lineGap) {
+            const vline = new fabric.Line([j, 0, j, cHeight], {
+                stroke: paperConfig.lineConfig.stroke,
+                selectable: false
+            });
+            lines.push(vline)
+        }
+        const group = new fabric.Group(lines, {
+            hbsId: nanoid(),
+            hbsType: HBSType.back,
+            selectable: false,
+            lockMovementX: true,
+            lockMovementY: true,
+        } as any)
 
+        canvas?.add(group)
+        group?.sendToBack();// 置于底层
+        group?.center()
+        canvas?.renderAll()
+    }
     // 画横线
+    const drawLineTexture = (stroke: string) => {
+        const cWidth: number = canvas?.getWidth() || 0
+        const cHeight: number = canvas?.getHeight() || 0
+        const lineGap = paperConfig.lineConfig.gap * zoomRatio
+        const lines = []
+        // 绘制横向网格线
+        for (var i = 0; i <= cHeight; i += lineGap) {
+            const cline = new fabric.Line([0, i, cWidth, i], {
+                stroke: stroke
+            });
+            lines.push(cline)
+        }
+        const group = new fabric.Group(lines, {
+            hbsId: nanoid(),
+            hbsType: HBSType.back,
+            selectable: false,
+            lockMovementX: true,
+            lockMovementY: true,
+        } as any)
+        canvas?.add(group)
+        group?.sendToBack();// 置于底层
+        group?.center()
+        canvas?.renderAll()
+    }
 
+    // 画点阵
+    const drawDotsTexture = (stroke: string) => {
+        const cWidth: number = canvas?.getWidth() || 0
+        const cHeight: number = canvas?.getHeight() || 0
+        const lineGap = paperConfig.lineConfig.gap * zoomRatio
+        // 定义网格线的间距
+        const dots = []
+        for (var i = 0; i <= cWidth; i += lineGap) {
+            for (var j = 0; j <= cHeight; j += lineGap) {
+                const dot = new fabric.Circle({
+                    top: j,
+                    left: i,
+                    radius: 1,
+                    stroke: stroke
+                })
+                dots.push(dot)
+            }
+        }
+        const group = new fabric.Group(dots, {
+            hbsId: nanoid(),
+            hbsType: HBSType.back,
+            selectable: false,
+            lockMovementX: true,
+            lockMovementY: true,
+        } as any)
+        canvas?.add(group)
+        group?.sendToBack();// 置于底层
+        group?.center()
+        canvas?.renderAll()
+    }
     // 画点阵
     return {
         paperConfig,
         setPaperConfig,
-        drawBackPaper
+        drawGridTexture, // 绘制网格纹理
+        drawLineTexture, // 绘制横线纹理
+        drawDotsTexture, // 绘制点阵纹理
     }
 }
 
@@ -35,24 +174,20 @@ export const PaperTempOptions = [
     }
 ]
 
-export enum PaperBackType {
-    grid = "grid",
-    dots = "dots",
-    lines = "lines",
-}
 
-export const PaperBackOptions = [{
-    label: "网格背景",
-    value: PaperBackType.grid
-},
-{
-    label: "点阵背景",
-    value: PaperBackType.dots
-},
-{
-    label: "横线背景",
-    value: PaperBackType.lines
-}]
+
+// export const PaperBackOptions = [{
+//     label: "网格背景",
+//     value: PaperBackType.grid
+// },
+// {
+//     label: "点阵背景",
+//     value: PaperBackType.dots
+// },
+// {
+//     label: "横线背景",
+//     value: PaperBackType.lines
+// }]
 
 export interface SileHoles {
     holesSize?: number;
@@ -114,7 +249,7 @@ export const A7TempConfig: PaperConfig = {
         holesGroupGap: 19,
         holesGap: 19,
     },
-    backConfig: PaperBackType.grid,
+    backConfig: PaperBackType.rectangle,
     showBackColor: true,
     showHole: true,
     showBackTexture: true,

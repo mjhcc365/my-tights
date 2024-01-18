@@ -1,174 +1,143 @@
 
 import { InputNumber, Select, ColorPicker, Form, Flex, Button, Switch } from "antd"
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
-import { MainContext, HBSType } from "@/store/store"
-import usePaperStore, { PaperTempOptions, PaperBackOptions, A7TempConfig, PaperConfig } from "@/store/usePaperStore"
-import { SIZE_ALL, getConfigByType, SIZE_Type } from "./type"
+import { MainContext, HBSType, hbsTypes } from "@/store/store";
+
+import usePaperStore, { PaperTempOptions, PaperBackType, PaperBackArray } from "@/store/usePaperStore"
 
 import "./index.less"
 
-const FormItem = Form.Item
+const IconImage = (props: {
+    src: string,
+    value: PaperBackType,
+    isActive: boolean,
+    onClick: (v: PaperBackType) => void
+}) => {
+    const { src, value, isActive, onClick } = props;
+    return <div className={`back-icon ${isActive ? "active-back-icon" : ""}`} onClick={() => {
+        onClick(value)
+    }}>
+        <img src={src} />
+    </div>
+}
 
 
 const SizeSection = () => {
     const { canvas, zoomRatio } = useContext(MainContext);
 
-    const { paperConfig, setPaperConfig, drawBackPaper } = usePaperStore()
+    const {
+        paperConfig,
+        setPaperConfig,
+        drawGridTexture,
+        drawLineTexture,
+        drawDotsTexture,
+    } = usePaperStore()
 
-    const [form] = Form.useForm();
 
-    const onChange = () => {
-        form.validateFields().then((v) => {
-            const { backType } = v;
-            switch (backType) {
-                case "grid":
-                    console.log("===>grid")
-                    onSetGridsBack()
-                    break;
-                case "color":
-                    clearGridBack()
-                    onSetColorBack();
-                    break;
-                case "dots":
-                    break;
-                case "lines":
-                    break;
-                default:
-                    return
+    const uselessFn = () => { }
 
-            }
+    const onChangeBackColor = (v: any) => {
+        const hex = v.toHexString()
+        setPaperConfig((d) => {
+            d.backgroundColor = hex
         })
+        canvas?.setBackgroundColor(hex, () => { })
+        canvas?.renderAll()
     }
 
-    const clearGridBack = () => {
+    const resetBackColor = (v: boolean) => {
+        const hex = v ? paperConfig.backgroundColor : "#fff";
+        setPaperConfig((d) => {
+            d.showBackColor = v
+        })
+        canvas?.setBackgroundColor(hex, () => { })
+        canvas?.renderAll()
+    }
+
+    const onClearBackTexture = () => {
+        canvas?.getObjects().forEach((ele) => {
+            if ((ele as any).hbsType === HBSType.back) {
+                canvas.remove(ele)
+            }
+        })
+        canvas?.renderAll()
+    }
+
+    // 改变背景纹理
+    const onChangeTexture = (v?: PaperBackType, color?: any) => {
+        const hex = color?.toHexString() || paperConfig.lineConfig.stroke;
+        const type = v || paperConfig.backConfig
+        onClearBackTexture()
+        switch (type) {
+            case PaperBackType.forDots:
+                drawDotsTexture(hex)
+                break;
+            case PaperBackType.lines:
+                drawLineTexture(hex)
+                break;
+            case PaperBackType.rectangle:
+                drawGridTexture(hex)
+                break;
+            default:
+                break
+        }
+    }
+
+    const onChangeTextureColor = (v: any) => {
+        const hex = v?.toHexString() || paperConfig.lineConfig.stroke;
+        setPaperConfig((d) => {
+            d.lineConfig.stroke = hex
+        })
+        canvas?.getObjects().forEach((ele) => {
+            if ((ele as any).hbsType === HBSType.back) {
+                ((ele as fabric.Group).getObjects() || []).forEach((item) => {
+                    item.set({
+                        stroke: hex
+                    })
+                })
+            }
+        })
+        canvas?.renderAll()
+    }
+
+    // 绘制活页孔
+    const onToggleCircle = (v: boolean) => {
+        canvas?.getObjects().forEach((ele: any) => {
+            if (ele.hbsType === HBSType.holes) {
+                ele.visible = v
+            }
+        })
+        setPaperConfig((d) => {
+            d.showHole = v
+        })
+        canvas?.renderAll()
+    }
+
+    const onToggleBack = (v: boolean) => {
         canvas?.getObjects().forEach((ele: any) => {
             if (ele.hbsType === HBSType.back) {
-                canvas?.remove(ele)
+                ele.visible = v
             }
         })
-    }
-
-
-    const handleSizeChange = (type: string) => {
-        // const { width, height, holes } = getConfigByType(type) as any
-        // const { holesNum = 6,
-        //     holesStep = 19,
-        //     holesSize = 5,
-        // } = holes
-
-        // form.setFieldsValue({
-        //     canvasWidth: width,
-        //     canvasHeight: height,
-        //     holesNum,
-        //     holesSize,
-        //     holesStep,
-        // })
-        // canvas?.setWidth(width * zoomRatio)
-        // canvas?.setHeight(height * zoomRatio);
-        // onChange()
-    }
-
-    // 绘制网格背景
-    const onSetGridsBack = () => {
-        const cWidth: number = canvas?.getWidth() || 0
-        const cHeight: number = canvas?.getHeight() || 0
-        clearGridBack()
-
-        form.validateFields().then((v) => {
-            const { lineGap = 3.5 * zoomRatio, lineColor } = v
-            // 定义网格线的间距
-            const group = new fabric.Group([], {
-                hbsId: nanoid(),
-                hbsType: HBSType.back,
-                selectable: false,
-                lockMovementX: true,
-                lockMovementY: true,
-            } as any)
-            // canvas?.add(group)
-            // 绘制横向网格线
-            for (var i = 0; i <= cHeight; i += lineGap) {
-                const cline = new fabric.Line([0, i, cWidth, i], {
-                    stroke: typeof lineColor === "string" ? lineColor : lineColor.toHexString(),
-                });
-                group.addWithUpdate(cline);
-            }
-
-            // // 绘制纵向网格线
-            for (var j = 0; j <= cWidth; j += lineGap) {
-                const vline = new fabric.Line([j, 0, j, cHeight], {
-                    stroke: typeof lineColor === "string" ? lineColor : lineColor.toHexString(),
-                    selectable: false
-                });
-                group.addWithUpdate(vline);
-            }
-
-            canvas?.add(group)
-            group?.sendToBack();// 置于底层
-            group?.center()
-            canvas?.renderAll()
-
+        setPaperConfig((d) => {
+            d.showBackTexture = v
         })
+        canvas?.renderAll()
     }
 
-    // 设置背景颜色
-    const onSetColorBack = () => {
-        if (!canvas) return
-        form.validateFields().then((v) => {
-            const { backgroundColor } = v
-            const newColor: string = typeof backgroundColor === "string" ? backgroundColor : backgroundColor.toHexString();
-            canvas?.setBackgroundColor(newColor, () => { })
-            canvas?.renderAll()
-        })
-    }
-
-    const delHoles = () => {
-        canvas?.getObjects().forEach((ele: any) => {
-            if (ele.hbsType === "holes") {
-                canvas?.remove(ele)
-            }
-        })
-    }
-
-    // 
-    const onAddCircle = (v: boolean) => {
-        console.log("==>v", v);
-        if (!v) {
-            delHoles()
-            return
-        }
+    const onAddCircle = () => {
         const cw = canvas?.getWidth() || 0
         const ch = canvas?.getHeight() || 0
         const middle = Math.floor(ch / 2)
         const LEFT_GAP = 8.5
-
-        const lineh = new fabric.Line([
-            LEFT_GAP * zoomRatio, 0, LEFT_GAP * zoomRatio, ch
-        ], {
-            stroke: "#F5F5F5",
-            strokeWidth: 2,
-            strokeDashArray: [2, 2]
-        })
-        const linev = new fabric.Line([
-            0, middle, cw, middle
-            // LEFT_GAP * zoomRatio, 0, LEFT_GAP * zoomRatio, ch
-        ], {
-            stroke: "#F5F5F5",
-            strokeWidth: 2,
-            strokeDashArray: [2, 2]
-        })
-
-        const group = new fabric.Group([lineh, linev], {
-            selectable: false,
-            hbsType: "holes"
-        } as any)
-
         const CIRCLE_R = 2.5;
         const CIRCLE_GAP = 19;
         const CIRCLE_GROUP_GAP = 19;
         const CIRCLR_LEFT = 2.5
 
+        const circles = []
         for (let i = 0; i <= 2; i++) {
             const c = new fabric.Circle({
                 radius: CIRCLE_R * zoomRatio,
@@ -176,7 +145,7 @@ const SizeSection = () => {
                 left: CIRCLR_LEFT * zoomRatio,
                 fill: "#F5F5F5",
             })
-            group.addWithUpdate(c)
+            circles.push(c)
         }
 
         for (let i = 0; i <= 2; i++) {
@@ -186,19 +155,30 @@ const SizeSection = () => {
                 left: CIRCLR_LEFT * zoomRatio,
                 fill: "#F5F5F5",
             })
-            group.addWithUpdate(c)
+            circles.push(c)
         }
+
+        const group = new fabric.Group(circles, {
+            selectable: false,
+            hbsType: "holes"
+        } as any)
 
         canvas?.add(group);
         canvas?.renderAll()
     }
+
+
+    useEffect(() => {
+        onChangeTexture();
+        onAddCircle()
+    }, [])
 
     return <div className="size-section">
         <Flex vertical={true} gap="middle" >
             <div className="section-title">画布尺寸</div>
             <Flex align="center" gap="small">
                 <div>尺寸：</div>
-                <Select value={paperConfig.curTempType} style={{ flex: 1 }} onChange={handleSizeChange} options={PaperTempOptions} />
+                <Select disabled value={paperConfig.curTempType} style={{ flex: 1 }} onChange={uselessFn} options={PaperTempOptions} />
             </Flex>
             <Flex gap="small">
                 <Flex align="center" gap="small">
@@ -211,7 +191,7 @@ const SizeSection = () => {
                 </Flex>
             </Flex>
             <div className="section-title">背景颜色
-                <Switch value={paperConfig.showBackColor} onChange={onAddCircle} />
+                <Switch value={paperConfig.showBackColor} onChange={resetBackColor} />
             </div>
             <Flex align="center" gap="small">
                 <div>背景颜色:</div>
@@ -220,30 +200,37 @@ const SizeSection = () => {
                         flex: 1
                     }}
                     value={paperConfig.backgroundColor}
-                    onChange={onSetColorBack} />
+                    onChange={onChangeBackColor} />
             </Flex>
-            <div className="section-title">活页孔 <Switch value={paperConfig.showHole} onChange={onAddCircle} /></div>
-            <div className="section-title">画布填充 <Switch value={paperConfig.showBackTexture} onChange={onAddCircle} /></div>
-
-            <Flex align="center" gap="small">
+            <div className="section-title">活页孔 <Switch value={paperConfig.showHole} onChange={onToggleCircle} /></div>
+            <div className="section-title">画布填充 <Switch value={paperConfig.showBackTexture} onChange={onToggleBack} /></div>
+            <Flex align="self-start" gap="small">
                 <div>背景类型:</div>
-                <Select
-                    style={{ flex: 1 }}
-                    value={paperConfig.backConfig}
-                    options={PaperBackOptions}
-                    onChange={() => { }}
-                />
+                <Flex flex={1} gap="small" wrap="wrap">
+                    {PaperBackArray.map((ele) => {
+                        return <IconImage
+                            key={ele.value}
+                            {...ele}
+                            isActive={paperConfig.backConfig === ele.value}
+                            onClick={(v) => {
+                                onChangeTexture(v, null, null)
+                                setPaperConfig((d) => {
+                                    d.backConfig = v
+                                })
+                            }} />
+                    })}
+                </Flex>
             </Flex>
             <Flex align="center" gap="small">
                 <div>线条颜色:</div>
                 <ColorPicker
                     style={{ flex: 1 }}
-                    value={paperConfig.lineConfig.stroke} onChange={onChange} allowClear />
+                    value={paperConfig.lineConfig.stroke} onChange={onChangeTextureColor} allowClear />
             </Flex>
-            <Flex align="center" gap="small" >
+            {/* <Flex align="center" gap="small" >
                 <div>线条类型:</div>
-                {/* <ColorPicker value={paperConfig.lineConfig?.strokeWidth} onChange={onChange} allowClear /> */}
-            </Flex>
+                <ColorPicker value={paperConfig.lineConfig?.strokeWidth} onChange={onChange} allowClear />
+            </Flex> */}
 
         </Flex>
 
