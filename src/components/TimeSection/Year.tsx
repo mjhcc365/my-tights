@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import { useDraw } from "./tools"
 
 import { ImageCard } from "./Images";
-import { MainContext } from "@/store/store";
+import { MainContext } from "@/store/useCanvas";
 
 import PenImg from "@/assets/pen.jpg"
 import LogoImg from "@/assets/logo.png"

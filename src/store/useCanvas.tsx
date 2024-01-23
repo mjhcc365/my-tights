@@ -1,7 +1,6 @@
 import { createContext, useRef, useState } from "react";
 import { fabric } from "fabric"
 import { useImmer } from 'use-immer'
-import usePaperStore, { PaperConfig } from "./usePaperStore";
 
 export enum HBSType {
     timeLine = "timeLine", //  时间轴
@@ -78,8 +77,6 @@ export const useCanvas = () => {
 }
 
 interface MainContextInterface {
-    // paperConfig: PaperConfig;
-    // setPaperConfig: any;
     canvas: fabric.Canvas | null;
     activeObject: fabric.Object | null;
     setActiveObject: any;

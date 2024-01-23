@@ -1,7 +1,7 @@
 
 
 import { useContext } from "react"
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 import { MainTools } from "@/components/Tools/Tools"
 
 import "./TopTools.less"

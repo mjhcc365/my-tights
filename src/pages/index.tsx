@@ -1,13 +1,11 @@
 
 import { Layout, } from 'antd';
 import { useEffect, useRef } from "react"
-import { fabric } from 'fabric'; // v5
-// import { observer } from "mobx-react-lite"
 import "@/assets/iconfont/iconfont.js"
 
 import MJHeader from "./MJHeader"
 import TopTools from "./TopTools"
-import { useCanvas, MainContext, MJ_DATA } from "../store/store"
+import { useCanvas, MainContext } from "../store/useCanvas"
 import { layoutStyle, headerStyle, siderStyle, contentStyle } from "./styles"
 import LeftSiderBox from "@/pages/LeftSiderBox";
 import "./index.less"
@@ -23,7 +21,6 @@ const HomePage = () => {
     setActiveObject,
     init,
     zoomRatio,
-    setZoomRatio,
     temporaryStorage
   } = useCanvas();
 
@@ -33,11 +30,6 @@ const HomePage = () => {
 
   const handleEnter = () => {
     console.log("-->", canvas)
-    if (!canvas) return
-    const curActice = canvas.getActiveObject()
-    // if (curActice) {
-    //   store.canvas.remove(curActice)
-    // }
   }
 
   const onKeyDown = (e: { code: any; }) => {
@@ -52,7 +44,6 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-
     const newCanvas = init()
     document.addEventListener('keydown', onKeyDown)
     newCanvas?.on("mouse:down", () => {

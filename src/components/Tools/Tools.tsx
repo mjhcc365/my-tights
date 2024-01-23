@@ -20,7 +20,7 @@ import {
 } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 import { nanoid } from "nanoid"
 import { Layers, SYS_FONTS, WEB_FONTS } from "./types"
 

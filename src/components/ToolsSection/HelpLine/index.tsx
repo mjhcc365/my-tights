@@ -2,7 +2,7 @@ import { Flex, Button, ColorPicker, Radio } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
 import { useImmer } from "use-immer";
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 
 import "./index.less"
 

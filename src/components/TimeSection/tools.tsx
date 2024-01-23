@@ -1,4 +1,4 @@
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 import { useContext } from "react"
 import { fabric } from "fabric"
 import { nanoid } from "nanoid"

@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { useContext, useState } from "react";
 import imgUrl from '@/assets/logo.png'
 
-import { MainContext } from "../store/store";
+import { MainContext } from "../store/useCanvas";
 import "./MJHeader.less"
 
 const MJHeader = () => {

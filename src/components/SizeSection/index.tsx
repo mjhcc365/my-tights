@@ -3,7 +3,7 @@ import { InputNumber, Select, ColorPicker, Form, Flex, Button, Switch } from "an
 import { useContext, useEffect } from "react";
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
-import { MainContext, HBSType, hbsTypes } from "@/store/store";
+import { MainContext, HBSType, hbsTypes } from "@/store/useCanvas";
 
 import usePaperStore, { PaperTempOptions, PaperBackType, PaperBackArray } from "@/store/usePaperStore"
 

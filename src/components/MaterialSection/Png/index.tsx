@@ -1,7 +1,7 @@
 import { fabric } from "fabric"
 import { useContext, useRef } from "react"
 import { nanoid } from "nanoid"
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 import BlackImg from "@/assets/black.jpg"
 
 

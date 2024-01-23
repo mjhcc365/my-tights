@@ -6,7 +6,7 @@ import Picker from '@emoji-mart/react'
 
 import "./index.less"
 
-import { MainContext } from "@/store/store"
+import { MainContext } from "@/store/useCanvas"
 
 
 const Emoji = () => {

@@ -10,7 +10,7 @@ import note from "@/assets/backicon/note.svg";
 import triangle from "@/assets/backicon/triangle.svg";
 import hexagon from "@/assets/backicon/hexagon.svg";
 import { useContext } from "react";
-import { MainContext, HBSType } from "./store";
+import { MainContext, HBSType } from "./useCanvas";
 
 export enum PaperBackType {
     threeDots = "threeDots",

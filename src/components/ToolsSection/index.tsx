@@ -1,4 +1,4 @@
-import { MainContext } from "@/store/store";
+import { MainContext } from "@/store/useCanvas";
 import { Tabs } from "antd";
 import type { TabsProps } from 'antd';
 import { useContext } from "react";
