@@ -3,9 +3,7 @@ import { DatePicker, Button } from "antd"
 import dayjs from "dayjs"
 import { fabric } from "fabric"
 import { useDraw } from "./tools"
-
-// import { ImageCard } from "./Images";
-import { MainContext } from "@/store/useCanvas";
+import { stores as store } from "@/store/main"
 
 import PenImg from "@/assets/pen.jpg"
 import LogoImg from "@/assets/logo.png"
@@ -22,7 +20,6 @@ const YearsTemp = [{
 ]
 
 const Week = () => {
-    const { canvas, zoomRatio } = useContext(MainContext)
     const [showTool, setShowTool] = useState<boolean>(true);
 
     const { drawMonth } = useDraw()
@@ -33,17 +30,17 @@ const Week = () => {
         for (let i = 1; i <= 7; i++) {
             const rect = new fabric.Rect({
                 top: 20, // 距离画布顶部距离
-                left: (5 * zoomRatio + 2 * zoomRatio) * i, // 距离画布左侧距离
-                width: 5 * zoomRatio, // 矩形宽度
-                height: 5 * zoomRatio, // 矩形高度
+                left: (5 * store?.canvasStore.zoomRodio + 2 * store?.canvasStore.zoomRodio) * i, // 距离画布左侧距离
+                width: 5 * store?.canvasStore.zoomRodio, // 矩形宽度
+                height: 5 * store?.canvasStore.zoomRodio, // 矩形高度
                 // fill: "#f5f5f5",
                 // stroke: ""
             })
 
             group.addWithUpdate(rect)
         }
-        canvas?.add(group);
-        canvas?.renderAll()
+        store?.canvasStore.canvas?.add(group);
+        store?.canvasStore.canvas?.renderAll()
     }
 
     const onChangeTime = () => { }

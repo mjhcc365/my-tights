@@ -1,14 +1,12 @@
 import { Button } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/store/useCanvas"
+import { stores as store } from "@/store/main"
 
 import "./index.less"
 
 
 const Rect = () => {
-    const { canvas } = useContext(MainContext)
-
     const onAddRect = () => {
         const rect = new fabric.Rect({
             top: 20, // 距离画布顶部距离
@@ -16,7 +14,7 @@ const Rect = () => {
             width: 60, // 矩形宽度
             height: 40 // 矩形高度
         })
-        canvas?.add(rect)
+        store?.canvasStore.canvas?.add(rect)
     }
 
 
@@ -25,7 +23,7 @@ const Rect = () => {
             width: 80, // 底边长度
             height: 100,// 底边到对角的距离
         })
-        canvas?.add(triangle)
+        store?.canvasStore.canvas?.add(triangle)
     }
 
     const onAddCircle = () => {
@@ -33,7 +31,7 @@ const Rect = () => {
         let circle = new fabric.Circle({
             radius: 50 // 半径
         })
-        canvas?.add(circle)
+        store?.canvasStore.canvas?.add(circle)
     }
 
     const onAddEllipse = () => {
@@ -41,7 +39,7 @@ const Rect = () => {
             rx: 50,
             ry: 30
         })
-        canvas?.add(ellipse)
+        store?.canvasStore.canvas?.add(ellipse)
     }
 
 

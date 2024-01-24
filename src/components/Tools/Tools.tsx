@@ -20,26 +20,26 @@ import {
 } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/store/useCanvas"
+import { MainStoreContext } from "@/store/main"
 import { nanoid } from "nanoid"
 import { Layers, SYS_FONTS, WEB_FONTS } from "./types"
+import { stores as store } from "@/store/main"
 
 import "./Tools.less"
 import Icon from "@/HbsUI/Icon"
 
 export const Copy = () => {
-    const { canvas } = useContext(MainContext);
 
     const handleCope = () => {
-        if (!canvas) return
-        const clonedRect = fabric.util.object.clone(canvas?.getActiveObject());
-        canvas.add(clonedRect);
+        if (!store?.canvasStore.canvas) return
+        const clonedRect = fabric.util.object.clone(store?.canvasStore.canvas?.getActiveObject());
+        store?.canvasStore.canvas?.add(clonedRect);
         clonedRect.set({
-            left: (canvas?.getActiveObject()?.left || 0) + 60,
-            top: (canvas?.getActiveObject()?.top || 0) + 60,
+            left: (store?.canvasStore.canvas?.getActiveObject()?.left || 0) + 60,
+            top: (store?.canvasStore.canvas?.getActiveObject()?.top || 0) + 60,
         });
-        canvas.discardActiveObject()
-        canvas?.renderAll();
+        store?.canvasStore.canvas?.discardActiveObject()
+        store?.canvasStore.canvas?.renderAll();
     }
 
     return <Tooltip placement="bottom" title="复制">
@@ -48,13 +48,12 @@ export const Copy = () => {
 }
 
 export const Delete = () => {
-    const { canvas, setActiveObject } = useContext(MainContext);
     const handleDelEle = () => {
-        if (!canvas) return
-        if (canvas.getActiveObject() && canvas) {
-            canvas.remove((canvas.getActiveObject()) as any)
-            canvas.renderAll();
-            setActiveObject(() => null)
+        if (!store?.canvasStore.canvas) return
+        if (store?.canvasStore.canvas?.getActiveObject() && store?.canvasStore.canvas) {
+            store?.canvasStore.canvas?.remove((store?.canvasStore.canvas?.getActiveObject()) as any)
+            store?.canvasStore.canvas?.renderAll();
+            store?.canvasStore.setCanvas(null)
         }
     }
     return <Tooltip placement="bottom" title="删除">
@@ -63,26 +62,26 @@ export const Delete = () => {
 }
 
 export const Lock = () => {
-    const { canvas, setActiveObject } = useContext(MainContext);
     const handleLock = () => {
-        if (!canvas) return
-        if (canvas.getActiveObject() && canvas) {
-            setActiveObject((d: any) => {
-                d.lockRotation = true;
-                d.lockMovementX = true;
-                d.lockMovementY = true;
-                d.lockScalingX = true;
-                d.lockScalingY = true;
-            })
-            canvas.getActiveObject()?.set({
+        if (!store?.canvasStore.canvas) return
+        if (store?.canvasStore.canvas.getActiveObject() && store?.canvasStore.canvas) {
+            // setActiveObject((d: any) => {
+            //     d.lockRotation = true;
+            //     d.lockMovementX = true;
+            //     d.lockMovementY = true;
+            //     d.lockScalingX = true;
+            //     d.lockScalingY = true;
+            // })
+            // store?.canvasStore.setActiveObj[locl]
+            store?.canvasStore.canvas.getActiveObject()?.set({
                 lockRotation: true,
                 lockMovementX: true,
                 lockMovementY: true,
                 lockScalingX: true,
                 lockScalingY: true
             })
-            canvas.discardActiveObject()
-            canvas.renderAll();
+            store?.canvasStore.canvas.discardActiveObject()
+            store?.canvasStore.canvas.renderAll();
         }
     }
     return <Tooltip placement="bottom" title="锁定">
@@ -92,25 +91,25 @@ export const Lock = () => {
 
 
 export const UnLock = () => {
-    const { canvas, setActiveObject } = useContext(MainContext);
     const handleUnLock = () => {
-        if (!canvas) return
-        if (canvas.getActiveObject() && canvas) {
-            setActiveObject((d: any) => {
-                d.lockRotation = false;
-                d.lockMovementX = false;
-                d.lockMovementY = false;
-                d.lockScalingX = false;
-                d.lockScalingY = false;
-            })
-            canvas.getActiveObject()?.set({
+        if (!store?.canvasStore.canvas) return
+        if (store?.canvasStore.canvas?.getActiveObject() && store?.canvasStore.canvas) {
+            // setActiveObject((d: any) => {
+            //     d.lockRotation = false;
+            //     d.lockMovementX = false;
+            //     d.lockMovementY = false;
+            //     d.lockScalingX = false;
+            //     d.lockScalingY = false;
+            // })
+            // store.canvasStore.setActiveObj()
+            store?.canvasStore.canvas?.getActiveObject()?.set({
                 lockRotation: false,
                 lockMovementX: false,
                 lockMovementY: false,
                 lockScalingX: false,
                 lockScalingY: false
             })
-            canvas.renderAll();
+            store?.canvasStore.canvas?.renderAll();
         }
     }
     return <Tooltip placement="bottom" title="解锁">
@@ -161,76 +160,75 @@ const ALL_SIZE = [{
 }]
 
 export const TextTools = () => {
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
     // 加粗
     const handleChangeFontWight = () => {
-        if (activeObject && canvas) {
-            const nextValue = (activeObject as any)?.fontWeight === 'bold' ? 'normal' : 'bold';
-            setActiveObject((draft: any) => {
-                draft.fontWeight = nextValue
-            })
-            canvas.getActiveObject()?.set({ fontWeight: nextValue } as any)
-            console.log("==>", canvas.getActiveObject())
-            canvas.renderAll();
+        if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+            const nextValue = (store?.canvasStore.activeObj as any)?.fontWeight === 'bold' ? 'normal' : 'bold';
+            // setActiveObject((draft: any) => {
+            //     draft.fontWeight = nextValue
+            // })
+            store?.canvasStore.canvas.getActiveObject()?.set({ fontWeight: nextValue } as any)
+            console.log("==>", store?.canvasStore.canvas.getActiveObject())
+            store?.canvasStore.canvas.renderAll();
         }
     }
     // 斜体
     const handleChangeFontStyle = () => {
-        if (activeObject && canvas) {
-            const nextValue = (activeObject as any)?.fontStyle === 'italic' ? 'normal' : 'italic';
-            setActiveObject((draft: any) => {
-                draft.fontStyle = nextValue
-            })
-            canvas.getActiveObject()?.set({ fontStyle: nextValue } as any)
-            console.log("==>", canvas.getActiveObject())
-            canvas.renderAll();
+        if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+            const nextValue = (store?.canvasStore.activeObj as any)?.fontStyle === 'italic' ? 'normal' : 'italic';
+            // setActiveObject((draft: any) => {
+            //     draft.fontStyle = nextValue
+            // })
+            store?.canvasStore.canvas.getActiveObject()?.set({ fontStyle: nextValue } as any)
+            console.log("==>", store?.canvasStore.canvas.getActiveObject())
+            store?.canvasStore.canvas.renderAll();
         }
     }
 
     // 下划线
     const handleChangeUnderline = () => {
-        const nextValue = !(activeObject as any).underline
-        setActiveObject((draft: any) => {
-            draft.underline = nextValue
-        })
-        canvas?.getActiveObject()?.set({ underline: nextValue } as any)
-        canvas?.renderAll();
+        const nextValue = !(store?.canvasStore.activeObj as any).underline
+        // setActiveObject((draft: any) => {
+        //     draft.underline = nextValue
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({ underline: nextValue } as any)
+        store?.canvasStore.canvas?.renderAll();
     }
 
     // 删除线
     const handleChangeLinethrough = () => {
-        if (!canvas) return
-        const nextValue = !(activeObject as any).linethrough
-        setActiveObject((draft: any) => {
-            draft.linethrough = nextValue
-        })
-        canvas.getActiveObject()?.set({ linethrough: nextValue } as any)
-        canvas.renderAll();
+        if (!store?.canvasStore.canvas) return
+        const nextValue = !(store?.canvasStore.activeObj as any).linethrough
+        // setActiveObject((draft: any) => {
+        //     draft.linethrough = nextValue
+        // })
+        store?.canvasStore.canvas.getActiveObject()?.set({ linethrough: nextValue } as any)
+        store?.canvasStore.canvas.renderAll();
     }
 
     const handleFontChange = (value: string) => {
-        if (activeObject && canvas) {
-            setActiveObject((draft: any) => {
-                draft.fontFamily = value
-            })
-            canvas.getActiveObject()?.set({ fontFamily: value } as any)
-            canvas.renderAll();
+        if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+            // setActiveObject((draft: any) => {
+            //     draft.fontFamily = value
+            // })
+            store?.canvasStore.canvas.getActiveObject()?.set({ fontFamily: value } as any)
+            store?.canvasStore.canvas.renderAll();
         }
     }
 
     const handleChangeSize = (value: string) => {
-        if (activeObject && canvas) {
-            setActiveObject((draft: any) => {
-                draft.fontSize = parseInt(value)
-            })
-            canvas.getActiveObject()?.set({ fontSize: parseInt(value) } as any)
-            canvas.renderAll();
+        if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+            // setActiveObject((draft: any) => {
+            //     draft.fontSize = parseInt(value)
+            // })
+            store?.canvasStore.canvas.getActiveObject()?.set({ fontSize: parseInt(value) } as any)
+            store?.canvasStore.canvas.renderAll();
         }
     }
     return <>
         <Select
             style={{ width: 100 }}
-            value={(activeObject as any)?.fontFamily}
+            value={(store?.canvasStore.activeObj as any)?.fontFamily}
             options={ALL_FONTS}
             optionRender={(ele) => {
                 return <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>
@@ -238,7 +236,7 @@ export const TextTools = () => {
             onChange={handleFontChange} />
         <Select
             style={{ width: 75 }}
-            value={(activeObject as any)?.fontSize}
+            value={(store?.canvasStore.activeObj as any)?.fontSize}
             onChange={handleChangeSize}
             options={ALL_SIZE} />
         <Tooltip placement="bottom" title="加粗">
@@ -260,21 +258,20 @@ export const TextTools = () => {
 }
 
 export const LaylerSelect = () => {
-    const { canvas, } = useContext(MainContext);
     const handleChangeLayer = (value: string) => {
-        if (!canvas) return
+        if (!store?.canvasStore.canvas) return
         switch (value) {
             case "top":
-                canvas?.getActiveObject()?.bringToFront();
+                store?.canvasStore.canvas?.getActiveObject()?.bringToFront();
                 break;
             case "pre": // 
-                canvas?.getActiveObject()?.bringForward();
+                store?.canvasStore.canvas?.getActiveObject()?.bringForward();
                 break;
             case "next": // 下一层
-                canvas?.getActiveObject()?.sendBackwards();
+                store?.canvasStore.canvas?.getActiveObject()?.sendBackwards();
                 break;
             case "bottom": // 底层
-                canvas?.getActiveObject()?.sendToBack();
+                store?.canvasStore.canvas?.getActiveObject()?.sendToBack();
                 break;
             default:
                 return
@@ -285,43 +282,41 @@ export const LaylerSelect = () => {
 
 
 export const FillColor = () => {
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const handleChangeColor = (v: any) => {
-        if (!canvas) return
-        setActiveObject((draft: any) => {
-            draft.fill = v.toRgbString()
-        })
-        canvas.getActiveObject()?.set({ fill: v.toRgbString() })
-        canvas.renderAll();
+        if (!store?.canvasStore.canvas) return
+        // setActiveObject((draft: any) => {
+        //     draft.fill = v.toRgbString()
+        // })
+        store?.canvasStore.canvas.getActiveObject()?.set({ fill: v.toRgbString() })
+        store?.canvasStore.canvas.renderAll();
     }
-    return <ColorPicker format="rgb" value={(activeObject as any)?.fill} onChange={handleChangeColor} />
+    return <ColorPicker format="rgb" value={(store?.canvasStore.activeObj as any)?.fill} onChange={handleChangeColor} />
 
 }
 
 // 描边样式
 export const StokeStyle = () => {
 
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const onStrokeColorChange = (v: any) => {
-        setActiveObject((draft: any) => {
-            draft.stroke = v.toHexString()
-        })
-        canvas?.getActiveObject()?.set({
+        // setActiveObject((draft: any) => {
+        //     draft.stroke = v.toHexString()
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({
             stroke: v.toHexString(),
         })
-        canvas?.renderAll()
+        store?.canvasStore.canvas?.renderAll()
     }
 
     const onStrokeWidthChange = (v: number) => {
-        setActiveObject((draft: any) => {
-            draft.strokeWidth = v
-        })
-        canvas?.getActiveObject()?.set({
+        // setActiveObject((draft: any) => {
+        //     draft.strokeWidth = v
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({
             strokeWidth: v,
         })
-        canvas?.renderAll()
+        store?.canvasStore.canvas?.renderAll()
     }
 
     const onRadiusChange = (v: any) => {
@@ -330,7 +325,7 @@ export const StokeStyle = () => {
 
     return <Popover placement="bottom" trigger={"hover"} title="边框样式" content={
         <div className="stroke-tools">
-            <ColorPicker allowClear value={activeObject?.stroke} onChange={onStrokeColorChange} />
+            <ColorPicker allowClear value={store?.canvasStore.activeObj?.stroke} onChange={onStrokeColorChange} />
             <div>
                 <Button>无</Button>
                 <Button onClick={onRadiusChange}>--</Button>
@@ -347,7 +342,6 @@ export const StokeStyle = () => {
 }
 
 export const WHinfo = () => {
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const changeObjWidth = () => {
     }
@@ -357,134 +351,131 @@ export const WHinfo = () => {
     }
 
     return <>
-        <InputNumber value={Math.floor(activeObject?.width)} prefix="W" onChange={changeObjWidth} />
-        <InputNumber value={Math.floor(activeObject?.height)} prefix="H" onChange={changeObjHeight} />
+        <InputNumber value={Math.floor(store?.canvasStore.activeObj?.width || 0)} prefix="W" onChange={changeObjWidth} />
+        <InputNumber value={Math.floor(store?.canvasStore.activeObj?.height || 0)} prefix="H" onChange={changeObjHeight} />
     </>
 }
 
 export const Opacity = () => {
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const handleOpacity = (v: any) => {
-        setActiveObject((draft: any) => {
-            draft.opacity = v
-        })
-        canvas?.getActiveObject()?.set({
+        // setActiveObject((draft: any) => {
+        //     draft.opacity = v
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({
             opacity: v
         })
-        canvas?.renderAll();
+        store?.canvasStore.canvas?.renderAll();
     }
 
-    return <Popover placement="bottom" content={<Slider value={activeObject?.opacity} onChange={handleOpacity} style={{ minWidth: 148 }} min={0} max={1} step={0.01} />} arrow={false}>
+    return <Popover placement="bottom" content={<Slider value={store?.canvasStore.activeObj?.opacity} onChange={handleOpacity} style={{ minWidth: 148 }} min={0} max={1} step={0.01} />} arrow={false}>
         <div><Icon fontSize={18} icon="toumingdu" /></div>
     </Popover>
 }
 
 export const Position = () => {
-    const { canvas, activeObject, setActiveObject } = useContext(MainContext);
 
     const changeObjTop = (v: number) => {
-        setActiveObject((draft: any) => {
-            draft.top = v
-        })
-        canvas?.getActiveObject()?.set({
+        // setActiveObject((draft: any) => {
+        //     draft.top = v
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({
             top: v
         })
-        canvas?.renderAll();
+        store?.canvasStore.canvas?.renderAll();
     }
 
     const changeObjLeft = (v: number) => {
-        setActiveObject((draft: any) => {
-            draft.left = v
-        })
-        canvas?.getActiveObject()?.set({
+        // setActiveObject((draft: any) => {
+        //     draft.left = v
+        // })
+        store?.canvasStore.canvas?.getActiveObject()?.set({
             left: v
         })
-        canvas?.renderAll();
+        store?.canvasStore.canvas?.renderAll();
 
     }
     return <>
-        <InputNumber value={Math.floor(activeObject?.top || 0)} prefix="T" onChange={changeObjTop} />
-        <InputNumber value={Math.floor(activeObject?.left || 0)} prefix="L" onChange={changeObjLeft} />
+        <InputNumber value={Math.floor(store?.canvasStore.activeObj?.top || 0)} prefix="T" onChange={changeObjTop} />
+        <InputNumber value={Math.floor(store?.canvasStore.activeObj?.left || 0)} prefix="L" onChange={changeObjLeft} />
     </ >
 }
 
 export const SetGroup = () => {
-    const { canvas, setActiveObject } = useContext(MainContext);
     const handleCombineGroup = () => {
-        if (!canvas) return
-        var activeObjects = canvas.getActiveObjects();
+        if (!store?.canvasStore.canvas) return
+        var activeObjects = store?.canvasStore.canvas.getActiveObjects();
 
         if (activeObjects.length > 1) {
-            setActiveObject(() => null)
-            canvas.discardActiveObject();
+            store?.canvasStore.setActiveObj(null)
+            store?.canvasStore.canvas.discardActiveObject();
             const group = new fabric.Group(activeObjects, {
                 id: nanoid(10),
                 // name: ElementNames.GROUP,
                 interactive: false,
                 subTargetCheck: true,
             } as any);
-            canvas.add(group);
-            canvas.remove(...activeObjects)
-            canvas.renderAll();
+            store?.canvasStore.canvas.add(group);
+            store?.canvasStore.canvas.remove(...activeObjects)
+            store?.canvasStore.canvas.renderAll();
         }
     }
 
     const handleIntersectElements = () => {
-        if (!canvas) return
-        const group = canvas.getActiveObject() as fabric.Group;
+        if (!store?.canvasStore.canvas) return
+        const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
         group.getObjects().forEach((ele) => {
-            canvas.add(ele)
+            store?.canvasStore.canvas?.add(ele)
         })
-        canvas.discardActiveObject()
-        setActiveObject(() => null)
-        canvas.remove(group);
-        canvas.renderAll()
+        store?.canvasStore.canvas.discardActiveObject()
+        // setActiveObject(() => null)
+        store?.canvasStore.canvas.remove(group);
+        store?.canvasStore.canvas.renderAll()
     }
 
     const handleLeft = () => {
-        if (!canvas) return
-        const group = canvas.getActiveObject() as fabric.Group;
+        if (!store?.canvasStore.canvas) return
+        const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
         group.getObjects().forEach((ele) => {
             ele.set({
                 left: -((group.width || 0) / 2)
             })
         })
-        canvas.renderAll();
+        store?.canvasStore.canvas.renderAll();
     }
 
     const handleRight = () => {
-        if (!canvas) return
-        const group = canvas.getActiveObject() as fabric.Group;
+        if (!store?.canvasStore.canvas) return
+        const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
 
         group.getObjects().forEach((ele) => {
             ele.set({
                 left: (group?.width || 0) / 2 - (ele?.width || 0)
             })
         })
-        canvas.renderAll();
+        store?.canvasStore.canvas.renderAll();
     }
 
     const handleTop = () => {
-        if (!canvas) return
-        const group = canvas.getActiveObject() as fabric.Group;
+        if (!store?.canvasStore.canvas) return
+        const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
         group.getObjects().forEach((ele) => {
             ele.set({
                 top: -((group.height || 0) / 2)
             })
         })
-        canvas.renderAll();
+        store?.canvasStore.canvas.renderAll();
     }
 
     const handleBottom = () => {
-        if (!canvas) return
-        const group = canvas.getActiveObject() as fabric.Group;
+        if (!store?.canvasStore.canvas) return
+        const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
         group.getObjects().forEach((ele) => {
             ele.set({
                 top: (group?.height || 0) / 2 - (ele?.height || 0)
             })
         })
-        canvas.renderAll();
+        store?.canvasStore.canvas.renderAll();
     }
 
 
@@ -581,18 +572,16 @@ export const getTools = (type: string) => {
 }
 
 export const MainTools = () => {
-    const { activeObject, canvas } = useContext(MainContext)
-    // console.log("===>", activeObject.type)
     return <>
         {
-            canvas?.getActiveObject()?.lockMovementX ?
+            store?.canvasStore.canvas?.getActiveObject()?.lockMovementX ?
                 <UnLock />
                 : <>
                     <div className="tool-common-left">
                         <Position />
                     </div>
                     <div className="tool-self-center">
-                        {getTools(activeObject?.type || "")?.map((ele) => {
+                        {getTools(store?.canvasStore.activeObj?.type || "")?.map((ele) => {
                             switch (ele) {
                                 case ToolType.fillcolor:
                                     return <FillColor />

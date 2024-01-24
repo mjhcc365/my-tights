@@ -1,92 +1,101 @@
 
-import { Layout, } from 'antd';
-import { useEffect, useRef } from "react"
-import "@/assets/iconfont/iconfont.js"
+import { Layout, Button } from 'antd';
 
-import MJHeader from "./MJHeader"
-import TopTools from "./TopTools"
-import { useCanvas, MainContext } from "../store/useCanvas"
-import { layoutStyle, headerStyle, siderStyle, contentStyle } from "./styles"
-import LeftSiderBox from "@/pages/LeftSiderBox";
+import MJHeader from "./Header/MJHeader"
+import MainContent from "./Content"
+import LeftSiderBox from "./Menu/LeftSiderBox"
 import "./index.less"
+import "@/assets/iconfont/iconfont.js"
+import { MainStoreContext, stores } from '@/store/main';
+import { createContext } from 'react';
+
+import { observable, action, makeObservable } from 'mobx';
+import { observer } from "mobx-react-lite"
+// import { observer } from "mobx-react"
 
 const { Header, Sider, Content } = Layout;
 
+export const headerStyle: React.CSSProperties = {
+  textAlign: 'center',
+  color: '#fff',
+  paddingInline: 48,
+  backgroundColor: '#fff',
+  borderBottom: "1px solid #f5f5f5"
+};
+
+export const contentStyle: React.CSSProperties = {
+  textAlign: 'center',
+  color: '#fff',
+  backgroundColor: '#0958d9',
+};
+
+export const siderStyle: React.CSSProperties = {
+  textAlign: 'center',
+  backgroundColor: '#fff',
+  display: "flex",
+  flexDirection: "column"
+};
+
+export const layoutStyle = {
+  borderRadius: 8,
+  overflow: 'hidden',
+};
+
+
+
 const HomePage = () => {
-  const {
-    canvas,
-    setCanvas,
-    canvasRef,
-    activeObject,
-    setActiveObject,
-    init,
-    zoomRatio,
-    temporaryStorage
-  } = useCanvas();
-
-
-  const canvasBoxRef = useRef<HTMLInputElement>(null)
-
-
-  const handleEnter = () => {
-    console.log("-->", canvas)
-  }
-
-  const onKeyDown = (e: { code: any; }) => {
-    const code = e.code;
-    switch (code) {
-      case "Enter":
-        handleEnter()
-        break;
-      default:
-        break
-    }
-  }
-
-  useEffect(() => {
-    const newCanvas = init()
-    document.addEventListener('keydown', onKeyDown)
-    newCanvas?.on("mouse:down", () => {
-      console.log("==>mouse:down")
-      setActiveObject(newCanvas?.getActiveObject()?.toObject() || null)
-    })
-    setCanvas(() => newCanvas)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, []);
-
-
   return (
-    <MainContext.Provider value={{ zoomRatio, canvas, activeObject, setActiveObject, temporaryStorage }}>
-      <div className='main'>
-        <Layout style={layoutStyle}>
-          <Header style={headerStyle}><MJHeader /></Header>
-          <Layout style={{ height: "calc(100vh - 64px)" }}>
-            <Sider width="25%" style={siderStyle}>
-              <LeftSiderBox />
-            </Sider>
-            <Content style={contentStyle}>
-              <div style={{
-                width: "100%",
-                height: "calc(100vh - 64px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#f5f5f5",
-                position: "relative"
-              }} ref={canvasBoxRef} >
-                <TopTools />
-                <canvas ref={canvasRef} />
-              </div>
-            </Content>
-          </Layout>
+    <div className='main'>
+      <Layout style={layoutStyle}>
+        <Header style={headerStyle}><MJHeader /></Header>
+        <Layout style={{ height: "calc(100vh - 64px)" }}>
+          <Sider width="25%" style={siderStyle}>
+            <LeftSiderBox />
+          </Sider>
+          <Content style={contentStyle}>
+            <MainContent />
+          </Content>
         </Layout>
-      </div>
-    </MainContext.Provider>
-
+      </Layout>
+    </div>
   );
 }
 
+export default observer(HomePage)
 
-export default HomePage
+// class TestStore {
+//   show: boolean = false;
+
+//   constructor() {
+//     makeObservable(this, {
+//       show: observable
+//     })
+//   }
+
+//   setShow = () => {
+//     this.show = !this.show
+//   }
+// }
+
+// const testStore = new TestStore()
+
+
+// const Comp = () => {
+//   return <div>{testStore.show ? "show" : "noshow"}</div>
+// }
+
+// const Test = () => {
+//   return <>
+//     <div>
+//       <Button onClick={() => {
+//         console.log("==>点击")
+//         testStore.setShow()
+//       }}>按钮</Button>
+//     </div>
+//     <div>{testStore.show ? "show" : "noshow"}</div>
+//     <Comp />
+//   </>
+// }
+
+
+// export default observer(Test)

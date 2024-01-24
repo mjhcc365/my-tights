@@ -1,15 +1,15 @@
 import { Button } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/store/useCanvas"
+import { MainStoreContext } from "@/store/main"
 import svg from "@/assets/iconfont/weixin.svg"
+import { stores as store } from "@/store/main"
 
 
 const Icon = () => {
-    const { canvas } = useContext(MainContext)
     const onAddIcon = () => {
         fabric.loadSVGFromURL(svg, (objects, options) => {
-            canvas?.add(objects[0]).renderAll();
+            store?.canvasStore.canvas?.add(objects[0]).renderAll();
         })
     }
     return <div>

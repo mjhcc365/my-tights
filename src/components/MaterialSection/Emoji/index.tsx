@@ -3,19 +3,21 @@ import { Button } from "antd"
 import { fabric } from "fabric"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import { stores as store } from "@/store/main"
+
 
 import "./index.less"
 
-import { MainContext } from "@/store/useCanvas"
+import { MainStoreContext } from "@/store/main"
 
 
 const Emoji = () => {
-    const { canvas } = useContext(MainContext)
+
     const onAddEmoji = (obj: { native: string }) => {
         const emoji = new fabric.Text(obj.native, {
             fontSize: 30,
         })
-        canvas?.add(emoji)
+        store?.canvasStore.canvas?.add(emoji)
         emoji.center()
     }
 

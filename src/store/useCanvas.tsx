@@ -20,6 +20,7 @@ export const useCanvas = () => {
     const [zoomRatio, setZoomRatio] = useState<number>(5)
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null)
     const [activeObject, setActiveObject] = useImmer(null);
+
     // 背景
 
     // 从localStorege获取原始数据
@@ -49,18 +50,18 @@ export const useCanvas = () => {
     }
 
     const temporaryStorage = () => {
-        const data = {
-            // lockRotation: true,
-            //     lockMovementX: true,
-            //     lockMovementY: true,
-            //     lockScalingX: true,
-            //     lockScalingY: true
-            canvas: canvas?.toJSON(['groupId', 'selectable', "hbsType", 'fontFamily', "lockRotation", "lockMovementX", "lockMovementY"]),
-            zoomRatio: zoomRatio,
-            canvasWidth: canvas?.getWidth(),
-            canvasHeight: canvas?.getHeight()
-        }
-        localStorage.setItem(MJ_DATA, JSON.stringify(data))
+        // const data = {
+        //     //     lockRotation: true,
+        //     //     lockMovementX: true,
+        //     //     lockMovementY: true,
+        //     //     lockScalingX: true,
+        //     //     lockScalingY: true
+        //     canvas: canvas?.toJSON(['groupId', 'selectable', "hbsType", 'fontFamily', "lockRotation", "lockMovementX", "lockMovementY"]),
+        //     zoomRatio: zoomRatio,
+        //     canvasWidth: canvas?.getWidth(),
+        //     canvasHeight: canvas?.getHeight()
+        // }
+        // localStorage.setItem(MJ_DATA, JSON.stringify(data))
     }
 
     return {
@@ -78,11 +79,11 @@ export const useCanvas = () => {
 
 interface MainContextInterface {
     canvas: fabric.Canvas | null;
+    setCanvas: any;
     activeObject: fabric.Object | null;
     setActiveObject: any;
     zoomRatio: number,
     temporaryStorage: () => void
-
 }
 
 export const MainContext = createContext<MainContextInterface>({} as any)

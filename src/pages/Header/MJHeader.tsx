@@ -1,15 +1,16 @@
 import { Button } from "antd";
-import { useContext, useState } from "react";
 import imgUrl from '@/assets/logo.png'
 
-import { MainContext } from "../store/useCanvas";
+import useHistory from "@/store/useHistory";
+import { stores as store } from "@/store/main";
 import "./MJHeader.less"
 
+
 const MJHeader = () => {
-    const { canvas, temporaryStorage } = useContext(MainContext)
+    const { addHistorySnapshot } = useHistory()
 
     const handleClickPic = () => {
-        var dataURL = canvas?.toDataURL({
+        var dataURL = store?.canvasStore.canvas?.toDataURL({
             format: 'png', // 指定导出格式，可以是 'png', 'jpeg', 'webp' 等
             quality: 0.8,
         })
@@ -26,7 +27,7 @@ const MJHeader = () => {
     }
 
     const handleOnSave = () => {
-        temporaryStorage()
+        // temporaryStorage()
     }
 
     const handleReset = () => {
@@ -39,8 +40,8 @@ const MJHeader = () => {
     }
 
     const handleClickJson = () => {
-        if (!canvas) return
-        var jsonString = JSON.stringify(canvas.toJSON());
+        if (!store?.canvasStore.canvas) return
+        var jsonString = JSON.stringify(store?.canvasStore.canvas.toJSON());
         // 创建一个下载链接
         var downloadLink = document.createElement('a');
         downloadLink.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonString);
@@ -69,6 +70,9 @@ const MJHeader = () => {
         <div className='btns-box'>
             <Button onClick={handleClick}>上一步</Button>
             <Button onClick={handleClick}>下一步</Button>
+            <Button onClick={() => {
+                addHistorySnapshot()
+            }}>添加到indexdb</Button>
         </div>
         <div className='btns-box'>
             <Button onClick={handleClickPic}>下载图片</Button>

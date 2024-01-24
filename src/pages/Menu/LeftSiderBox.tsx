@@ -1,14 +1,14 @@
 import { Menu } from "antd";
 import { useState } from "react";
 import type { MenuProps } from 'antd';
-import TemplatesSectioin from "../components/Templates";
-import TextSectioin from "../components/TextSection";
-import PictureSection from "../components/PictureSection";
+import TemplatesSectioin from "../../components/Templates";
+import TextSectioin from "../../components/TextSection";
+import PictureSection from "../../components/PictureSection";
 import MaterialSection from "@/components/MaterialSection";
 import SizeSection from "@/components/SizeSection";
 import TimeSection from "@/components/TimeSection";
 import ToolsSection from "@/components/ToolsSection"
-import { items, MENUKEY } from "./types";
+import { items, MENUKEY } from "../types";
 import "./LeftSiderBox.less";
 
 const LeftSiderBox = () => {

@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import { useDraw } from "./tools"
 
 import { ImageCard } from "./Images";
-import { MainContext } from "@/store/useCanvas";
+import { stores as store } from "@/store/main"
 
 import PenImg from "@/assets/pen.jpg"
 import LogoImg from "@/assets/logo.png"
@@ -21,7 +21,6 @@ const YearsTemp = [{
 ]
 
 const Year = () => {
-    const { canvas } = useContext(MainContext)?.store || {}
     const [showTool, setShowTool] = useState<boolean>(true);
 
     const { drawMonth } = useDraw()

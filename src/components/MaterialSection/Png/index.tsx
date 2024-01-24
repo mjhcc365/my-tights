@@ -1,18 +1,16 @@
 import { fabric } from "fabric"
 import { useContext, useRef } from "react"
 import { nanoid } from "nanoid"
-import { MainContext } from "@/store/useCanvas"
+import { MainStoreContext } from "@/store/main"
 import BlackImg from "@/assets/black.jpg"
+import { stores as store } from "@/store/main"
 
 
 
 const Png = () => {
-    const { canvas } = useContext(MainContext)
     const imgRef = useRef(null)
 
     const handleAddPicture = () => {
-        if (!canvas) return
-
         const Image = new fabric.Image(imgRef.current || "", {
             top: 20,
             left: 90,
@@ -21,7 +19,7 @@ const Png = () => {
             scaleX: 0.2,
             scaleY: 0.2,
         } as any)
-        canvas.add(Image)
+        store?.canvasStore.canvas?.add(Image)
     }
 
     return <div >

@@ -2,7 +2,7 @@ import { fabric } from "fabric";
 import { Button } from "antd"
 import rule from "@/assets/cm.svg"
 import { useContext } from "react";
-import { MainContext } from "@/store/useCanvas";
+import { MainStoreContext } from "@/store/main";
 
 const Rule = () => {
     const { canvas } = useContext(MainContext);

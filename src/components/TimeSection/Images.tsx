@@ -1,9 +1,5 @@
-import { useRef, useContext } from "react"
-import { fabric } from "fabric"
-import { nanoid } from "nanoid"
-import { MainContext } from "@/store/useCanvas"
+import { useRef } from "react"
 import PenImg from "@/assets/pen.jpg"
-
 import "./Image.less"
 
 export interface ImageCardProps {

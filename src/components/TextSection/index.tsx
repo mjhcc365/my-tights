@@ -2,14 +2,14 @@
 import { Button } from "antd"
 import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainContext } from "@/store/useCanvas"
+import { MainStoreContext } from "@/store/main"
+import { stores as store } from "@/store/main"
 import { nanoid } from "nanoid"
 
 const TextSectioin = () => {
-    const { canvas } = useContext(MainContext)
 
     const handleAddText = () => {
-        if (!canvas) return
+        if (!store?.canvasStore.canvas) return
         // TODO 双击修改文案
         const text = new fabric.Textbox('双击可修改文案', {
             left: 50,
@@ -21,7 +21,7 @@ const TextSectioin = () => {
             fill: "rgb(0,0,0)",
             selectable: true
         } as any)
-        canvas.add(text)
+        store?.canvasStore.canvas.add(text)
     }
 
 
