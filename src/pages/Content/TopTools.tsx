@@ -1,7 +1,5 @@
 
 
-import { useContext } from "react"
-import { MainStoreContext } from "@/store/main"
 import { observer } from "mobx-react-lite"
 import { MainTools } from "@/components/Tools/Tools"
 import { stores as store } from "@/store/main"

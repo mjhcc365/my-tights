@@ -1,18 +1,16 @@
 import { fabric } from "fabric";
 import { Button } from "antd"
+import { stores as store } from "@/store/main";
 import rule from "@/assets/cm.svg"
-import { useContext } from "react";
-import { MainStoreContext } from "@/store/main";
 
 const Rule = () => {
-    const { canvas } = useContext(MainContext);
     const onAddRule = () => {
         fabric.loadSVGFromURL(rule, (objects, options) => {
             const group = new fabric.Group(objects, {
                 lockScalingX: true,
                 lockScalingY: true,
             })
-            canvas?.add(group).renderAll();
+            store.canvasStore.canvas?.add(group).renderAll();
             console.log("===>", objects, options)
         })
     }

@@ -1,5 +1,3 @@
-import { MainStoreContext } from "@/store/main"
-import { useContext } from "react"
 import { fabric } from "fabric"
 import { nanoid } from "nanoid"
 import { stores as store } from "@/store/main"

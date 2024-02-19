@@ -34,7 +34,7 @@ function getItem(
 }
 
 export const items: MenuItem[] = [
-    getItem('尺寸', MENUKEY.size,), // 调整尺寸
+    getItem('纸张', MENUKEY.size,), // 调整尺寸
     // getItem('模板', MENUKEY.temp,), // 经典模板，一日一页，两日一页等
     getItem('素材', MENUKEY.material,), // 形状，线条，图标
     getItem('文字', MENUKEY.text,), // 艺术字体

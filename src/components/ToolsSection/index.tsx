@@ -1,8 +1,5 @@
-import { MainStoreContext } from "@/store/main";
 import { Tabs } from "antd";
 import type { TabsProps } from 'antd';
-import { useContext } from "react";
-import { fabric } from "fabric"
 
 import HelpLine from "./HelpLine";
 import Rule from "./Rule";

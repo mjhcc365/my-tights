@@ -1,9 +1,10 @@
 import { Button } from "antd"
-import { useContext } from "react"
 import { fabric } from "fabric"
 import { stores as store } from "@/store/main"
+// import { common } from "@/store/common"
 
 import "./index.less"
+import { observer } from "mobx-react-lite"
 
 
 const Rect = () => {
@@ -15,6 +16,7 @@ const Rect = () => {
             height: 40 // 矩形高度
         })
         store?.canvasStore.canvas?.add(rect)
+        store?.dexieStore.add(store.canvasStore.getCurCanvasObj())
     }
 
 
@@ -52,4 +54,4 @@ const Rect = () => {
     </div>
 }
 
-export default Rect
+export default observer(Rect)

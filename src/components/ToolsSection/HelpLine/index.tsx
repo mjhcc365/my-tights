@@ -1,8 +1,6 @@
 import { Flex, Button, ColorPicker, Radio } from "antd"
-import { useContext } from "react"
 import { fabric } from "fabric"
 import { useImmer } from "use-immer";
-import { MainStoreContext } from "@/store/main"
 import { stores as store } from "@/store/main";
 
 import "./index.less"

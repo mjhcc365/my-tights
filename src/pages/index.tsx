@@ -1,17 +1,15 @@
 
-import { Layout, Button } from 'antd';
+import { Layout } from 'antd';
 
-import MJHeader from "./Header/MJHeader"
+import MJHeader from "./Header"
 import MainContent from "./Content"
 import LeftSiderBox from "./Menu/LeftSiderBox"
 import "./index.less"
 import "@/assets/iconfont/iconfont.js"
-import { MainStoreContext, stores } from '@/store/main';
-import { createContext } from 'react';
 
-import { observable, action, makeObservable } from 'mobx';
 import { observer } from "mobx-react-lite"
-// import { observer } from "mobx-react"
+import { useEffect } from 'react';
+import { stores } from '@/store/main';
 
 const { Header, Sider, Content } = Layout;
 
@@ -44,6 +42,17 @@ export const layoutStyle = {
 
 
 const HomePage = () => {
+
+  const handleUnload = () => {
+    console.log("==>unload")
+    stores.dexieStore.clear()
+  }
+
+
+  useEffect(() => {
+    window.addEventListener("unload", handleUnload);
+    return window.removeEventListener("unload", handleUnload)
+  }, [])
   return (
     <div className='main'>
       <Layout style={layoutStyle}>

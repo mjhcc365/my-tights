@@ -8,7 +8,6 @@ import { stores as store } from "@/store/main"
 
 import "./index.less"
 
-import { MainStoreContext } from "@/store/main"
 
 
 const Emoji = () => {

@@ -1,4 +1,3 @@
-import { createContext, useContext } from "react"
 import { action, makeAutoObservable, observable } from "mobx"
 import CanvasStore from "./canvas"
 import DexieStore from "./dexie";
@@ -26,13 +25,12 @@ class MainPage {
 export interface Stores {
     canvasStore: CanvasStore;
     dexieStore: DexieStore;
-    mainStore: MainPage
+    mainStore: MainPage;
 }
 
 export const stores: Stores = {
     canvasStore: new CanvasStore(),
     dexieStore: new DexieStore(),
-    mainStore: new MainPage()
+    mainStore: new MainPage(),
 };
 
-export const MainStoreContext = createContext<Stores | null>(null)

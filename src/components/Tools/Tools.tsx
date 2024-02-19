@@ -18,15 +18,15 @@ import {
     InputNumber,
     Tooltip
 } from "antd"
-import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainStoreContext } from "@/store/main"
 import { nanoid } from "nanoid"
 import { Layers, SYS_FONTS, WEB_FONTS } from "./types"
 import { stores as store } from "@/store/main"
 
 import "./Tools.less"
 import Icon from "@/HbsUI/Icon"
+import { observer } from "mobx-react-lite"
+import { observe } from "mobx"
 
 export const Copy = () => {
 
@@ -53,7 +53,6 @@ export const Delete = () => {
         if (store?.canvasStore.canvas?.getActiveObject() && store?.canvasStore.canvas) {
             store?.canvasStore.canvas?.remove((store?.canvasStore.canvas?.getActiveObject()) as any)
             store?.canvasStore.canvas?.renderAll();
-            store?.canvasStore.setCanvas(null)
         }
     }
     return <Tooltip placement="bottom" title="删除">
@@ -341,20 +340,22 @@ export const StokeStyle = () => {
     </Popover>
 }
 
-export const WHinfo = () => {
-
-    const changeObjWidth = () => {
+export const WHinfo = observer(() => {
+    const changeObjWidth = (v: number | null) => {
+        store?.canvasStore.setActiveObjParam("width", v);
+        store.dexieStore.add(store.canvasStore.getCurCanvasObj())
     }
 
-    const changeObjHeight = () => {
-
+    const changeObjHeight = (v: number | null) => {
+        store?.canvasStore.setActiveObjParam("height", v);
+        store.dexieStore.add(store.canvasStore.getCurCanvasObj())
     }
 
     return <>
         <InputNumber value={Math.floor(store?.canvasStore.activeObj?.width || 0)} prefix="W" onChange={changeObjWidth} />
         <InputNumber value={Math.floor(store?.canvasStore.activeObj?.height || 0)} prefix="H" onChange={changeObjHeight} />
     </>
-}
+})
 
 export const Opacity = () => {
 
@@ -373,33 +374,24 @@ export const Opacity = () => {
     </Popover>
 }
 
-export const Position = () => {
+export const Position = observer(() => {
 
-    const changeObjTop = (v: number) => {
-        // setActiveObject((draft: any) => {
-        //     draft.top = v
-        // })
-        store?.canvasStore.canvas?.getActiveObject()?.set({
-            top: v
-        })
-        store?.canvasStore.canvas?.renderAll();
+    const changeObjTop = (v: number | null) => {
+        if (!v) return
+        store?.canvasStore.setActiveObjParam("top", v)
+        store.dexieStore.add(store.canvasStore.getCurCanvasObj())
     }
 
-    const changeObjLeft = (v: number) => {
-        // setActiveObject((draft: any) => {
-        //     draft.left = v
-        // })
-        store?.canvasStore.canvas?.getActiveObject()?.set({
-            left: v
-        })
-        store?.canvasStore.canvas?.renderAll();
-
+    const changeObjLeft = (v: number | null) => {
+        if (!v) return
+        store?.canvasStore.setActiveObjParam("left", v)
+        store.dexieStore.add(store.canvasStore.getCurCanvasObj())
     }
     return <>
         <InputNumber value={Math.floor(store?.canvasStore.activeObj?.top || 0)} prefix="T" onChange={changeObjTop} />
         <InputNumber value={Math.floor(store?.canvasStore.activeObj?.left || 0)} prefix="L" onChange={changeObjLeft} />
-    </ >
-}
+    </>
+})
 
 export const SetGroup = () => {
     const handleCombineGroup = () => {

@@ -1,9 +1,9 @@
 
-import { InputNumber, Select, ColorPicker, Form, Flex, Button, Switch } from "antd"
-import { useContext, useEffect } from "react";
+import { InputNumber, Select, ColorPicker, Flex, Switch } from "antd"
+import { useEffect } from "react";
 import { fabric } from "fabric";
-import { nanoid } from "nanoid";
-import { MainContext, HBSType, hbsTypes } from "@/store/useCanvas";
+import { HBSType } from "@/store/useCanvas";
+import { stores as store } from "@/store/main"
 
 import usePaperStore, { PaperTempOptions, PaperBackType, PaperBackArray } from "@/store/usePaperStore"
 
@@ -16,17 +16,17 @@ const IconImage = (props: {
     onClick: (v: PaperBackType) => void
 }) => {
     const { src, value, isActive, onClick } = props;
-    return <div className={`back-icon ${isActive ? "active-back-icon" : ""}`} onClick={() => {
-        onClick(value)
-    }}>
+    return <div
+        className={`back-icon ${isActive ? "active-back-icon" : ""}`}
+        onClick={() => {
+            onClick(value)
+        }}>
         <img src={src} />
     </div>
 }
 
 
 const SizeSection = () => {
-    const { canvas, zoomRatio } = useContext(MainContext);
-
     const {
         paperConfig,
         setPaperConfig,
@@ -43,8 +43,8 @@ const SizeSection = () => {
         setPaperConfig((d) => {
             d.backgroundColor = hex
         })
-        canvas?.setBackgroundColor(hex, () => { })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.setBackgroundColor(hex, () => { })
+        store.canvasStore.canvas?.renderAll()
     }
 
     const resetBackColor = (v: boolean) => {
@@ -52,17 +52,17 @@ const SizeSection = () => {
         setPaperConfig((d) => {
             d.showBackColor = v
         })
-        canvas?.setBackgroundColor(hex, () => { })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.setBackgroundColor(hex, () => { })
+        store.canvasStore.canvas?.renderAll()
     }
 
     const onClearBackTexture = () => {
-        canvas?.getObjects().forEach((ele) => {
+        store.canvasStore.canvas?.getObjects().forEach((ele) => {
             if ((ele as any).hbsType === HBSType.back) {
-                canvas.remove(ele)
+                store.canvasStore.canvas?.remove(ele)
             }
         })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.renderAll()
     }
 
     // 改变背景纹理
@@ -90,7 +90,7 @@ const SizeSection = () => {
         setPaperConfig((d) => {
             d.lineConfig.stroke = hex
         })
-        canvas?.getObjects().forEach((ele) => {
+        store.canvasStore.canvas?.getObjects().forEach((ele) => {
             if ((ele as any).hbsType === HBSType.back) {
                 ((ele as fabric.Group).getObjects() || []).forEach((item) => {
                     item.set({
@@ -99,12 +99,12 @@ const SizeSection = () => {
                 })
             }
         })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.renderAll()
     }
 
     // 绘制活页孔
     const onToggleCircle = (v: boolean) => {
-        canvas?.getObjects().forEach((ele: any) => {
+        store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
             if (ele.hbsType === HBSType.holes) {
                 ele.visible = v
             }
@@ -112,11 +112,11 @@ const SizeSection = () => {
         setPaperConfig((d) => {
             d.showHole = v
         })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.renderAll()
     }
 
     const onToggleBack = (v: boolean) => {
-        canvas?.getObjects().forEach((ele: any) => {
+        store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
             if (ele.hbsType === HBSType.back) {
                 ele.visible = v
             }
@@ -124,12 +124,12 @@ const SizeSection = () => {
         setPaperConfig((d) => {
             d.showBackTexture = v
         })
-        canvas?.renderAll()
+        store.canvasStore.canvas?.renderAll()
     }
 
     const onAddCircle = () => {
-        const cw = canvas?.getWidth() || 0
-        const ch = canvas?.getHeight() || 0
+        const cw = store.canvasStore.canvas?.getWidth() || 0
+        const ch = store.canvasStore.canvas?.getHeight() || 0
         const middle = Math.floor(ch / 2)
         const LEFT_GAP = 8.5
         const CIRCLE_R = 2.5;
@@ -140,9 +140,9 @@ const SizeSection = () => {
         const circles = []
         for (let i = 0; i <= 2; i++) {
             const c = new fabric.Circle({
-                radius: CIRCLE_R * zoomRatio,
-                top: middle + (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) * zoomRatio,
-                left: CIRCLR_LEFT * zoomRatio,
+                radius: CIRCLE_R * store.canvasStore.zoomRodio,
+                top: middle + (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) * store.canvasStore.zoomRodio,
+                left: CIRCLR_LEFT * store.canvasStore.zoomRodio,
                 fill: "#F5F5F5",
             })
             circles.push(c)
@@ -150,9 +150,9 @@ const SizeSection = () => {
 
         for (let i = 0; i <= 2; i++) {
             const c = new fabric.Circle({
-                radius: CIRCLE_R * zoomRatio,
-                top: middle - ((CIRCLE_GROUP_GAP / 2 + CIRCLE_R) + CIRCLE_GAP * i) * zoomRatio,
-                left: CIRCLR_LEFT * zoomRatio,
+                radius: CIRCLE_R * store.canvasStore.zoomRodio,
+                top: middle - ((CIRCLE_GROUP_GAP / 2 + CIRCLE_R) + CIRCLE_GAP * i) * store.canvasStore.zoomRodio,
+                left: CIRCLR_LEFT * store.canvasStore.zoomRodio,
                 fill: "#F5F5F5",
             })
             circles.push(c)
@@ -163,8 +163,8 @@ const SizeSection = () => {
             hbsType: "holes"
         } as any)
 
-        canvas?.add(group);
-        canvas?.renderAll()
+        store.canvasStore.canvas?.add(group);
+        store.canvasStore.canvas?.renderAll()
     }
 
 

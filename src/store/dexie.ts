@@ -1,10 +1,13 @@
 import { db } from "@/utils/database"
 import { action, computed, makeAutoObservable, observable } from "mobx"
 
+const INIT_LENGTH = 0;
+const INIT_CURSOR = 0
+
 
 class Dexie {
-    snapshotLength: number = 0;
-    snapshotCursor: number = -1;
+    snapshotLength: number = INIT_LENGTH;
+    snapshotCursor: number = INIT_CURSOR;
 
     constructor() {
         makeAutoObservable(this, {
@@ -13,12 +16,13 @@ class Dexie {
         })
     }
 
-
-    @computed get canRedo() {
-        return this.snapshotCursor < this.snapshotLength - 1
+    // 撤销 上一步
+    @computed get disableUndo() {
+        return this.snapshotCursor <= 0
     }
-    @computed get canUndo() {
-        return this.snapshotCursor > 0
+    // 重做 下一步
+    @computed get disableRedo() {
+        return this.snapshotCursor >= this.snapshotLength
     }
 
     @action
@@ -31,13 +35,51 @@ class Dexie {
         this.snapshotCursor = cursor
     }
 
-    snapshotAdd = async (template: any) => {
+    @action
+    addSnapshotLength = () => {
+        this.snapshotLength += 1
+    }
+
+    @action
+    addSnapshotCursor = () => {
+        this.snapshotCursor += 1
+    }
+    /** 添加快照 */
+    add = async (template: any) => {
         const snapshot = {
             index: this.snapshotLength + 1,
             templates: [template]
         }
+        this.setSnapshotLength(snapshot.index)
+        this.setSnapshotCursor(snapshot.index)
         await db.snapshots.add(snapshot)
     }
+
+    /** 清空快照 */
+    clear = async () => {
+        this.setSnapshotLength(INIT_LENGTH)
+        this.setSnapshotCursor(INIT_CURSOR)
+        await db.snapshots.clear()
+    }
+
+
+    getPreSnapshot = async () => {
+        const nextSnapshotCursor = this.snapshotCursor - 1
+        const snapshots: any[] = await db.snapshots.orderBy('id').toArray()
+        const snapshot = snapshots[nextSnapshotCursor]
+        return snapshot
+    }
+
+    getNextSnapshot = async () => {
+        const nextSnapshotCursor = this.snapshotCursor + 1
+        const snapshots: any[] = await db.snapshots.orderBy('id').toArray()
+        const snapshot = snapshots[nextSnapshotCursor]
+        return snapshot
+    }
+
+
+
+
 
     // 添加快照
     // const snapshotAdd = async () => {

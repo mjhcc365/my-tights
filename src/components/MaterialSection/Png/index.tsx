@@ -1,7 +1,6 @@
 import { fabric } from "fabric"
-import { useContext, useRef } from "react"
+import { useRef } from "react"
 import { nanoid } from "nanoid"
-import { MainStoreContext } from "@/store/main"
 import BlackImg from "@/assets/black.jpg"
 import { stores as store } from "@/store/main"
 

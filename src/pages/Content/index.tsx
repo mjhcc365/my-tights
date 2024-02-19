@@ -41,10 +41,12 @@ const MainContent = () => {
         const newCanvas = new fabric.Canvas(canvasRef.current as any, options);
 
         newCanvas.on("mouse:down", () => {
-            console.log("==>", store?.canvasStore.canvas?.getActiveObject()?.toObject())
+            // console.log("==>", store?.canvasStore.canvas?.getActiveObject()?.toObject())
             store?.canvasStore.setActiveObj(store.canvasStore.canvas?.getActiveObject()?.toObject())
         })
         store?.canvasStore.setCanvas(newCanvas)
+
+        store?.dexieStore.clear()
 
         return () => {
             document.removeEventListener('keydown', onKeyDown)

@@ -25,6 +25,15 @@ class CanvasStore {
     }
 
     @action
+    setActiveObjParam = (k: any, v: any) => {
+        this.activeObj[k] = v
+        this.canvas?.getActiveObject()?.set({
+            [k]: v
+        })
+        this.canvas?.renderAll()
+    }
+
+    @action
     setCanvas = (canvas: fabric.Canvas | null) => {
         this.canvas = canvas;
     }
@@ -34,6 +43,17 @@ class CanvasStore {
         this.zoomRodio = zoomRodio;
     }
 
+    getCurCanvasObj = () => {
+        return this.canvas?.toObject()
+    }
+
+    loadCanvasFormObj = (snapshot: any) => {
+        if (!snapshot) return
+        this.canvas?.loadFromJSON(snapshot.templates[0], () => {
+            console.log("==>loadFromJSON", snapshot.templates[0])
+        })
+        this.canvas?.renderAll()
+    }
 }
 
 

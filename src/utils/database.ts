@@ -46,12 +46,23 @@ export class MySubClassedDexie extends Dexie {
     snapshots!: Table<Snapshot, number>;
 
     constructor() {
-        super('myDatabase');
+        super(`hbs-datebase-${(new Date()).getTime()}`);
+        this.deleteDiscardedDB()
         this.version(1).stores({
             snapshots: '++id',
         });
-        this.snapshots = this.table('snapshots')
+        this.snapshots = this.table('snapshots');
     }
+
+    deleteDiscardedDB = async () => {
+        const dbNames = await Dexie.getDatabaseNames()
+        dbNames.forEach((ele) => {
+            Dexie.delete(ele)
+
+        })
+    }
+
+
 }
 
 export const db = new MySubClassedDexie();

@@ -1,8 +1,6 @@
 
 import { Button } from "antd"
-import { useContext } from "react"
 import { fabric } from "fabric"
-import { MainStoreContext } from "@/store/main"
 import { stores as store } from "@/store/main"
 import { nanoid } from "nanoid"
 
