@@ -1,11 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('build') {
+    stage('sayhello') {
       steps {
-        sh '''pnpm i
-git pull
-umi build'''
+        echo 'hello'
       }
     }
 
