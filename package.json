@@ -16,6 +16,8 @@
     "@types/lodash": "^4.14.202",
     "add": "^2.0.6",
     "antd": "^5.12.8",
+    "chokidar": "^3.6.0",
+    "clear-module": "^4.1.2",
     "dayjs": "^1.11.10",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
