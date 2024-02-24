@@ -4,7 +4,7 @@ pipeline {
     stage('print') {
       steps {
         echo 'start build'
-        lscpu
+        sh 'lscpu'
       }
     }
 
