@@ -32,15 +32,14 @@
     "mobx-react-lite": "^4.0.5",
     "nanoid": "^5.0.4",
     "umi": "^4.1.0",
-    "use-immer": "^0.9.0"
-  },
-  "devDependencies": {
+    "electron": "28.1.1",
+    "use-immer": "^0.9.0",
     "@tsconfig/node14": "^14.1.0",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
-    "electron": "28.1.1",
     "typescript": "^5.3.3"
   },
+  "devDependencies": {},
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
