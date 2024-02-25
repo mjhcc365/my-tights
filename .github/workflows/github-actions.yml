@@ -23,14 +23,11 @@ jobs:
         DOCKER_HUB_USER: ${{ vars.DOCKER_HUB_USER }}
         DOCKER_HUB_SECRET: ${{ secrets.DOCKER_HUB_SECRET }}
         IMAGE_NAME: my-tights
-        SERVER_HOST: ${{ vars.SERVER_HOST }} 
-        SERVER_USER: ${{ vars.SERVER_USER }}
-        SERVER_PORT: ${{ vars.SERVER_PORT }}
       with:
-        host: $SERVER_HOST
-        username: $SERVER_USER
+        host: ${{ vars.SERVER_HOST }} 
+        username: ${{ vars.SERVER_USER }}
         password: ${{ secrets.SERVER_PWD }}
-        port: $SERVER_PORT
+        port: ${{ vars.SERVER_PORT }}
         script: | 
           docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_SECRET
           docker rm -f $IMAGE_NAME
