@@ -22,16 +22,17 @@ jobs:
       env:
         DOCKER_HUB_USER: ${{ vars.DOCKER_HUB_USER }}
         DOCKER_HUB_SECRET: ${{ secrets.DOCKER_HUB_SECRET }}
+        IMAGE_NAME: my-tights
       with:
-        host: ${{ secrets.SERVER_HOST }} # 服务器ip地址 ; 需要去仓库的 settings/secrets/actions 去创建
-        username: ${{ secrets.SERVER_USER }} # 服务器用户名称；需要去仓库的 settings/secrets/actions 去创建
-        password: ${{ secrets.SERVER_PWD }} # 服务器密码；需要去仓库的 settings/secrets/actions 去创建
-        port: ${{ secrets.SERVER_PORT }} # 服务器端口，默认22；需要去仓库的 settings/secrets/actions 去创建
-        script: | # 重启更新镜像
+        host: ${{ secrets.SERVER_HOST }} 
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PWD }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: | 
           docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_SECRET
-          docker rm -f test
-          docker pull huziyin/blog-starter-kit:latest
-          docker run -itd --name=test -p 3001:3000 huziyin/blog-starter-kit:latest
+          docker rm -f $IMAGE_NAME
+          docker pull $DOCKER_HUB_USER/$IMAGE_NAME:latest
+          docker run -itd --name=$IMAGE_NAME -p 8000:8000 $DOCKER_HUB_USER/$IMAGE_NAME:latest
           docker ps
 
         
