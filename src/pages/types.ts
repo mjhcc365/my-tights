@@ -34,11 +34,11 @@ function getItem(
 }
 
 export const items: MenuItem[] = [
-    getItem('纸张', MENUKEY.size,), // 调整尺寸
+    getItem('纸张1', MENUKEY.size,), // 调整尺寸
     // getItem('模板', MENUKEY.temp,), // 经典模板，一日一页，两日一页等
-    getItem('素材', MENUKEY.material,), // 形状，线条，图标
-    getItem('文字', MENUKEY.text,), // 艺术字体
+    getItem('素材1', MENUKEY.material,), // 形状，线条，图标
+    getItem('文字1', MENUKEY.text,), // 艺术字体
     // getItem('照片', MENUKEY.picture,), // 自己的图片,网站提供一些图片
-    getItem('时间', MENUKEY.time,), // 
+    getItem('时间1', MENUKEY.time,), // 
     getItem('工具', MENUKEY.tools,), // 
 ];
