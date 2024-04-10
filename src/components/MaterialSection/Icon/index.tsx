@@ -1,18 +1,42 @@
-import { Button } from "antd"
-import { fabric } from "fabric"
-import svg from "@/assets/iconfont/weixin.svg"
-import { stores as store } from "@/store/main"
+import { fabric } from "fabric";
+import { rilis } from "./calendar";
 
+import { stores as store } from "@/store/main";
 
-const Icon = () => {
-    const onAddIcon = () => {
-        fabric.loadSVGFromURL(svg, (objects, options) => {
-            store?.canvasStore.canvas?.add(objects[0]).renderAll();
-        })
-    }
-    return <div>
-        <Button onClick={onAddIcon}>添加一个icon</Button>
+const IconEditor = () => {
+  const onAddIcon = (param: any) => {
+    fabric.loadSVGFromURL(rilis[param], (objects, options) => {
+      store?.canvasStore.canvas?.add(objects[0]).renderAll();
+    });
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "4px",
+        }}
+      >
+        {rilis.map((ele, index) => {
+          return (
+            <div
+              style={{
+                width: 36,
+                height: 28,
+              }}
+              onClick={() => {
+                onAddIcon(index);
+              }}
+            >
+              <img src={ele} style={{ width: 24, height: 24 }} />
+            </div>
+          );
+        })}
+      </div>
     </div>
-}
+  );
+};
 
-export default Icon
+export default IconEditor;
