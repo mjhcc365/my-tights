@@ -68,6 +68,4 @@ export const getConfigByType = (type: string): PaperTypeConfig | undefined => {
 
 export const drawSideCircle = () => {
 
-
-
 }

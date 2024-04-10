@@ -58,11 +58,8 @@ export class MySubClassedDexie extends Dexie {
         const dbNames = await Dexie.getDatabaseNames()
         dbNames.forEach((ele) => {
             Dexie.delete(ele)
-
         })
     }
-
-
 }
 
 export const db = new MySubClassedDexie();
