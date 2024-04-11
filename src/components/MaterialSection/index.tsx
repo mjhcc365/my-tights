@@ -1,10 +1,10 @@
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import Rect from "./Rect";
-import Line from "./Line";
 import Icon from "./Icon";
 import Emoji from "./Emoji";
 import Png from "./Png";
+import Picture from "./Picture";
 
 const items: TabsProps["items"] = [
   {
@@ -18,11 +18,6 @@ const items: TabsProps["items"] = [
     children: <Icon />,
   },
   {
-    key: "3",
-    label: "线条",
-    children: <Line />,
-  },
-  {
     key: "4",
     label: "emoji",
     children: <Emoji />,
@@ -31,6 +26,11 @@ const items: TabsProps["items"] = [
     key: "5",
     label: "形状",
     children: <Rect />,
+  },
+  {
+    key: "6",
+    label: "图片",
+    children: <Picture />,
   },
 ];
 

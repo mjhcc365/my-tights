@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { fabric } from "fabric";
 import { stores as store } from "@/store/main";
 import { nanoid } from "nanoid";
-import { mockbrush } from "@/mock/brush";
+// import { mockbrush } from "@/mock/brush";
 import { WEB_FONTS } from "../Tools/types";
 
 const TextSectioin = () => {
@@ -21,10 +21,6 @@ const TextSectioin = () => {
     } as any);
     store?.canvasStore.canvas.add(text);
   };
-
-  // 根据组绘制图形组合
-  const handleAddGroup = (param) => {};
-
   return (
     <div>
       <div>单一字体</div>
@@ -51,7 +47,11 @@ const TextSectioin = () => {
         })}
       </div>
       <div>组合文案</div>
-      <div>{mockbrush.map((ele) => {})}</div>
+      <div>
+        {/* {mockbrush.map((_ele, index) => {
+          return <Button onClick={onDraw}>{index}</Button>;
+        })} */}
+      </div>
     </div>
   );
 };
