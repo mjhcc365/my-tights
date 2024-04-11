@@ -1,6 +1,17 @@
 notice: run `pnpm install clear-module lodash chokidar` while using pnpm.
 
-fabric 官网文档 http://fabricjs.com/
+## 技术栈
+
+前端：
+
+- Fabric 官网文档 http://fabricjs.com/
+- React18+
+- Antd5.0+
+
+后端
+
+- Node
+- MangoDB
 
 ## 版本迭代
 
@@ -35,7 +46,11 @@ V1.0.0
 - 导出功能：图片，json，pdf
 - 清除
 
+【2024.4.10 完成】
+
 V1.1.0
+主要目标：构建自己的服务端
+
 1、系统功能：
 添加登录登出：
 用户上传自己的素材png，

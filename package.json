@@ -12,11 +12,13 @@
     "@ant-design/icons": "^5.2.6",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
+    "@umijs/plugin-electron": "^0.2.4",
+    "antd": "^5.12.8"
+  },
+  "devDependencies": {
     "@types/fabric": "^5.3.6",
     "@types/lodash": "^4.14.202",
-    "@umijs/plugin-electron": "^0.2.4",
     "add": "^2.0.6",
-    "antd": "^5.12.8",
     "chokidar": "^3.6.0",
     "clear-module": "^4.1.2",
     "dayjs": "^1.11.10",
@@ -39,7 +41,6 @@
     "@types/react-dom": "^18.2.18",
     "typescript": "^5.3.3"
   },
-  "devDependencies": {},
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
