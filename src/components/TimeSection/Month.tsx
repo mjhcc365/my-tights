@@ -26,11 +26,11 @@ const Month = () => {
 
   const { drawMonth } = useDraw();
 
-  const changeTheme = () => {};
+  // const changeTheme = () => {};
 
   const onChangeTime = () => {};
 
-  const onDrawDays = () => {};
+  // const onDrawDays = () => {};
 
   const onDrawMonth = () => {
     drawMonth();

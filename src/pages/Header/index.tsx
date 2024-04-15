@@ -99,7 +99,7 @@ const MJHeader = () => {
         {/* <Button onClick={handleOnSave}>暂存</Button> */}
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleSave}>保存</Button>
-        <Button onClick={handleGetPicture}>请求unsplash接口</Button>
+        {/* <Button onClick={handleGetPicture}>请求unsplash接口</Button> */}
       </div>
     </div>
   );
