@@ -132,10 +132,44 @@ const Weather = () => {
     });
   };
 
+  function showmap(position: any) {
+    console.log("==>showmap", position);
+    //.强调coords
+    var cords = position.coords;
+    var latitude = cords.latitude; //获取纬度
+    var longitude = cords.longitude; //获取经度
+    console.log("==>纬度,经度", latitude, longitude);
+  }
+  function error(error: any) {
+    console.log("==>error", error);
+    //.强调code
+    var err = error.code;
+
+    switch (err) {
+      case 1:
+        alert("用户拒绝了位置服务");
+        break;
+      case 2:
+        alert("获取不到位置信息");
+        break;
+      case 3:
+        alert("获取信息超时");
+    }
+  }
+
+  const getCurPosition = () => {
+    if (navigator.geolocation) {
+      console.log("==>showmap", navigator.geolocation);
+      navigator.geolocation.getCurrentPosition(showmap, error);
+    } else {
+      alert("该浏览器不支持获取地理位置");
+    }
+  };
+
   return (
     <div className="time-section-class">
       <div className="time-section-images">
-        <Button>获取当前经纬度</Button>
+        <Button onClick={getCurPosition}>获取当前经纬度</Button>
       </div>
       <div className="time-section-images">
         <Button onClick={onDrawPhenomena}>天气</Button>
