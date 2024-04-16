@@ -6,7 +6,7 @@ import { stores as store } from "@/store/main";
 import { mockpng } from "./mockpng";
 
 const Png = () => {
-  const imgRef = useRef(null);
+  // const imgRef = useRef(null);
 
   const handleAddPicture = (index: any) => {
     fabric.Image.fromURL(mockpng[index], function (img) {
@@ -29,9 +29,11 @@ const Png = () => {
         }}
         onClick={handleAddPicture}
       >
+        <span>从七牛等下载，暂无合适的资源可用</span>
         {mockpng.map((ele, index) => {
           return (
             <img
+              key={ele}
               style={{
                 width: 80,
                 height: 80,
