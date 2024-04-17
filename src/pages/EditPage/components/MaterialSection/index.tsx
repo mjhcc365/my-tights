@@ -32,6 +32,11 @@ const items: TabsProps["items"] = [
     label: "图片",
     children: <Picture />,
   },
+  // {
+  //   key: "7",
+  //   label: "表情包",
+  //   children: <Picture />,
+  // },
 ];
 
 const MaterialSection = () => {

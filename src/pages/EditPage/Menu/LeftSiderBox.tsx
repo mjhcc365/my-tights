@@ -1,12 +1,12 @@
 import { Menu } from "antd";
 import { useState } from "react";
 import type { MenuProps } from "antd";
-import TemplatesSectioin from "@/components/Templates";
-import TextSectioin from "@/components/TextSection";
-import MaterialSection from "@/components/MaterialSection";
-import SizeSection from "@/components/SizeSection";
-import TimeSection from "@/components/TimeSection";
-import ToolsSection from "@/components/ToolsSection";
+import TemplatesSectioin from "@/pages/EditPage/components/Templates";
+import TextSectioin from "@/pages/EditPage/components/TextSection";
+import MaterialSection from "@/pages/EditPage/components/MaterialSection";
+import SizeSection from "@/pages/EditPage/components/SizeSection";
+import TimeSection from "@/pages/EditPage/components/TimeSection";
+import ToolsSection from "@/pages/EditPage/components/ToolsSection";
 import { items, MENUKEY } from "../types";
 import "./LeftSiderBox.less";
 

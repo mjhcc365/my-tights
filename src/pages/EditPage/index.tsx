@@ -1,13 +1,15 @@
 import { Layout } from "antd";
+import { useEffect } from "react";
+import { observer } from "mobx-react-lite";
 
 import MJHeader from "./Header";
 import MainContent from "./Content";
 import LeftSiderBox from "./Menu/LeftSiderBox";
+
 import "./index.less";
+
 import "@/assets/iconfont/iconfont.js";
 
-import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import { stores } from "@/store/main";
 
 const { Header, Sider, Content } = Layout;

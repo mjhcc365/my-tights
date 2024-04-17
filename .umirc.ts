@@ -4,7 +4,7 @@ export default defineConfig({
   npmClient: "pnpm",
   favicons: ["/favicon.svg"],
   routes: [
-    { path: "/", component: "@/pages/index" },
+    { path: "/", component: "@/pages/EditPage" },
     { path: "/login", component: "@/pages/Login" },
   ],
 

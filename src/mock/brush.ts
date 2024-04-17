@@ -1,5 +1,5 @@
 
-import {WEB_FONTS} from "@/components/Tools/types"
+import {WEB_FONTS} from "@/pages/EditPage/components/Tools/types"
 
 // 字体组合
 export const mockbrush = [

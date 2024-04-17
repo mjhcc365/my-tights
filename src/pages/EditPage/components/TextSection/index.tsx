@@ -1,7 +1,7 @@
 import { fabric } from "fabric";
 import { stores as store } from "@/store/main";
 import { nanoid } from "nanoid";
-import { WEB_FONTS } from "@/components/Tools/types";
+import { WEB_FONTS } from "@/pages/EditPage/components/Tools/types";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 
