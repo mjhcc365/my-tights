@@ -45,9 +45,11 @@
     "mobx": "^6.12.0",
     "mobx-react-lite": "^4.0.5",
     "nanoid": "^5.0.4",
+    "tailwindcss": "^3",
     "typescript": "^5.3.3",
     "umi": "^4.1.0",
-    "use-immer": "^0.9.0"
+    "use-immer": "^0.9.0",
+    "@umijs/plugins": "^4.1.0"
   },
   "publishConfig": {
     "access": "public",

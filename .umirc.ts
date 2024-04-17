@@ -1,11 +1,13 @@
-import { defineConfig } from 'umi';
-import { Platform, Arch } from '@umijs/plugin-electron';
+import { defineConfig } from "umi";
 
 export default defineConfig({
-  npmClient: 'yarn',
+  npmClient: "pnpm",
   favicons: ["/favicon.svg"],
   routes: [
-    { path: '/', component:'@/pages/index' },
-    { path: '/login', component: '@/pages/Login' },
+    { path: "/", component: "@/pages/index" },
+    { path: "/login", component: "@/pages/Login" },
   ],
+
+  tailwindcss: {},
+  plugins: ["@umijs/plugins/dist/tailwindcss"],
 });

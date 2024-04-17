@@ -10,3 +10,5 @@
 .electron
 .electron-production
 yarn-error.log
+readme-lint.md
+readme-note.md
