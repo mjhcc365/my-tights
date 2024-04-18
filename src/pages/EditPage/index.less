@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    margin: 0;
-}
+
 
 .icon {
     width: 1em;
@@ -12,16 +10,6 @@ body {
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
-}
-
-#root {
-    width: 100vw;
-    height: 100vh;
-}
-
-.main {
-    width: 100vw;
-    height: 100vh;
 }
 
 @font-face {
@@ -77,4 +65,13 @@ body {
 @font-face {
     font-family: '得意黑';
     src: url(@/assets/fonts/得意黑.ttf);
+}
+
+@keyframes moveAndHide {
+    0% {
+      left: 0; /* 初始位置 */
+    }
+    100% {
+      left: 56px; /* 最终位置 */
+    }
 }

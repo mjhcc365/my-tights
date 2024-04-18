@@ -27,11 +27,11 @@ const items: TabsProps["items"] = [
     label: "形状",
     children: <Rect />,
   },
-  {
-    key: "6",
-    label: "图片",
-    children: <Picture />,
-  },
+  // {
+  //   key: "6",
+  //   label: "图片",
+  //   children: <Picture />,
+  // },
   // {
   //   key: "7",
   //   label: "表情包",

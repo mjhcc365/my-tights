@@ -58,7 +58,7 @@ const HomePage = () => {
           <MJHeader />
         </Header>
         <Layout style={{ height: "calc(100vh - 64px)" }}>
-          <Sider width="25%" style={siderStyle}>
+          <Sider width={58} style={siderStyle}>
             <LeftSiderBox />
           </Sider>
           <Content style={contentStyle}>

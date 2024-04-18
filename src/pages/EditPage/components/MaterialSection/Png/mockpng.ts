@@ -19,5 +19,5 @@ export const mockpng =[
     Grape,
     Ham,
     Coffee,
-    pineapple
+    pineapple,
 ]

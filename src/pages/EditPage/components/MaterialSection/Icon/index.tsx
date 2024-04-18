@@ -13,8 +13,8 @@ import { stores as store } from "@/store/main";
 library.add(fas, far, fab);
 
 const libraryObj: Record<string, IconPack> = {
-  fabname: fab,
   farname: far,
+  fabname: fab,
   fasname: fas,
 };
 
@@ -42,27 +42,13 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
         );
   }, [search]);
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(5,1fr)",
-        flexWrap: "wrap",
-        gap: "4px",
-      }}
-    >
-      {iconArray.slice(0, 200).map((ele) => {
+    <div className="border grid grid-cols-5 gap-4 overflow-y-scroll  rounded-lg">
+      {iconArray.map((ele) => {
         return (
-          <div
-            key={ele}
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
+          <div key={ele} className="col-span-1 flex flex-col">
             <FontAwesomeIcon
               style={{
-                width: 36,
+                width: 32,
                 height: 28,
                 color: "grey",
                 cursor: "pointer",
@@ -71,7 +57,7 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
                 `${libraryName.slice(0, 3)}` as any,
                 libraryObj[libraryName][ele]?.iconName,
               ]}
-              onClick={(e) => {
+              onClick={() => {
                 onAddSVG(libraryObj[libraryName][ele]?.iconName);
               }}
             />
@@ -89,55 +75,23 @@ const IconEditor = () => {
     setSearch(() => str.target.value);
   };
 
-  // const onAddIcon = (param: any) => {
-  //   fabric.loadSVGFromURL(rilis[param], (objects, options) => {
-  //     store?.canvasStore.canvas?.add(objects[0]).renderAll();
-  //   });
-  // };
-
   return (
     <div>
-      <div
-        style={{
-          marginBottom: "8px",
-        }}
-      >
+      <div>
         <Input value={search} onChange={onSearchChange} />
       </div>
-      <div
-        style={{
-          height: "calc(100vh - 220px)",
-          overflowY: "scroll",
-        }}
-      >
-        {Object.keys(libraryObj).map((ele) => {
-          return <SubIconArray key={ele} search={search} libraryName={ele} />;
-        })}
-        {/* <div
+      {
+        <div
           style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "4px",
+            height: "calc(100vh - 200px)",
           }}
+          className="grid grid-rows-3 gap-4 mt-2 "
         >
-          {rilis.map((ele, index) => {
-            return (
-              <div
-                key={ele}
-                style={{
-                  width: 36,
-                  height: 28,
-                }}
-                onClick={() => {
-                  onAddIcon(index);
-                }}
-              >
-                <img src={ele} style={{ width: 24, height: 24 }} />
-              </div>
-            );
+          {Object.keys(libraryObj).map((ele) => {
+            return <SubIconArray key={ele} search={search} libraryName={ele} />;
           })}
-        </div> */}
-      </div>
+        </div>
+      }
     </div>
   );
 };

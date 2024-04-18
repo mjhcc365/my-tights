@@ -22,12 +22,10 @@ const TextSectioin = () => {
     store?.canvasStore.canvas.add(text);
   };
 
-  const onChangeTab = () => {};
-
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "单一素材",
+      label: "字体",
       children: (
         <div
           style={{
@@ -62,18 +60,15 @@ const TextSectioin = () => {
     },
     {
       key: "2",
-      label: "组合素材",
+      label: "艺术字",
       children: "Content of Tab Pane 2",
     },
   ];
 
   return (
-    <div
-      style={{
-        cursor: "pointer",
-      }}
-    >
-      <h1
+    <div className="flex flex-col gap-4 pt-4 cursor-pointer">
+      <div
+        className="text-3xl"
         onClick={() => {
           handleAddText("点击添加标题文字", {
             fontSize: 20,
@@ -81,8 +76,9 @@ const TextSectioin = () => {
         }}
       >
         点击添加标题文字
-      </h1>
+      </div>
       <h4
+        className="text-2xl"
         onClick={() => {
           handleAddText("点击添加副标题文字", {
             fontSize: 16,
@@ -92,6 +88,7 @@ const TextSectioin = () => {
         点击添加副标题文字
       </h4>
       <div
+        className="text-xl"
         onClick={() => {
           handleAddText("点击添加正文", {
             fontSize: 14,
@@ -100,19 +97,7 @@ const TextSectioin = () => {
       >
         点击添加正文
       </div>
-      {/* <div
-        style={{
-          marginTop: "12px",
-          display: "flex",
-          gap: "8px",
-          justifyContent: "center",
-        }}
-      >
-        <Button>横向</Button>
-        <Button>竖向</Button>
-      </div> */}
-
-      <Tabs defaultActiveKey="1" items={items} onChange={onChangeTab} />
+      <Tabs defaultActiveKey="1" items={items} />
     </div>
   );
 };
