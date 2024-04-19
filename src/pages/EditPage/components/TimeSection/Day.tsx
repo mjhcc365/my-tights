@@ -2,7 +2,7 @@ import { DatePicker, Button } from "antd";
 import { fabric } from "fabric";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 import { FORMAT_MOCK } from "@/utils/date";
 import "./index.less";
 

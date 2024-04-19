@@ -1,6 +1,6 @@
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 export const useDraw = () => {
   // 画月份

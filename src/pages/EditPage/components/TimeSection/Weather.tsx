@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { fabric } from "fabric";
 import fetchJsonp from "fetch-jsonp";
 
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 const zonghe =
   "https://api.caiyunapp.com/v2.6/p2Tk6q3dOepTkxUq/116.3176,39.9760/weather?alert=true&dailysteps=1&hourlysteps=24";

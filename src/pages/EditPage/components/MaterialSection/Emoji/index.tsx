@@ -3,7 +3,7 @@ import { Button } from "antd";
 import { fabric } from "fabric";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import "./index.less";
 

@@ -1,14 +1,14 @@
 import { InputNumber, Select, ColorPicker, Flex, Switch, Button } from "antd";
 import { useEffect } from "react";
 import { fabric } from "fabric";
-import { HBSType } from "@/store/useCanvas";
-import { stores as store } from "@/store/main";
+import { HBSType } from "@/pages/EditPage/config/paper";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import usePaperStore, {
   PaperTempOptions,
   PaperBackType,
   PaperBackArray,
-} from "@/store/usePaperStore";
+} from "@/pages/EditPage/components/SizeSection/usePaperStore";
 
 import "./index.less";
 
@@ -238,7 +238,7 @@ const SizeSection = () => {
                   {...ele}
                   isActive={paperConfig.backConfig === ele.value}
                   onClick={(v) => {
-                    onChangeTexture(v, null, null);
+                    // onChangeTexture(v, null, null);
                     setPaperConfig((d) => {
                       d.backConfig = v;
                     });

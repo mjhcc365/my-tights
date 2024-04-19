@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { fabric } from "fabric";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

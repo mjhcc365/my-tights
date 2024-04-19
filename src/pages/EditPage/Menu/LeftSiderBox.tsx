@@ -1,8 +1,5 @@
-import { Menu } from "antd";
 import { useState } from "react";
-import type { MenuProps } from "antd";
 import Icon from "@/HbsUI/Icon";
-import TemplatesSectioin from "@/pages/EditPage/components/Templates";
 import TextSectioin from "@/pages/EditPage/components/TextSection";
 import MaterialSection from "@/pages/EditPage/components/MaterialSection";
 import SizeSection from "@/pages/EditPage/components/SizeSection";

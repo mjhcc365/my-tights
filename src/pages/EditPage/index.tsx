@@ -5,44 +5,15 @@ import { observer } from "mobx-react-lite";
 import MJHeader from "./Header";
 import MainContent from "./Content";
 import LeftSiderBox from "./Menu/LeftSiderBox";
-
-import "./index.less";
-
 import "@/assets/iconfont/iconfont.js";
-
-import { stores } from "@/store/main";
+import "./index.less";
+import { stores } from "@/pages/EditPage/store/main";
+import { layoutStyle, headerStyle, siderStyle, contentStyle } from "./styles";
 
 const { Header, Sider, Content } = Layout;
 
-export const headerStyle: React.CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  paddingInline: 48,
-  backgroundColor: "#fff",
-  borderBottom: "1px solid #f5f5f5",
-};
-
-export const contentStyle: React.CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  backgroundColor: "#0958d9",
-};
-
-export const siderStyle: React.CSSProperties = {
-  textAlign: "center",
-  backgroundColor: "#fff",
-  display: "flex",
-  flexDirection: "column",
-};
-
-export const layoutStyle = {
-  borderRadius: 8,
-  overflow: "hidden",
-};
-
 const HomePage = () => {
   const handleUnload = () => {
-    console.log("==>unload");
     stores.dexieStore.clear();
   };
 
@@ -71,38 +42,3 @@ const HomePage = () => {
 };
 
 export default observer(HomePage);
-
-// class TestStore {
-//   show: boolean = false;
-
-//   constructor() {
-//     makeObservable(this, {
-//       show: observable
-//     })
-//   }
-
-//   setShow = () => {
-//     this.show = !this.show
-//   }
-// }
-
-// const testStore = new TestStore()
-
-// const Comp = () => {
-//   return <div>{testStore.show ? "show" : "noshow"}</div>
-// }
-
-// const Test = () => {
-//   return <>
-//     <div>
-//       <Button onClick={() => {
-//         console.log("==>点击")
-//         testStore.setShow()
-//       }}>按钮</Button>
-//     </div>
-//     <div>{testStore.show ? "show" : "noshow"}</div>
-//     <Comp />
-//   </>
-// }
-
-// export default observer(Test)

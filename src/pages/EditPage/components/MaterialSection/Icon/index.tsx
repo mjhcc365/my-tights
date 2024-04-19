@@ -8,7 +8,7 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // import { rilis } from "./calendar";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 library.add(fas, far, fab);
 

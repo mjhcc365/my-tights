@@ -1,6 +1,6 @@
 import { fabric } from "fabric";
 import { Button } from "antd";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 import rule from "@/assets/cm.svg";
 import { fabricRenderJson } from "@/utils/fabric";
 

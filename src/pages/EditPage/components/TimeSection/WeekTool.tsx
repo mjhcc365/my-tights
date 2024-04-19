@@ -3,7 +3,7 @@ import { DatePicker, Button } from "antd";
 import dayjs from "dayjs";
 import { fabric } from "fabric";
 import { useDraw } from "./tools";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import PenImg from "@/assets/pen.jpg";
 import LogoImg from "@/assets/logo.png";

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { MainTools } from "@/pages/EditPage/components/Tools/Tools";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import "./TopTools.less";
 

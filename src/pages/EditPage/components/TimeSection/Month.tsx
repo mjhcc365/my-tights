@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useDraw } from "./tools";
 
 import { ImageCard } from "./Images";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import PenImg from "@/assets/pen.jpg";
 import LogoImg from "@/assets/logo.png";

@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
 import imgUrl from "@/assets/logo.png";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import "./index.less";
 

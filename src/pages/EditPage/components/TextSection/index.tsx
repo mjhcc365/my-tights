@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 import { nanoid } from "nanoid";
 import { WEB_FONTS } from "@/pages/EditPage/components/Tools/types";
 import { Tabs } from "antd";

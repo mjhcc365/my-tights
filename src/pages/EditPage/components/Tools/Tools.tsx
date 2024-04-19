@@ -21,7 +21,7 @@ import {
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
 import { Layers, SYS_FONTS, WEB_FONTS } from "./types";
-import { stores as store } from "@/store/main";
+import { stores as store } from "@/pages/EditPage/store/main";
 
 import "./Tools.less";
 import Icon from "@/HbsUI/Icon";
