@@ -1,8 +1,8 @@
-import { Button } from "antd";
+import { Button, Select } from "antd";
 import { observer } from "mobx-react-lite";
-import axios from "axios";
 import imgUrl from "@/assets/logo.png";
 import { stores as store } from "@/pages/EditPage/store/main";
+import { ALL_FONTS } from "@/utils/fonts";
 
 import "./index.less";
 
@@ -28,10 +28,6 @@ const MJHeader = () => {
     localStorage.clear();
     location.reload();
   };
-
-  const handleSave = () => {};
-
-  const handleClickPDF = () => {};
 
   const handleClickJson = () => {
     if (!store?.canvasStore.canvas) return;
@@ -63,20 +59,7 @@ const MJHeader = () => {
     store.canvasStore.setActiveObj(null);
   };
 
-  const handleGetPicture = () => {
-    const ACCESS_KEY = "pV3slW8tpn9nsDJ-sivbAWCHj13h-M96ZHXzF5M0_ps";
-    const Secretkey = "2mI3UAW50rPe7BeI5J7NiyPH4YQXtx4YOxGBO9Gm3OI";
-    const appid = "589374";
-
-    axios
-      .get(`https://api.unsplash.com/photos/?client_id=${ACCESS_KEY}`, {})
-      .then((res: any) => {
-        console.log("===>", res);
-      })
-      .catch((error) => {
-        console.log("===>", error);
-      });
-  };
+  const handleFontChange = () => {};
 
   return (
     <div className="headerBox">
@@ -95,10 +78,21 @@ const MJHeader = () => {
       <div className="btns-box">
         <Button onClick={handleClickPic}>下载图片</Button>
         <Button onClick={handleClickJson}>下载JSON</Button>
-        <Button onClick={handleClickPDF}>下载PDF</Button>
+        <Button onClick={handleClickJson}>下载PDF</Button>
         {/* <Button onClick={handleOnSave}>暂存</Button> */}
         <Button onClick={handleReset}>清除</Button>
-        <Button onClick={handleSave}>保存</Button>
+        <Button onClick={handleReset}>保存</Button>
+        <Select
+          style={{ width: 100 }}
+          value={(store?.canvasStore.activeObj as any)?.fontFamily}
+          options={ALL_FONTS}
+          optionRender={(ele) => {
+            return (
+              <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>
+            );
+          }}
+          onChange={handleFontChange}
+        />
         {/* <Button onClick={handleGetPicture}>请求unsplash接口</Button> */}
       </div>
     </div>

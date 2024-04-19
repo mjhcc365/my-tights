@@ -1,7 +1,6 @@
 import { action, computed, makeAutoObservable, observable } from "mobx"
 import { fabric } from "fabric"
 
-
 class CanvasStore {
     canvas: fabric.Canvas | null = null;
     activeObj: fabric.Object | null = null;

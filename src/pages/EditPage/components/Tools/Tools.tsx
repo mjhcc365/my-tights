@@ -20,13 +20,12 @@ import {
 } from "antd";
 import { fabric } from "fabric";
 import { nanoid } from "nanoid";
-import { Layers, SYS_FONTS, WEB_FONTS } from "./types";
 import { stores as store } from "@/pages/EditPage/store/main";
+import { Layers, ALL_FONTS, ALL_SIZE } from "@/utils/fonts";
 
 import "./Tools.less";
 import Icon from "@/HbsUI/Icon";
 import { observer } from "mobx-react-lite";
-import { observe } from "mobx";
 
 export const Copy = () => {
   const handleCope = () => {
@@ -146,55 +145,6 @@ export const UnLock = () => {
     </Tooltip>
   );
 };
-
-const ALL_FONTS = SYS_FONTS.concat(WEB_FONTS);
-
-const ALL_SIZE = [
-  {
-    label: "100",
-    value: 100,
-  },
-  {
-    label: "90",
-    value: 90,
-  },
-  {
-    label: "80",
-    value: 80,
-  },
-  {
-    label: "70",
-    value: 70,
-  },
-  {
-    label: "60",
-    value: 60,
-  },
-  {
-    label: "50",
-    value: 50,
-  },
-  {
-    label: "40",
-    value: 40,
-  },
-  {
-    label: "30",
-    value: 30,
-  },
-  {
-    label: "20",
-    value: 20,
-  },
-  {
-    label: "18",
-    value: 18,
-  },
-  {
-    label: "16",
-    value: 16,
-  },
-];
 
 export const TextTools = () => {
   // 加粗

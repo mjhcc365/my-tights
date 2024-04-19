@@ -44,8 +44,9 @@ const SizeSection = () => {
 
   const onChangeBackColor = (v: any) => {
     const hex = v.toHexString();
+    console.log("===>", hex, hex.slice(-2) === "00");
     setPaperConfig((d) => {
-      d.backgroundColor = hex;
+      d.backgroundColor = hex.slice(-2) === "00" ? "#ffffff" : hex;
     });
     store.canvasStore.canvas?.setBackgroundColor(hex, () => {});
     store.canvasStore.canvas?.renderAll();
@@ -196,7 +197,7 @@ const SizeSection = () => {
             options={PaperTempOptions}
           />
         </Flex>
-        <Flex gap="small">
+        {/* <Flex gap="small">
           <Flex align="center" gap="small">
             <div>宽度:</div>
             <InputNumber value={paperConfig.width} disabled />
@@ -205,10 +206,10 @@ const SizeSection = () => {
             <div>高度:</div>
             <InputNumber value={paperConfig.height} disabled />
           </Flex>
-        </Flex>
+        </Flex> */}
         <div className="section-title">
           背景颜色
-          <Switch value={paperConfig.showBackColor} onChange={resetBackColor} />
+          {/* <Switch value={paperConfig.showBackColor} onChange={resetBackColor} /> */}
         </div>
         <Flex align="center" gap="small">
           <div>背景颜色:</div>
@@ -222,7 +223,7 @@ const SizeSection = () => {
         </Flex>
         <div className="section-title">
           活页孔{" "}
-          <Switch value={paperConfig.showHole} onChange={onToggleCircle} />
+          {/* <Switch value={paperConfig.showHole} onChange={onToggleCircle} /> */}
         </div>
         <div className="section-title">
           画布填充{" "}

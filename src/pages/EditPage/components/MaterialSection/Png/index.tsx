@@ -16,7 +16,7 @@ const Png = () => {
   return (
     <>
       <div
-        className="grid grid-cols-3 cursor-pointer gap-2 border h-full"
+        className="grid grid-cols-3 cursor-pointer gap-2  h-full"
         style={{
           height: "calc(100vh - 200px)",
         }}
