@@ -9,31 +9,31 @@ import axios from "axios";
 // dpr: for adjusting the device pixel ratio of the image
 
 const ACCESS_KEY = "pV3slW8tpn9nsDJ-sivbAWCHj13h-M96ZHXzF5M0_ps";
-const url = 'https://api.unsplash.com/photos'
-
 
 export  class LoadUnsplashHelper {
     curPage = 1;
     nextPage = 1;
-    curTopic="";
+    collectionId="";
     curPerpage=10;
-    constructor(topic:string,perPage?:number){
-        this.curTopic = topic;
+
+    constructor(collectionId:string,perPage?:number){
+        this.collectionId = collectionId;
         this.curPerpage = perPage || 10
     }
 
     loadMoreData = () => {
+        if(!this.collectionId){
+            return  Promise.resolve([] as any) 
+        }
         if(this.nextPage === this.curPage){
             this.nextPage = this.curPage + 1
             return new Promise((resolve,reject)=>{
-                axios.get(url,{
+                axios.get(`https://api.unsplash.com/collections/${this.collectionId}/photos`,{
                     params:{
                         client_id:ACCESS_KEY,
                         page: this.curPage,
                         per_page: this.curPerpage,
-                        color: this.curTopic,
-                        query:this.curTopic,
-                        order_by:"popular"
+                        order_by:"latest"
                     }
                 }).then((res)=>{
                     this.curPage = this.curPage + 1
@@ -44,50 +44,6 @@ export  class LoadUnsplashHelper {
             })
         }   
     };
-
-    loadTopicData=()=>{
-        return new Promise((resolve,reject)=>{
-            axios.get("https://api.unsplash.com/topics",{
-                params:{
-                    client_id:ACCESS_KEY,
-                    page: this.curPage,
-                    per_page: this.curPerpage,
-                    color: this.curTopic,
-                    query:this.curTopic,
-                    order_by:"popular"
-                }
-            }).then((res)=>{
-                this.curPage = this.curPage + 1
-                resolve(res)
-            }).catch((err)=>{
-                reject(err)
-            })
-        })
-    }
-
-
-    loadCollections=()=>{
-        return new Promise((resolve,reject)=>{
-            axios.get("https://api.unsplash.com/collections",{
-                params:{
-                    client_id:ACCESS_KEY,
-                    page: this.curPage,
-                    per_page: this.curPerpage,
-                    color: this.curTopic,
-                    query:this.curTopic,
-                    order_by:"popular"
-                }
-            }).then((res)=>{
-                this.curPage = this.curPage + 1
-                resolve(res)
-            }).catch((err)=>{
-                reject(err)
-            })
-        })
-
-    }
-
-
 }
 
 
@@ -95,7 +51,6 @@ export class LoadCollectionsHelper{
     curPage = 1;
     nextPage = 1;
     curPerpage=10;
-
     loadCollections = () => {
         if(this.nextPage === this.curPage){
             this.nextPage = this.curPage + 1
@@ -105,7 +60,6 @@ export class LoadCollectionsHelper{
                         client_id:ACCESS_KEY,
                         page: this.curPage,
                         per_page: this.curPerpage,
-                        // order_by:"popular"
                     }
                 }).then((res)=>{
                     this.curPage = this.curPage + 1

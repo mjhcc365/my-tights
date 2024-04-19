@@ -23,7 +23,7 @@ const PictureSection = () => {
   return (
     <div>
       <Tabs
-        defaultActiveKey="2"
+        defaultActiveKey="1"
         items={items}
         onChange={onChange}
         indicatorSize={(origin) => origin - 16}

@@ -60,7 +60,7 @@ const LeftSiderBox = () => {
         {curmenu === MENUKEY.text && isOpen && <TextSectioin />}
         {curmenu === MENUKEY.material && <MaterialSection />}
         {curmenu === MENUKEY.size && <SizeSection />}
-        {/* {curmenu === MENUKEY.time && <TimeSection />} */}
+        {curmenu === MENUKEY.time && <TimeSection />}
         {/* {curmenu === MENUKEY.tools && <ToolsSection />} */}
         {curmenu === MENUKEY.picture && <PictureSection />}
       </div>
