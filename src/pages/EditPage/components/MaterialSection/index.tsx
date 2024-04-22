@@ -4,7 +4,7 @@ import Rect from "./Rect";
 import Icon from "./Icon";
 import Emoji from "./Emoji";
 import Png from "./Png";
-import Picture from "./Picture";
+// import Picture from "./Picture";
 
 const items: TabsProps["items"] = [
   {

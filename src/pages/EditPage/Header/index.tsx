@@ -3,25 +3,18 @@ import { observer } from "mobx-react-lite";
 import imgUrl from "@/assets/logo.png";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { ALL_FONTS } from "@/utils/fonts";
+import { download, downloadJson } from "@/utils/download";
 
 import "./index.less";
 
 const MJHeader = () => {
+  // 导出为图片
   const handleClickPic = () => {
     var dataURL = store?.canvasStore.canvas?.toDataURL({
       format: "png", // 指定导出格式，可以是 'png', 'jpeg', 'webp' 等
       quality: 0.8,
     });
-    //
-    var downloadLink: any = document.createElement("a");
-    downloadLink.href = dataURL;
-    downloadLink.download = "fabric_image.png"; // 设置下载的文件名
-    // 将链接添加到文档中
-    document.body.appendChild(downloadLink);
-    // 模拟点击链接以触发下载
-    downloadLink.click();
-    // 移除链接元素
-    document.body.removeChild(downloadLink);
+    download(dataURL, "fabric_image.png");
   };
 
   const handleReset = () => {
@@ -61,6 +54,12 @@ const MJHeader = () => {
 
   const handleFontChange = () => {};
 
+  // 下载当前绘制的一个组
+  const handleDownloadGroup = () => {
+    const json = store.canvasStore.canvas?.getActiveObject()?.toJSON();
+    downloadJson(JSON.stringify(json));
+  };
+
   return (
     <div className="headerBox">
       <div className="logo-box">
@@ -77,6 +76,7 @@ const MJHeader = () => {
       </div>
       <div className="btns-box">
         <Button onClick={handleClickPic}>下载图片</Button>
+        <Button onClick={handleDownloadGroup}>下载Group</Button>
         <Button onClick={handleClickJson}>下载JSON</Button>
         <Button onClick={handleClickJson}>下载PDF</Button>
         {/* <Button onClick={handleOnSave}>暂存</Button> */}

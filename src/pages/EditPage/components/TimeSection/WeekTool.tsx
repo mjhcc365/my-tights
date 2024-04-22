@@ -29,19 +29,20 @@ const Week = () => {
     const group = new fabric.Group();
 
     for (let i = 1; i <= 7; i++) {
-      const rect = new fabric.Rect({
-        top: 20, // 距离画布顶部距离
-        left:
-          (5 * store?.canvasStore.zoomRodio +
-            2 * store?.canvasStore.zoomRodio) *
-          i, // 距离画布左侧距离
-        width: 5 * store?.canvasStore.zoomRodio, // 矩形宽度
-        height: 5 * store?.canvasStore.zoomRodio, // 矩形高度
-        // fill: "#f5f5f5",
-        // stroke: ""
-      });
-
-      group.addWithUpdate(rect);
+      for (let j = 1; j <= 2; j++) {
+        const rect = new fabric.Rect({
+          top: 100 * j, // 距离画布顶部距离
+          left:
+            (5 * store?.canvasStore.zoomRodio +
+              2 * store?.canvasStore.zoomRodio) *
+            i, // 距离画布左侧距离
+          width: 5 * store?.canvasStore.zoomRodio, // 矩形宽度
+          height: 5 * store?.canvasStore.zoomRodio, // 矩形高度
+          // fill: "#f5f5f5",
+          // stroke: ""
+        });
+        group.addWithUpdate(rect);
+      }
     }
     store?.canvasStore.canvas?.add(group);
     store?.canvasStore.canvas?.renderAll();

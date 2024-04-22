@@ -4,6 +4,7 @@ import TextSectioin from "@/pages/EditPage/components/TextSection";
 import MaterialSection from "@/pages/EditPage/components/MaterialSection";
 import SizeSection from "@/pages/EditPage/components/SizeSection";
 import TimeSection from "@/pages/EditPage/components/TimeSection";
+import Calender from "@/pages/EditPage/components/Calender";
 import ToolsSection from "@/pages/EditPage/components/ToolsSection";
 import PictureSection from "../components/PictureSection";
 import { menuConfig, MENUKEY } from "./types";
@@ -60,6 +61,7 @@ const LeftSiderBox = () => {
         {curmenu === MENUKEY.time && <TimeSection />}
         {/* {curmenu === MENUKEY.tools && <ToolsSection />} */}
         {curmenu === MENUKEY.picture && <PictureSection />}
+        {curmenu === MENUKEY.todos && <Calender />}
       </div>
       <div
         style={{
