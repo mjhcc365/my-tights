@@ -18,7 +18,7 @@ import {
   InputNumber,
   Tooltip,
 } from "antd";
-import { fabric } from "fabric";
+import { util, Group } from "fabric";
 import { nanoid } from "nanoid";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { Layers, ALL_FONTS, ALL_SIZE } from "@/utils/fonts";
@@ -30,16 +30,16 @@ import { observer } from "mobx-react-lite";
 export const Copy = () => {
   const handleCope = () => {
     if (!store?.canvasStore.canvas) return;
-    const clonedRect = fabric.util.object.clone(
-      store?.canvasStore.canvas?.getActiveObject()
-    );
-    store?.canvasStore.canvas?.add(clonedRect);
-    clonedRect.set({
-      left: (store?.canvasStore.canvas?.getActiveObject()?.left || 0) + 60,
-      top: (store?.canvasStore.canvas?.getActiveObject()?.top || 0) + 60,
-    });
-    store?.canvasStore.canvas?.discardActiveObject();
-    store?.canvasStore.canvas?.renderAll();
+    // const clonedRect = util.object.clone(
+    //   store?.canvasStore.canvas?.getActiveObject()
+    // );
+    // store?.canvasStore.canvas?.add(clonedRect);
+    // clonedRect.set({
+    //   left: (store?.canvasStore.canvas?.getActiveObject()?.left || 0) + 60,
+    //   top: (store?.canvasStore.canvas?.getActiveObject()?.top || 0) + 60,
+    // });
+    // store?.canvasStore.canvas?.discardActiveObject();
+    // store?.canvasStore.canvas?.renderAll();
   };
 
   return (
@@ -270,16 +270,16 @@ export const LaylerSelect = () => {
     if (!store?.canvasStore.canvas) return;
     switch (value) {
       case "top":
-        store?.canvasStore.canvas?.getActiveObject()?.bringToFront();
+        // store?.canvasStore.canvas?.getActiveObject()?.bringToFront();
         break;
       case "pre": //
-        store?.canvasStore.canvas?.getActiveObject()?.bringForward();
+        // store?.canvasStore.canvas?.getActiveObject()?.bringForward();
         break;
       case "next": // 下一层
-        store?.canvasStore.canvas?.getActiveObject()?.sendBackwards();
+        // store?.canvasStore.canvas?.getActiveObject()?.sendBackwards();
         break;
       case "bottom": // 底层
-        store?.canvasStore.canvas?.getActiveObject()?.sendToBack();
+        // store?.canvasStore.canvas?.getActiveObject()?.sendToBack();
         break;
       default:
         return;
@@ -465,7 +465,7 @@ export const SetGroup = () => {
     if (activeObjects.length > 1) {
       store?.canvasStore.setActiveObj(null);
       store?.canvasStore.canvas.discardActiveObject();
-      const group = new fabric.Group(activeObjects, {
+      const group = new Group(activeObjects, {
         id: nanoid(10),
         // name: ElementNames.GROUP,
         interactive: false,
@@ -479,7 +479,7 @@ export const SetGroup = () => {
 
   const handleIntersectElements = () => {
     if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
+    const group = store?.canvasStore.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       store?.canvasStore.canvas?.add(ele);
     });
@@ -491,7 +491,7 @@ export const SetGroup = () => {
 
   const handleLeft = () => {
     if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
+    const group = store?.canvasStore.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         left: -((group.width || 0) / 2),
@@ -502,7 +502,7 @@ export const SetGroup = () => {
 
   const handleRight = () => {
     if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
+    const group = store?.canvasStore.canvas.getActiveObject() as Group;
 
     group.getObjects().forEach((ele) => {
       ele.set({
@@ -514,7 +514,7 @@ export const SetGroup = () => {
 
   const handleTop = () => {
     if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
+    const group = store?.canvasStore.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         top: -((group.height || 0) / 2),
@@ -525,7 +525,7 @@ export const SetGroup = () => {
 
   const handleBottom = () => {
     if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as fabric.Group;
+    const group = store?.canvasStore.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         top: (group?.height || 0) / 2 - (ele?.height || 0),

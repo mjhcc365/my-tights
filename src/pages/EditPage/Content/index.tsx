@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import TopTools from "./TopTools";
 import { observer } from "mobx-react-lite";
 import { stores as store } from "@/pages/EditPage/store/main";

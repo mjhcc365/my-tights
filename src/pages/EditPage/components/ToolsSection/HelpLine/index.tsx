@@ -1,5 +1,5 @@
 import { Flex, Button, ColorPicker, Radio } from "antd";
-import { fabric } from "fabric";
+import { Line, Group } from "fabric";
 import { useImmer } from "use-immer";
 import { stores as store } from "@/pages/EditPage/store/main";
 
@@ -34,7 +34,7 @@ const HelpLine = () => {
     // 绘制横线
     const hLines = [];
     for (let i = 1; i < helpLine.portion; i++) {
-      const line = new fabric.Line([0, item * i, cw, item * i], {
+      const line = new Line([0, item * i, cw, item * i], {
         stroke: helpLine.stroke,
         strokeWidth: helpLine.strokeWidth,
         strokeDashArray: [2, 2],
@@ -42,9 +42,9 @@ const HelpLine = () => {
       hLines.push(line);
     }
 
-    const group = new fabric.Group(hLines);
+    const group = new Group(hLines);
     store?.canvasStore.canvas?.add(group);
-    group?.sendToBack(); // 置于底层
+    // group?.sendToBack(); // 置于底层
   };
 
   // 绘制竖线
@@ -54,7 +54,7 @@ const HelpLine = () => {
     const item = cw / helpLine.portion;
     const vLines = [];
     for (let i = 1; i < helpLine.portion; i++) {
-      const line = new fabric.Line([item * i, 0, item * i, ch], {
+      const line = new Line([item * i, 0, item * i, ch], {
         stroke: helpLine.stroke,
         strokeWidth: helpLine.strokeWidth,
         strokeDashArray: [2, 2],
@@ -62,18 +62,10 @@ const HelpLine = () => {
       vLines.push(line);
     }
 
-    // const group = new fabric.Group(vLines, {
-    //     selectable: false,
-    //     lockMovementX: true,
-    //     lockMovementY: true,
-    //     lockScalingX: true,
-    //     lockScalingY: true
-    // });
-
-    const group = new fabric.Group(vLines);
+    const group = new Group(vLines);
 
     store?.canvasStore.canvas?.add(group);
-    group?.sendToBack(); // 置于底层
+    // group?.sendToBack(); // 置于底层
   };
 
   const onHelpLineChange = () => {

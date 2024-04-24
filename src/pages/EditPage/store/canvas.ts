@@ -1,9 +1,9 @@
 import { action, computed, makeAutoObservable, observable } from "mobx";
-import { fabric } from "fabric";
+import { Canvas, Object as FabricObject } from "fabric";
 
 class CanvasStore {
-  canvas: fabric.Canvas | null = null;
-  activeObj: fabric.Object | null = null;
+  canvas: Canvas | null = null;
+  activeObj: FabricObject | null = null;
   zoomRodio: number = 5;
 
   constructor() {
@@ -19,7 +19,7 @@ class CanvasStore {
   }
 
   @action
-  setActiveObj = (activeObj: fabric.Object | null) => {
+  setActiveObj = (activeObj: FabricObject | null) => {
     this.activeObj = activeObj;
   };
 
@@ -33,7 +33,7 @@ class CanvasStore {
   };
 
   @action
-  setCanvas = (canvas: fabric.Canvas | null) => {
+  setCanvas = (canvas: Canvas | null) => {
     this.canvas = canvas;
   };
 

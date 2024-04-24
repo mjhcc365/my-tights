@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { DatePicker, Button } from "antd";
 import dayjs from "dayjs";
-import { fabric } from "fabric";
+import { Group, Rect } from "fabric";
 import { useDraw } from "./tools";
 import { stores as store } from "@/pages/EditPage/store/main";
 
@@ -26,11 +26,11 @@ const Week = () => {
   // const { drawMonth } = useDraw()
 
   const onDrawWeek = () => {
-    const group = new fabric.Group();
+    const group = new Group();
 
     for (let i = 1; i <= 7; i++) {
       for (let j = 1; j <= 2; j++) {
-        const rect = new fabric.Rect({
+        const rect = new Rect({
           top: 100 * j, // 距离画布顶部距离
           left:
             (5 * store?.canvasStore.zoomRodio +
@@ -41,7 +41,8 @@ const Week = () => {
           // fill: "#f5f5f5",
           // stroke: ""
         });
-        group.addWithUpdate(rect);
+        group.add(rect);
+        // group.addWithUpdate(rect);
       }
     }
     store?.canvasStore.canvas?.add(group);

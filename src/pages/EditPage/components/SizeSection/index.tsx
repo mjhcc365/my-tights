@@ -1,6 +1,6 @@
 import { InputNumber, Select, ColorPicker, Flex, Switch, Button } from "antd";
 import { useEffect } from "react";
-import { fabric } from "fabric";
+import { Group, Circle } from "fabric";
 import { HBSType } from "@/pages/EditPage/config/paper";
 import { stores as store } from "@/pages/EditPage/store/main";
 
@@ -97,7 +97,7 @@ const SizeSection = () => {
     });
     store.canvasStore.canvas?.getObjects().forEach((ele) => {
       if ((ele as any).hbsType === HBSType.back) {
-        ((ele as fabric.Group).getObjects() || []).forEach((item) => {
+        ((ele as Group).getObjects() || []).forEach((item) => {
           item.set({
             stroke: hex,
           });
@@ -144,7 +144,7 @@ const SizeSection = () => {
 
     const circles = [];
     for (let i = 0; i <= 2; i++) {
-      const c = new fabric.Circle({
+      const c = new Circle({
         radius: CIRCLE_R * store.canvasStore.zoomRodio,
         top:
           middle +
@@ -157,7 +157,7 @@ const SizeSection = () => {
     }
 
     for (let i = 0; i <= 2; i++) {
-      const c = new fabric.Circle({
+      const c = new Circle({
         radius: CIRCLE_R * store.canvasStore.zoomRodio,
         top:
           middle -
@@ -169,7 +169,7 @@ const SizeSection = () => {
       circles.push(c);
     }
 
-    const group = new fabric.Group(circles, {
+    const group = new Group(circles, {
       selectable: false,
       hbsType: "holes",
     } as any);

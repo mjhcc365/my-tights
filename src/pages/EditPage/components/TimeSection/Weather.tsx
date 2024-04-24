@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { fabric } from "fabric";
+import { Textbox } from "fabric";
 import fetchJsonp from "fetch-jsonp";
 
 import { stores as store } from "@/pages/EditPage/store/main";
@@ -83,7 +83,7 @@ const Weather = () => {
   const handleAddText = (param: string, options: any) => {
     if (!store?.canvasStore.canvas) return;
     // TODO 双击修改文案
-    const text = new fabric.Textbox(param, {
+    const text = new Textbox(param, {
       left: 150,
       top: 150,
       fontSize: 20,

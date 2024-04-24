@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import { Textbox } from "fabric";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { nanoid } from "nanoid";
 import { WEB_FONTS } from "@/pages/EditPage/components/Tools/types";
@@ -9,7 +9,7 @@ const TextSectioin = () => {
   const handleAddText = (param: string, options: any) => {
     if (!store?.canvasStore.canvas) return;
     // TODO 双击修改文案
-    const text = new fabric.Textbox(param, {
+    const text = new Textbox(param, {
       left: 150,
       top: 150,
       fontSize: 20,

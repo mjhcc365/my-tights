@@ -1,11 +1,10 @@
-import { fabric } from "fabric";
+import { FabricImage } from "fabric";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { mockpng } from "./mockpng";
 
 const Png = () => {
-  const handleAddPicture = (index: any) => {
-    fabric.Image.fromURL(mockpng[index], function (img) {
-      // 图像加载成功后的回调函数
+  const handleAddPicture = async (index: any) => {
+    FabricImage.fromURL(mockpng[index]).then((img) => {
       img.scaleToWidth(200); // 设置图像宽度
       img.scaleToHeight(200); // 设置图像高度
       store?.canvasStore.canvas?.add(img); // 添加图像到 Canvas

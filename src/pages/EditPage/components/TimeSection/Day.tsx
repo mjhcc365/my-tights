@@ -1,5 +1,5 @@
 import { DatePicker, Button } from "antd";
-import { fabric } from "fabric";
+import { Textbox } from "fabric";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { stores as store } from "@/pages/EditPage/store/main";
@@ -17,7 +17,7 @@ const Day = () => {
 
   const onDraw = (format: any) => {
     if (!store?.canvasStore.canvas) return;
-    const text = new fabric.Textbox(dayjs(date).format(format), {
+    const text = new Textbox(dayjs(date).format(format), {
       left: 50,
       top: 50,
       fontSize: 20,

@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import { loadSVGFromString, util } from "fabric";
 import { Input } from "antd";
 import { useMemo, useState } from "react";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -22,16 +22,15 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
   const { search, libraryName } = props;
   const onAddSVG = (iconname: any) => {
     const node: Element | null = document.querySelector(`.fa-${iconname}`);
-    fabric.loadSVGFromString(node?.outerHTML || "", (objects, options) => {
-      // store?.canvasStore.canvas?.add(node?.src).renderAll();
-      const svgObjects = fabric.util.groupSVGElements(objects, options);
+    loadSVGFromString(node?.outerHTML || "").then((ele) => {
+      const svgObjects = util.groupSVGElements(ele.objects, ele.options);
       svgObjects.set({
         left: 100,
         top: 100,
         scaleX: 0.5,
         scaleY: 0.5,
       });
-      store?.canvasStore.canvas?.add(svgObjects).renderAll();
+      store?.canvasStore.canvas?.add(svgObjects);
     });
   };
   const iconArray = useMemo(() => {

@@ -1,22 +1,22 @@
-import { fabric } from "fabric";
+import { Textbox, Circle, Group } from "fabric";
 
-export const fabricRender=(obj:any)=>{
+export const fabricRender = (obj: any) => {
   switch (obj.type) {
     case "textbox":
-      return new fabric.Textbox(obj.text,{...obj})
+      return new Textbox(obj.text, { ...obj });
     case "circle":
-      return new fabric.Circle({...obj})
+      return new Circle({ ...obj });
     case "group":
-      return fabricRenderJson(obj.objects,{...obj})
+      return fabricRenderJson(obj.objects, { ...obj });
     default:
       break;
   }
-}
+};
 
-export const fabricRenderJson = (objects: any,options?:any) => {
-    const group = new fabric.Group(undefined,options);
-    (objects||[]).map((ele: any) => {
-      group.addWithUpdate(fabricRender(ele)) 
-    });
-    return group;
-  };
+export const fabricRenderJson = (objects: any, options?: any) => {
+  const group = new Group(undefined, options);
+  (objects || []).map((ele: any) => {
+    // group.add(fabricRender(ele));
+  });
+  return group;
+};
