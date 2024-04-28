@@ -48,18 +48,18 @@ const SizeSection = () => {
     setPaperConfig((d) => {
       d.backgroundColor = hex.slice(-2) === "00" ? "#ffffff" : hex;
     });
-    store.canvasStore.canvas?.setBackgroundColor(hex, () => {});
+    store.canvasStore.canvas?.set("backgroundColor", hex);
     store.canvasStore.canvas?.renderAll();
   };
 
-  const resetBackColor = (v: boolean) => {
-    const hex = v ? paperConfig.backgroundColor : "#fff";
-    setPaperConfig((d) => {
-      d.showBackColor = v;
-    });
-    store.canvasStore.canvas?.setBackgroundColor(hex, () => {});
-    store.canvasStore.canvas?.renderAll();
-  };
+  // const resetBackColor = (v: boolean) => {
+  //   const hex = v ? paperConfig.backgroundColor : "#fff";
+  //   setPaperConfig((d) => {
+  //     d.showBackColor = v;
+  //   });
+  //   store.canvasStore.canvas?.set("backgroundColor", hex);
+  //   store.canvasStore.canvas?.renderAll();
+  // };
 
   const onClearBackTexture = () => {
     store.canvasStore.canvas?.getObjects().forEach((ele) => {
@@ -108,17 +108,17 @@ const SizeSection = () => {
   };
 
   // 绘制活页孔
-  const onToggleCircle = (v: boolean) => {
-    store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
-      if (ele.hbsType === HBSType.holes) {
-        ele.visible = v;
-      }
-    });
-    setPaperConfig((d) => {
-      d.showHole = v;
-    });
-    store.canvasStore.canvas?.renderAll();
-  };
+  // const onToggleCircle = (v: boolean) => {
+  //   store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
+  //     if (ele.hbsType === HBSType.holes) {
+  //       ele.visible = v;
+  //     }
+  //   });
+  //   setPaperConfig((d) => {
+  //     d.showHole = v;
+  //   });
+  //   store.canvasStore.canvas?.renderAll();
+  // };
 
   const onToggleBack = (v: boolean) => {
     store.canvasStore.canvas?.getObjects().forEach((ele: any) => {

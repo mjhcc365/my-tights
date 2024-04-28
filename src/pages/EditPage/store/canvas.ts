@@ -1,5 +1,5 @@
 import { action, computed, makeAutoObservable, observable } from "mobx";
-import { Canvas, Object as FabricObject } from "fabric";
+import { Canvas, Object as FabricObject, Group, Textbox } from "fabric";
 
 class CanvasStore {
   canvas: Canvas | null = null;

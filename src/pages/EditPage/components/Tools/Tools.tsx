@@ -616,23 +616,23 @@ export const PathToolType = [ToolType.wh, ToolType.fillcolor];
 
 export const getTools = (type: string) => {
   switch (type) {
-    case "text":
-    case "textbox":
+    case "Text":
+    case "Textbox":
       return TextToolTypes;
-    case "image":
+    case "Image":
       return ImageToolTypes;
-    case "ellipse":
-    case "circle":
-    case "triangle":
-    case "rect":
+    case "Ellipse":
+    case "Circle":
+    case "Triangle":
+    case "Rect":
       return ShapeToolTypes;
-    case "path":
+    case "Path":
       return PathToolType;
-    case "group":
+    case "Group":
       return GroupToolTypes;
-    case "activeSelection":
+    case "ActiveSelection":
       return GroupToolTypes;
-    case "line":
+    case "Line":
       return LineToolsType;
     default:
       return null;

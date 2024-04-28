@@ -40,12 +40,11 @@ const MainContent = () => {
     };
     const newCanvas = new fabric.Canvas(canvasRef.current as any, options);
 
-    // newCanvas.on("mouse:down", () => {
-    //   // console.log("==>", store?.canvasStore.canvas?.getActiveObject()?.toObject())
-    //   store?.canvasStore.setActiveObj(
-    //     store.canvasStore.canvas?.getActiveObject()?.toObject()
-    //   );
-    // });
+    newCanvas.on("mouse:down", () => {
+      store?.canvasStore.setActiveObj(
+        store.canvasStore.canvas?.getActiveObject()?.toObject()
+      );
+    });
     store?.canvasStore.setCanvas(newCanvas);
     store?.canvasStore.canvas?.renderAll();
     store?.dexieStore.clear();

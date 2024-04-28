@@ -52,7 +52,9 @@ const MJHeader = () => {
     store.canvasStore.setActiveObj(null);
   };
 
-  const handleFontChange = () => {};
+  const handleFontChange = (v: string) => {
+    store.mainStore.setFontFamily(v);
+  };
 
   // 下载当前绘制的一个组
   const handleDownloadGroup = () => {
@@ -84,7 +86,7 @@ const MJHeader = () => {
         <Button onClick={handleReset}>保存</Button>
         <Select
           style={{ width: 100 }}
-          value={(store?.canvasStore.activeObj as any)?.fontFamily}
+          value={store?.mainStore.fontFamily}
           options={ALL_FONTS}
           optionRender={(ele) => {
             return (

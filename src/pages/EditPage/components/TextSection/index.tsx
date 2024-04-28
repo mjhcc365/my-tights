@@ -13,6 +13,7 @@ const TextSectioin = () => {
       left: 150,
       top: 150,
       fontSize: 20,
+      fontFamily: store.mainStore.fontFamily,
       hbsId: nanoid(),
       hbsType: "textbox",
       fill: "rgb(0,0,0)",

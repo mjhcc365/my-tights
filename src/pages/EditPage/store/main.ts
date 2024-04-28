@@ -7,7 +7,7 @@ class MainPage {
   templates: any[] = [];
   curTempIndex: number = 0; // 当前模板
   snapshots: any[] = [];
-
+  fontFamily: string = "仓耳小丸子";
   constructor() {
     makeAutoObservable(this, {
       templates: observable,
@@ -18,6 +18,10 @@ class MainPage {
   @action
   addTemplates = (template: any) => {
     this.templates[this.templates.length] = template;
+  };
+
+  setFontFamily = (str: string) => {
+    this.fontFamily = str;
   };
 }
 

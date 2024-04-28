@@ -14,31 +14,30 @@ const DEFAULT_COL_WIDTH = 50;
 const DEFAULT_ROW_HEIGHT = 100;
 
 export class fabricTable {
-  group: Group = new Group([], {
+  gridMap: Map<string, any> = new Map([]);
+  top: number = 0;
+  left: number = 0;
+  cWidth: number = 0;
+  cHeight: number = 0;
+  originData: any[] = [];
+  dataMap: any[] = [];
+  canvas: any;
+  tableGroup: Group = new Group([], {
     subTargetCheck: true,
     interactive: true, // 启用选择子目标
   });
-  gridMap: Map<string, BaseCell> = new Map([]);
-  top: number = 0;
-  left: number = 0;
 
-  constructor() {
-    this.initGroup();
-    // 绘制三层
-    // 1. row 绘制每行cell
-    // row 绘制行line 整行
-    // col 绘制列line 整列
+  constructor(canvas: any) {
+    this.canvas = canvas;
+    this.doLayout();
+    this.renderCell();
   }
 
-  initGroup = () => {
-    this.renderCell();
-    this.renderLine();
-  };
-
-  renderCell = () => {
-    mockdata.forEach((rowData: any, rowIndex: number) => {
-      Object.keys(rowData).forEach((colDataKey, colIndex) => {
-        const info = {
+  doLayout = () => {
+    // doLayout
+    mockdata.forEach((ele, rowIndex) => {
+      Object.keys(ele).forEach((_, colIndex) => {
+        const cellCfg = {
           row: rowIndex,
           col: colIndex,
           width: DEFAULT_COL_WIDTH,
@@ -46,15 +45,19 @@ export class fabricTable {
           top: DEFAULT_ROW_HEIGHT * rowIndex,
           left: DEFAULT_COL_WIDTH * colIndex,
         };
-        const cell = new BaseCell({
-          meta: info,
-          context: rowData[colDataKey],
-        });
-
-        this.gridMap.set(`row${rowIndex}-col${colIndex}`, cell);
-        this.group.add(cell.backgroundShape);
-        this.group.add(cell.textShape);
+        this.gridMap.set(`row${rowIndex}-col${colIndex}`, cellCfg);
       });
+    });
+  };
+
+  initGroup = () => {
+    this.renderCell();
+    this.renderLine();
+  };
+
+  renderCell = () => {
+    this.gridMap.forEach((cell) => {
+      // this.renderCell(this.tableGroup, cell, config);
     });
   };
 

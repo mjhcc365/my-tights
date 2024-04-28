@@ -2,15 +2,15 @@ import dayjs from "dayjs";
 
 import { Textbox } from "fabric";
 
-export function getDaysInMonth(date) {
+export function getDaysInMonth(date: any) {
   return date.daysInMonth();
 }
 
-export function getFirstDayOfMonth(date) {
+export function getFirstDayOfMonth(date: any) {
   return date.startOf("month").day();
 }
 
-function drawCalendar(date) {
+function drawCalendar(date: any) {
   //   let fabricCanvas = new fabric.Canvas("calendar");
   let daysInMonth = getDaysInMonth(date);
   let firstDayOfMonth = getFirstDayOfMonth(date);

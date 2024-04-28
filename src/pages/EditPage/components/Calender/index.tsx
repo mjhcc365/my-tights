@@ -27,7 +27,7 @@ const Calender = () => {
     });
 
     const text = new IText("123", {
-      // editable: true,
+      // editable: true
     });
     const group = new Group([text, rect], {
       subTargetCheck: true,
@@ -103,9 +103,5 @@ const Calender = () => {
     </div>
   );
 };
-
-// const Calender = () => {
-//   return <div>111</div>;
-// };
 
 export default Calender;

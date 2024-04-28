@@ -21,6 +21,7 @@ const Day = () => {
       left: 50,
       top: 50,
       fontSize: 20,
+      fontFamily: store.mainStore.fontFamily,
       hbsType: "textbox",
       fill: "rgb(0,0,0)",
       selectable: true,

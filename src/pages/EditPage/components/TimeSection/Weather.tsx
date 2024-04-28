@@ -86,7 +86,8 @@ const Weather = () => {
     const text = new Textbox(param, {
       left: 150,
       top: 150,
-      fontSize: 20,
+      fontSize: 16,
+      fontFamily: store.mainStore.fontFamily,
       hbsType: "textbox",
       fill: "rgb(0,0,0)",
       selectable: true,

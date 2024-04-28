@@ -87,8 +87,7 @@ const usePaperStore = () => {
     } as any);
 
     store.canvasStore.canvas?.add(group);
-    // group?.sendToBack(); // 置于底层
-    // group?.center();
+    store.canvasStore.canvas?.sendObjectToBack(group);
     store.canvasStore.canvas?.renderAll();
   };
   // 画横线

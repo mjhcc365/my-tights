@@ -17,6 +17,7 @@ const LeftSiderBox = () => {
 
   const onClickMenu = (ele: MENUKEY) => {
     setMenu(() => ele);
+    setIsOpen(() => true);
     localStorage.setItem("mj-menu", ele);
   };
 
