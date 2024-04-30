@@ -2,8 +2,9 @@ import { stores as store } from "@/pages/EditPage/store/main";
 import { Button } from "antd";
 import { Rect, Group, IText, Textbox, Line } from "fabric";
 import dayjs from "dayjs";
-import { fabricTable } from "./fabricTable";
+// import { fabricTable } from "./fabricTable";
 import { getDaysInMonth, getFirstDayOfMonth } from "./drawMonth";
+import { fabric } from "../../../TestPage/fabric/index";
 
 // TODO
 // 所有元素添加到一个Group里面。
@@ -12,10 +13,22 @@ import { getDaysInMonth, getFirstDayOfMonth } from "./drawMonth";
 
 const Calender = () => {
   const handleClick = () => {
+    // const table = new fabric.Table({
+    //   strokeWidth: 2,
+    //   cornerSize: 8,
+    //   lockRotation: true,
+    //   left: 1000,
+    //   top: 100,
+    //   rows: [{ height: 50 }, { height: 50 }],
+    //   columns: [{ width: 100 }, { width: 100 }],
+    // });
+    // console.log("==>", table);
+    // // console.log("===>",store.canvasStore.canvas);
+    // store.canvasStore.canvas?.add(table);
     // store.canvasStore;
-    const tabel = new fabricTable();
-    store.canvasStore.canvas?.add(tabel.group);
-    store.canvasStore.canvas?.renderAll();
+    // const tabel = new fabricTable();
+    // store.canvasStore.canvas?.add(tabel.group);
+    // store.canvasStore.canvas?.renderAll();
   };
 
   const handleGroup = () => {
