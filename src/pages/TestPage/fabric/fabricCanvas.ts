@@ -1,19 +1,19 @@
-import { Canvas } from "fabric";
-import * as fabric from "fabric";
+import { fabric } from "fabric";
+// import * as fabric from "fabric";
 /**
  * This code extends the fabric.Canvas class with additional methods and event handlers to enable drawing mode on the canvas.
  * It uses a mixin pattern to keep the drawing-related functionality separate and easily applicable to any fabric.Canvas instance.
  */
 
 // Default drawing class is fabric.Rect, but it can be customized
-Canvas.prototype.drawingClass = "rect";
+fabric.Canvas.prototype.drawingClass = "rect";
 
-Canvas.prototype.drawingOptions = {};
+fabric.Canvas.prototype.drawingOptions = {};
 /**
  * Enable drawing mode on the canvas
  * @param klass - The object type which will be created on mousedown
  */
-Canvas.prototype.enableDrawing = function (klass: string) {
+fabric.Canvas.prototype.enableDrawing = function (klass: string) {
   // If a custom drawing class is provided, use it
   if (klass) {
     this.drawingClass = klass;
@@ -36,7 +36,7 @@ Canvas.prototype.enableDrawing = function (klass: string) {
   this.on("mouse:up", this._tableDrawingMouseUp);
 };
 
-Canvas.prototype.disablePanning = function () {
+fabric.Canvas.prototype.disablePanning = function () {
   // @ts-ignore
   this.off("mouse:down", this._handModeMouseDown);
   // @ts-ignore
@@ -44,9 +44,9 @@ Canvas.prototype.disablePanning = function () {
   this.off("mouse:up", this._handModeMouseUp);
 };
 
-Canvas.prototype.interactiveMode = "selection";
+fabric.Canvas.prototype.interactiveMode = "selection";
 
-Canvas.prototype.enablePanning = function () {
+fabric.Canvas.prototype.enablePanning = function () {
   if (this.interactiveMode === "panning") {
     return;
   }
@@ -60,7 +60,7 @@ Canvas.prototype.enablePanning = function () {
   this.on("mouse:up", this._handModeMouseUp);
 };
 //Disable drawing mode
-Canvas.prototype.disableDrawing = function () {
+fabric.Canvas.prototype.disableDrawing = function () {
   // Enable object selection and remove drawing event listeners
   // @ts-ignore
   this.off("mouse:down", this._tableDrawingMouseDown);
@@ -69,11 +69,11 @@ Canvas.prototype.disableDrawing = function () {
   this.off("mouse:up", this._tableDrawingMouseUp);
 };
 
-Canvas.prototype.disableSelection = function () {
+fabric.Canvas.prototype.disableSelection = function () {
   this.selection = false;
 };
 
-Canvas.prototype.enableSelection = function () {
+fabric.Canvas.prototype.enableSelection = function () {
   if (this.interactiveMode === "selection") {
     return;
   }
@@ -83,7 +83,7 @@ Canvas.prototype.enableSelection = function () {
   this.selection = true;
 };
 // Event handler for mouse down during drawing
-Canvas.prototype._tableDrawingMouseDown = function (o: fabric.TEvent) {
+fabric.Canvas.prototype._tableDrawingMouseDown = function (o: fabric.TEvent) {
   // If there is an active object, do nothing
   if (this._activeObject) {
     return;
@@ -92,7 +92,7 @@ Canvas.prototype._tableDrawingMouseDown = function (o: fabric.TEvent) {
   this._drawModeData = { ...pointer };
 };
 // Event handler for mouse move during drawing
-Canvas.prototype._tableDrawingMouseMove = function (
+fabric.Canvas.prototype._tableDrawingMouseMove = function (
   o: fabric.TEvent<MouseEvent>
 ) {
   // If drawing mode is not enabled, do nothing
@@ -133,7 +133,7 @@ Canvas.prototype._tableDrawingMouseMove = function (
   this.renderAll();
 };
 // Event handler for mouse up during drawing
-Canvas.prototype._tableDrawingMouseUp = function () {
+fabric.Canvas.prototype._tableDrawingMouseUp = function () {
   // If no drawing object exists, do nothing
   if (!this._drawModeData) {
     return;
@@ -154,7 +154,9 @@ Canvas.prototype._tableDrawingMouseUp = function () {
   delete this._drawModeData;
 };
 
-Canvas.prototype._handModeMouseMove = function (e: fabric.IEvent<MouseEvent>) {
+fabric.Canvas.prototype._handModeMouseMove = function (
+  e: fabric.IEvent<MouseEvent>
+) {
   if (this._activeObject) {
     return;
   }

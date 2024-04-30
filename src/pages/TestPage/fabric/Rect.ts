@@ -1,5 +1,4 @@
-import * as fabric from "fabric";
-import { changeSizeUtils } from "./Util";
+import { fabric } from "fabric";
 
 let fabricRectMixin: any = {
   /**
@@ -34,7 +33,7 @@ let fabricRectMixin: any = {
   _getControls() {
     //@ts-ignore
     let cursorStyleHandler = fabric.controlsUtils.scaleCursorStyleHandler;
-    let changeSize = changeSizeUtils;
+    let changeSize = fabric.controlsUtils.changeSize;
     //@ts-ignore
     let dragHandler = fabric.controlsUtils.dragHandler;
 
@@ -43,25 +42,25 @@ let fabricRectMixin: any = {
         x: -0.5,
         y: -0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       tr: new fabric.Control({
         x: 0.5,
         y: -0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       bl: new fabric.Control({
         x: -0.5,
         y: 0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       br: new fabric.Control({
         x: 0.5,
         y: 0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
     };
   },

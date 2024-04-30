@@ -1,4 +1,4 @@
-import * as fabric from "fabric";
+import { fabric } from "fabric";
 
 fabric.Object.prototype.addUndoState = function () {
   // Check if history is disabled

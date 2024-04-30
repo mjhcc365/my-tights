@@ -37,18 +37,17 @@
  * There is an initialization of an undo mechanism for reverting changes.
  */
 import { icons } from "./Icons";
-import * as fabric from "fabric";
-import { Group } from "fabric";
+import { fabric } from "fabric";
 import "./Object";
 import "./Util";
-import { changeSizeUtils } from "./Util";
+import { IEvent } from "fabric/fabric-impl";
 
 const tableOwnProperties = ["columns", "rows", "cells", "fontSize"];
 
 /**
  * FabricJS Table Object
  */
-class FabricTable extends Group {
+class FabricTable extends fabric.Group {
   /**
    * default FabricJS properties
    */
@@ -138,9 +137,6 @@ class FabricTable extends Group {
   private _currentSelectionCells?: fabric.TableCell[];
   private _cellsMap: Map<fabric.Rect, fabric.TableCell> = new Map();
   private _textMap: Map<fabric.Text, fabric.TableCell> = new Map();
-  // stateProperties: any[];
-  // cacheProperties: any[];
-  // propertyApplyOrder: string[];
 
   constructor(o: Partial<fabric.TableOptions>) {
     super();
@@ -152,6 +148,7 @@ class FabricTable extends Group {
       {},
       this.getDefaultProperties()
     ) as fabric.TableOptions;
+
     console.log("===>getDefaultProperties", options);
     Object.assign(options, o);
 
@@ -190,9 +187,6 @@ class FabricTable extends Group {
     }
 
     this.initUndo();
-  }
-  callSuper(arg0: string, options: fabric.TableOptions) {
-    throw new Error("Method not implemented.");
   }
   override onSet(options: { [key: string]: any }) {
     let dirty =
@@ -1041,7 +1035,7 @@ class FabricTable extends Group {
   private _getControls() {
     //@ts-ignore
     let cursorStyleHandler = fabric.controlsUtils.scaleCursorStyleHandler;
-    let changeSize = changeSizeUtils;
+    let changeSize = fabric.controlsUtils.changeSize;
     //@ts-ignore
     let dragHandler = fabric.controlsUtils.dragHandler;
 
@@ -1050,25 +1044,25 @@ class FabricTable extends Group {
         x: -0.5,
         y: -0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       tr: new fabric.Control({
         x: 0.5,
         y: -0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       bl: new fabric.Control({
         x: -0.5,
         y: 0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       br: new fabric.Control({
         x: 0.5,
         y: 0.5,
         cursorStyleHandler,
-        actionHandler: changeSizeUtils,
+        actionHandler: changeSize,
       }),
       drag: new fabric.Control({
         x: -0.5,
@@ -1536,7 +1530,7 @@ class FabricTable extends Group {
     }
     let row = this._resizingYData.row;
     let zoom = this.canvas.getZoom();
-    let newPoint = fabric.controlsUtils.getLocalPoint(
+    let newPoint = fabric.util.getLocalPoint(
       transform,
       transform.originX,
       transform.originY,
@@ -1570,7 +1564,7 @@ class FabricTable extends Group {
     }
     let column = this._resizingXData.col;
     let zoom = this.canvas.getZoom();
-    let newPoint = fabric.controlsUtils.getLocalPoint(
+    let newPoint = fabric.util.getLocalPoint(
       transform,
       transform.originX,
       transform.originY,
@@ -1926,23 +1920,21 @@ class FabricTable extends Group {
 }
 
 FabricTable.prototype.type = "table";
-
-// FabricTable.prototype.type = "table";
-// FabricTable.prototype.stateProperties = [
-//   ...fabric.Object.prototype.stateProperties!,
-//   ...tableOwnProperties,
-// ];
-// FabricTable.prototype.cacheProperties = [
-//   ...fabric.Group.prototype.cacheProperties!,
-//   ...tableOwnProperties,
-// ];
-// FabricTable.prototype.propertyApplyOrder = [
-//   "columns",
-//   "rows",
-//   "cells",
-//   "width",
-//   "height",
-// ];
+FabricTable.prototype.stateProperties = [
+  ...fabric.Object.prototype.stateProperties!,
+  ...tableOwnProperties,
+];
+FabricTable.prototype.cacheProperties = [
+  ...fabric.Group.prototype.cacheProperties!,
+  ...tableOwnProperties,
+];
+FabricTable.prototype.propertyApplyOrder = [
+  "columns",
+  "rows",
+  "cells",
+  "width",
+  "height",
+];
 
 fabric.Table = FabricTable;
 

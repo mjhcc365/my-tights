@@ -1,4 +1,4 @@
-import * as fabric from "fabric";
+import { fabric } from "fabric";
 import { IPoint } from "fabric/fabric-impl";
 
 const connectionOwnProperties: string[] = [];
@@ -462,9 +462,7 @@ fabric.Canvas.prototype.getObjectByIDPath = function (value: string) {
 
 // fabric.Connection = FabricConnection;
 
-fabric.FabricObject.prototype.disconnect = function (
-  value?: string | fabric.Object
-) {
+fabric.Object.prototype.disconnect = function (value?: string | fabric.Object) {
   let target: string;
   if (value) {
     if (value.constructor === String) {

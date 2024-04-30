@@ -1,4 +1,4 @@
-import * as fabric from "fabric";
+import { fabric } from "fabric";
 
 fabric.Object.prototype.getIDPath = function () {
   let result = this.group ? this.group.getIDPath() + "." : "";

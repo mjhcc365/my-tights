@@ -1,7 +1,7 @@
 // import
 import { Button } from "antd";
 import { useEffect, useRef } from "react";
-import * as fabric from "fabric";
+import { fabric } from "fabric";
 
 import { controlsUtils } from "fabric";
 // import { FabricTable } from "./fabric/Table";
