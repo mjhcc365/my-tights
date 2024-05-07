@@ -1,1 +1,0 @@
-getBrowserWindowRuntime().webContents.openDevTools();
