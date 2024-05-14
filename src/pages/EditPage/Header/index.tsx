@@ -5,6 +5,11 @@ import { stores as store } from "@/pages/EditPage/store/main";
 import { ALL_FONTS } from "@/utils/fonts";
 import { download, downloadJson } from "@/utils/download";
 
+import { FabricTable } from "./table";
+// import { FabricTable } from "./tablenew";
+// import { FabricTable } from "./table";
+import * as fabric from "fabric";
+
 import "./index.less";
 
 const MJHeader = () => {
@@ -62,6 +67,112 @@ const MJHeader = () => {
     downloadJson(JSON.stringify(json));
   };
 
+  const handleTable = () => {
+    // const options = {
+    //   width: 300,
+    //   height: 300,
+    // };
+
+    // const rect1 = new fabric.Rect({
+    //   width: 10,
+    //   height: 10,
+    //   top: 10,
+    //   left: 20,
+    //   backgroundColor: "black",
+    // });
+
+    // const rect2 = new fabric.Rect({
+    //   width: 10,
+    //   height: 10,
+    //   top: 100,
+    //   left: 200,
+    //   backgroundColor: "black",
+    // });
+
+    const options = {
+      columns: [
+        { width: 110, header: true },
+        { width: 110 },
+        { width: 110 },
+        { width: 110 },
+        { width: 110 },
+        { width: 110 },
+      ],
+      rows: [
+        { height: 28, header: true },
+        { height: 25, header: true },
+        { height: 25 },
+        { height: 25 },
+        { height: 25 },
+        { height: 25 },
+        { height: 23 },
+      ],
+      cells: [
+        [{ colspan: 6, text: "1" }],
+        [
+          { text: "2" },
+          { text: "3" },
+          { colspan: 2, text: "4" },
+          { text: "5" },
+          { text: "6" },
+        ],
+        [
+          { rowspan: 3, text: "7" },
+          { text: "A" },
+          { text: "B" },
+          { text: "C" },
+          { text: "D" },
+          { text: "E" },
+        ],
+        [
+          { text: "F" },
+          { text: "G" },
+          { text: "H" },
+          { text: "I" },
+          { text: "K" },
+        ],
+        [
+          { text: "L" },
+          { text: "M" },
+          { text: "N" },
+          { text: "O" },
+          { text: "P" },
+        ],
+        [
+          { rowspan: 2, text: "8" },
+          { text: "Q" },
+          { text: "R" },
+          { text: "S" },
+          { text: "T" },
+          { text: "U" },
+        ],
+        [
+          { text: "V" },
+          { text: "W" },
+          { text: "X" },
+          { text: "Y" },
+          { text: "Z" },
+        ],
+      ],
+    };
+
+    // const table = new FabricTable({
+    //   ...options,
+    //   stroke: "#f5f5f5",
+    //   strokeDashArray: [2, 2],
+    //   backgroundColor: "pink",
+    //   strokeWidth: 2,
+    //   cornerSize: 8,
+    //   lockRotation: true,
+    // });
+
+    const table = new FabricTable([], {});
+
+    console.log("==>table", table);
+    store.canvasStore.canvas?.add(table);
+    store.canvasStore.canvas?.renderAll();
+  };
+
   return (
     <div className="headerBox">
       <div className="logo-box">
@@ -95,7 +206,7 @@ const MJHeader = () => {
           }}
           onChange={handleFontChange}
         />
-        {/* <Button onClick={handleGetPicture}>请求unsplash接口</Button> */}
+        <Button onClick={handleTable}>画表格</Button>
       </div>
     </div>
   );

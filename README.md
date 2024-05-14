@@ -5,8 +5,9 @@ notice: run `pnpm install clear-module lodash chokidar` while using pnpm.
 前端：
 
 - Fabric 6+ 官网文档 http://fabricjs.com/
-- React18+
-- Antd5.0+
+- React 18+
+- Antd 5.0+
+- mobx 6.12.0
 
 后端
 
