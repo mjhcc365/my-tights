@@ -1,5 +1,6 @@
 import * as fabric from "fabric";
 import { classRegistry, FabricObject, GroupProps } from "fabric";
+// import {} from "fabric/es/";
 import { icons } from "./Icons";
 
 import {
@@ -94,8 +95,8 @@ const getInitTable = () => {
 };
 const defaultProperties: any = {
   noScaleCache: false,
-  // lockMovementX: true,
-  // lockMovementY: true,
+  lockMovementX: true,
+  lockMovementY: true,
   subTargetCheck: true,
   hoverCursor: "default",
   lockScalingFlip: true,
@@ -136,6 +137,8 @@ export class FabricTable extends fabric.Group {
   resizerSize?: number = 6;
   fontSize?: number = 20;
   fillText?: string = "#000000";
+  fillActive?: string = "#ffffff66";
+  fillHover?: string = "#ffffff33";
 
   private _cellsmodified?: boolean;
   private _rowsmodified?: boolean;
@@ -154,6 +157,8 @@ export class FabricTable extends fabric.Group {
 
   private _cellsMap: Map<fabric.Rect, TableCell> = new Map();
   private _textMap: Map<fabric.Text, TableCell> = new Map();
+
+  private _hoverCell?: TableCell;
 
   private _renderInvisible(
     ctx: CanvasRenderingContext2D,
@@ -174,17 +179,28 @@ export class FabricTable extends fabric.Group {
     initial: number;
   };
 
+  private _selectionData?: {
+    begin: TableCell;
+    end: TableCell;
+  };
+
+  private _currentSelectionBounds?: {
+    x1: number;
+    x2: number;
+    y1: number;
+    y2: number;
+  };
+
+  private _currentSelectionCells?: TableCell[];
+
   constructor(mockOptions: any, options?: Partial<GroupProps>) {
     // 继承的过程
     const { objs } = getInitTable();
     super(objs, {
-      width: 200,
-      height: 100,
-      backgroundColor: "pink",
+      backgroundColor: "#fff",
       ...defaultProperties,
     });
 
-    // this.add(rectTest);
     this.__setcolumns(this.columns);
     this.__setrows(this.rows);
     this.__setcells(this.cells);
@@ -192,41 +208,41 @@ export class FabricTable extends fabric.Group {
     this._updateCellsGeometry();
 
     this.controls = this._getControls();
+
+    /** hover */
+    this.enableHover();
+    // this.enableSelection();
+
+    this.on({
+      // modified: this._cleanCache.bind(this),
+      // resizing: this._cleanCache.bind(this),
+      added: this._updateLines.bind(this),
+      // deselected: this.clearSelection.bind(this),
+      // row: this._cleanCache.bind(this),
+      // column: this._cleanCache.bind(this),
+    });
+
+    console.log("===>", this.controls);
   }
+
+  // private _cleanCache() {
+  //   if (this.canvas) {
+  //     this._cacheCanvas?.width;
+  //     this._cacheContext?.clearRect(
+  //       this._cacheCanvas?.width as number,
+  //       this._cacheCanvas?.height as number,
+  //       (this._cacheCanvas?.width as number) * 2,
+  //       (this._cacheCanvas?.height as number) * 2
+  //     );
+  //     this.dirty = true;
+  //     this.canvas.renderAll();
+  //   }
+  // }
 
   private _getControls() {
     //@ts-ignore
-    let cursorStyleHandler = fabric.controlsUtils.scaleCursorStyleHandler;
-    let changeSize = fabric.controlsUtils.changeSize;
-    // let c= fabric.controlsUtils.
-    //@ts-ignore
-    let dragHandler = fabric.controlsUtils.dragHandler;
-
     return {
-      tl: new fabric.Control({
-        x: -0.5,
-        y: -0.5,
-        cursorStyleHandler,
-        actionHandler: changeSize,
-      }),
-      tr: new fabric.Control({
-        x: 0.5,
-        y: -0.5,
-        cursorStyleHandler,
-        actionHandler: changeSize,
-      }),
-      bl: new fabric.Control({
-        x: -0.5,
-        y: 0.5,
-        cursorStyleHandler,
-        actionHandler: changeSize,
-      }),
-      br: new fabric.Control({
-        x: 0.5,
-        y: 0.5,
-        cursorStyleHandler,
-        actionHandler: changeSize,
-      }),
+      ...fabric.controlsUtils.createObjectDefaultControls(),
       drag: new fabric.Control({
         x: -0.5,
         y: -0.5,
@@ -241,7 +257,7 @@ export class FabricTable extends fabric.Group {
           this._lockMovement();
           return true;
         },
-        actionHandler: dragHandler, //change to this
+        actionHandler: fabric.controlsUtils.dragHandler, //change to this
         actionName: "drag",
         render: this._renderGrabControl.bind(this),
       }),
@@ -271,6 +287,7 @@ export class FabricTable extends fabric.Group {
       }),
     };
   }
+
   insertRow = (
     position = -1,
     height = this._rows[this._rows.length - 1].height || 1
@@ -470,7 +487,7 @@ export class FabricTable extends fabric.Group {
     ctx: CanvasRenderingContext2D,
     left: number,
     top: number,
-    styleOverride: fabric.IObjectOptions,
+    styleOverride: any,
     fabricObject: fabric.Object
   ) {
     let size = 15; //this.cornerSize;
@@ -665,6 +682,53 @@ export class FabricTable extends fabric.Group {
     }
   }
 
+  // Ends the resizing process for a row
+  private rowResizingFinish() {
+    if (!this.canvas || !this._resizingYData) {
+      return;
+    }
+    let newrow = this._resizingYData.row;
+    if (this._resizingYData.initial !== newrow.height) {
+      this.fire("modified");
+      this.canvas.fire("object:modified", { target: this, newrow });
+    }
+    delete this._resizingYData;
+  }
+
+  // Resizes a row during the resizing process
+  private rowResizing(
+    eventData: MouseEvent,
+    transform: fabric.Transform,
+    x: number,
+    y: number,
+    options: any = {}
+  ) {
+    if (!this.canvas || !this._resizingYData) {
+      return false;
+    }
+    let row = this._resizingYData.row;
+    let zoom = this.canvas.getZoom();
+    let newPoint = this.getLocalPoint(
+      transform,
+      transform.originX,
+      transform.originY,
+      x,
+      y
+    );
+    newPoint.y += this.scaleY! * this.height! * zoom;
+    let oldHeight = row.height;
+    row.height =
+      Math.max(newPoint.y / this.scaleY!, this._resizingYData.min) - row.top;
+    this._updateRows();
+    this._updateTableHeight();
+    this._updateCellsGeometry();
+    if (oldHeight !== row.height) {
+      this.fire("row");
+      return true;
+    }
+    return false;
+  }
+
   private _updateCellsGeometry = () => {
     if (!this._cells) {
       return;
@@ -744,13 +808,13 @@ export class FabricTable extends fabric.Group {
           x: -1,
           sizeY: this.resizerSize,
           cursorStyle: "ns-resize",
-          // actionHandler: this.rowResizing.bind(this),
+          actionHandler: this.rowResizing.bind(this),
           mouseDownHandler: () => {
             this.rowResizingBegin();
             return true;
           },
           mouseUpHandler: () => {
-            // this.rowResizingFinish();
+            this.rowResizingFinish();
             return true;
           },
           actionName: "row",
@@ -1061,6 +1125,293 @@ export class FabricTable extends fabric.Group {
     }
     return p2.subtractEquals(p);
   };
+
+  private fireSelectionEvent(postfix: string) {
+    let data: CellsSelectionEvent = {
+      cells: this.selection,
+      bounds: this._currentSelectionBounds,
+      begin: this._selectionData?.begin,
+      end: this._selectionData?.end,
+    };
+    let eventname = "selection";
+    if (postfix) {
+      eventname += ":" + postfix;
+    }
+    this.fire(eventname, data);
+    this.canvas?.fire("object:" + eventname, { target: this, ...data });
+  }
+
+  // Finishes the selection process
+  private selectionFinish() {
+    this.fireSelectionEvent("end");
+    if (!this._selectionData) {
+      return;
+    }
+    delete this._selectionData;
+  }
+
+  // Hover over a cell
+  hoverCell(cell: TableCell) {
+    if (cell && cell !== this._hoverCell) {
+      this._hoverCell = cell;
+      this.dirty = true;
+      this.canvas?.renderAll();
+    }
+  }
+  private _unhoverCell() {
+    this.canvas?.renderAll();
+  }
+
+  // Enable hover functionality for the table cells
+  enableHover() {
+    this.on({
+      mousemove: (e: fabric.TEvent) => {
+        // console.log("===>mousemove", e);
+        if (this.canvas!.getActiveObject() === this && e?.subTargets) {
+          let subtarget = e.subTargets[0];
+          const type = subtarget?.type;
+          if (["rect", "i-text"].includes(subtarget?.type)) {
+            this.hoverCell(this._textMap!.get(subtarget)!);
+          } else {
+            this._unhoverCell();
+          }
+        }
+      },
+      mouseout: (e: fabric.TEvent) => {
+        this._unhoverCell();
+      },
+    });
+  }
+
+  setSelection(newSelection: TableCell[] = []) {
+    this.selection = newSelection;
+    this.dirty = true;
+    this.canvas?.renderAll();
+  }
+
+  // Select a specific cell
+  selectCell({ x, y }: { x: number; y: number }) {
+    if (this._cells[y]?.[x]) {
+      this.setSelection([this._cells[y][x] as TableCell]);
+    } else {
+      this.setSelection([]);
+    }
+  }
+
+  // Adds a column to the current selection
+  private _addColumnToSelection = (x: number) => {
+    if (!this._currentSelectionBounds) {
+      return;
+    }
+    for (
+      let y = this._currentSelectionBounds.y1;
+      y <= this._currentSelectionBounds.y2;
+      y++
+    ) {
+      this._addCellToSelection(x, y);
+    }
+  };
+
+  // Adds a row to the current selection
+  private _addRowToSelection(y: number) {
+    if (!this._currentSelectionBounds) {
+      return;
+    }
+    for (
+      let x = this._currentSelectionBounds.x1;
+      x <= this._currentSelectionBounds.x2;
+      x++
+    ) {
+      this._addCellToSelection(x, y);
+    }
+  }
+
+  // Adds a cell to the current selection
+  private _addCellToSelection(x: number, y: number) {
+    if (!this._currentSelectionCells || !this._currentSelectionBounds) {
+      return;
+    }
+    if (!this._cells[y][x]) {
+      return;
+    }
+    let cell = this._cells[y][x] as TableCell;
+    if (!this._currentSelectionCells.includes(cell)) {
+      this._currentSelectionCells.push(cell);
+      if (cell.c.index < this._currentSelectionBounds.x1) {
+        let oldMinX = this._currentSelectionBounds.x1;
+        let newMinX = cell.c.index;
+        this._currentSelectionBounds.x1 = newMinX;
+        for (let xi = newMinX; xi < oldMinX; xi++) {
+          this._addColumnToSelection(xi);
+        }
+      }
+      if (cell.r.index < this._currentSelectionBounds.y1) {
+        let oldMinY = this._currentSelectionBounds.y1;
+        let newMinY = cell.r.index;
+        this._currentSelectionBounds.y1 = newMinY;
+        for (let yi = newMinY; yi < oldMinY; yi++) {
+          this._addRowToSelection(yi);
+        }
+      }
+      if (cell.c.index + cell.colspan - 1 > this._currentSelectionBounds.x2) {
+        let oldMaxX = this._currentSelectionBounds.x2;
+        let newMaxX = cell.c.index + cell.colspan - 1;
+        this._currentSelectionBounds.x2 = newMaxX;
+        for (let xi = oldMaxX + 1; xi <= newMaxX; xi++) {
+          this._addColumnToSelection(xi);
+        }
+      }
+      if (cell.r.index + cell.rowspan - 1 > this._currentSelectionBounds.y2) {
+        let oldMaxY = this._currentSelectionBounds.y2;
+        let newMaxY = cell.r.index + cell.rowspan - 1;
+        this._currentSelectionBounds.y2 = newMaxY;
+        for (let yi = oldMaxY + 1; yi <= newMaxY; yi++) {
+          this._addRowToSelection(yi);
+        }
+      }
+    }
+  }
+
+  // Select a range of cells
+  selectRange(
+    rangeBegin: { x: number; y: number },
+    rangeEnd: { x: number; y: number }
+  ) {
+    let bounds = {
+      x1: Math.min(rangeBegin.x, rangeEnd.x),
+      x2: Math.max(rangeBegin.x, rangeEnd.x),
+      y1: Math.min(rangeBegin.y, rangeEnd.y),
+      y2: Math.max(rangeBegin.y, rangeEnd.y),
+    };
+    this._currentSelectionBounds = {
+      x1: bounds.x1,
+      x2: bounds.x2,
+      y1: bounds.y1,
+      y2: bounds.y2,
+    };
+    this._currentSelectionCells = [];
+    for (let x = bounds.x1; x <= bounds.x2; x++) {
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        this._addCellToSelection(x, y);
+      }
+    }
+    this.setSelection(this._currentSelectionCells);
+    delete this._currentSelectionCells;
+  }
+
+  private selectionBegin(cell: TableCell) {
+    delete this.canvas!._currentTransform;
+
+    this._selectionData = { begin: cell, end: cell };
+    this.selectCell({ x: cell.c.index, y: cell.r.index });
+
+    this.fireSelectionEvent("begin");
+  }
+  // Processes the selection of cells
+  private _selectionProcess(cell: TableCell) {
+    if (!this._selectionData || this._selectionData.end === cell) {
+      return;
+    }
+    this._selectionData.end = cell;
+    this.selectRange(
+      {
+        x: this._selectionData.begin.c.index,
+        y: this._selectionData.begin.r.index,
+      },
+      { x: cell.c.index, y: cell.r.index }
+    );
+
+    this.fireSelectionEvent("change");
+  }
+
+  // Enable selection functionality for the table cells
+  enableSelection() {
+    this.on({
+      mouseup: () => {
+        if (this._selectionData) {
+          this.selectionFinish();
+        }
+      },
+      mousedown: (e: fabric.TEvent) => {
+        if (this.canvas!.getActiveObject() === this && e?.subTargets) {
+          let subtarget = e.subTargets[0] as fabric.Rect;
+          if (["rect"].includes(subtarget?.type)) {
+            this.selectionBegin(this._cellsMap!.get(subtarget)!);
+          }
+        }
+      },
+      mousemove: (e: fabric.TEvent) => {
+        if (
+          this._selectionData &&
+          this.canvas!.getActiveObject() === this &&
+          e?.subTargets
+        ) {
+          let subtarget = e.subTargets[0] as fabric.Rect;
+          if (
+            ["rect", "i-text"].includes(subtarget?.type) &&
+            this._selectionData.begin
+          ) {
+            this._selectionProcess(this._cellsMap!.get(subtarget)!);
+          }
+        }
+      },
+    });
+  }
+
+  // Render function for the table
+  override render(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    this.transform(ctx);
+
+    let w = this.width!,
+      h = this.height!,
+      x = -w / 2,
+      y = -h / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + w, y);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x, y + h);
+    ctx.lineTo(x, y);
+    ctx.closePath();
+    this._renderPaintInOrder(ctx);
+    ctx.restore();
+
+    fabric.Group.prototype.render.call(this, ctx);
+    let bounds = this.getSelectionBounds();
+    if (bounds || this._hoverCell) {
+      ctx.save();
+      this.transform(ctx);
+      if (bounds && this.fillActive) {
+        if (
+          this._cols[bounds.x] &&
+          this._rows[bounds.y] &&
+          this._cols[bounds.x2] &&
+          this._rows[bounds.y2]
+        ) {
+          ctx.fillStyle = this.fillActive;
+          ctx.fillRect(
+            x + this._cols[bounds.x].left,
+            y + this._rows[bounds.y].top,
+            this._cols[bounds.x2].left -
+              this._cols[bounds.x].left +
+              this._cols[bounds.x2].width,
+            this._rows[bounds.y2].top -
+              this._rows[bounds.y].top +
+              this._rows[bounds.y2].height
+          );
+        }
+      }
+
+      if (this._hoverCell && this.fillHover) {
+        let rect = this._hoverCell.o;
+        ctx.fillStyle = this.fillHover;
+        ctx.fillRect(rect.left!, rect.top!, rect.width!, rect.height!);
+      }
+      ctx.restore();
+    }
+  }
 }
 
 classRegistry.setClass(FabricTable);

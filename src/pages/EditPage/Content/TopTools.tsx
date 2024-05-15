@@ -5,10 +5,6 @@ import { stores as store } from "@/pages/EditPage/store/main";
 import "./TopTools.less";
 
 const TopTools = () => {
-  console.log(
-    "==>store?.canvasStore.activeObj?.type",
-    store?.canvasStore.activeType
-  );
   return (
     <>
       {store?.canvasStore?.activeType ? (
