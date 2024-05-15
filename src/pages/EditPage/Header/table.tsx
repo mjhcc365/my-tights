@@ -95,8 +95,8 @@ const getInitTable = () => {
 };
 const defaultProperties: any = {
   noScaleCache: false,
-  lockMovementX: true,
-  lockMovementY: true,
+  // lockMovementX: true,
+  // lockMovementY: true,
   subTargetCheck: true,
   hoverCursor: "default",
   lockScalingFlip: true,
@@ -166,7 +166,14 @@ export class FabricTable extends fabric.Group {
     top: number,
     styleOverride: any,
     fabricObject: fabric.Object
-  ) {}
+  ) {
+    let size = 25; //this.cornerSize;
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle!));
+    ctx.drawImage(icons.add, -size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
 
   private _resizingXData?: {
     col: TableColumn;
@@ -209,35 +216,35 @@ export class FabricTable extends fabric.Group {
 
     this.controls = this._getControls();
 
+    this.on({
+      modified: this._cleanCache.bind(this),
+      resizing: this._cleanCache.bind(this),
+      added: this._updateLines.bind(this),
+      deselected: this.clearSelection.bind(this),
+      row: this._cleanCache.bind(this),
+      column: this._cleanCache.bind(this),
+    });
+
     /** hover */
     this.enableHover();
-    // this.enableSelection();
-
-    this.on({
-      // modified: this._cleanCache.bind(this),
-      // resizing: this._cleanCache.bind(this),
-      added: this._updateLines.bind(this),
-      // deselected: this.clearSelection.bind(this),
-      // row: this._cleanCache.bind(this),
-      // column: this._cleanCache.bind(this),
-    });
+    this.enableSelection();
 
     console.log("===>", this.controls);
   }
 
-  // private _cleanCache() {
-  //   if (this.canvas) {
-  //     this._cacheCanvas?.width;
-  //     this._cacheContext?.clearRect(
-  //       this._cacheCanvas?.width as number,
-  //       this._cacheCanvas?.height as number,
-  //       (this._cacheCanvas?.width as number) * 2,
-  //       (this._cacheCanvas?.height as number) * 2
-  //     );
-  //     this.dirty = true;
-  //     this.canvas.renderAll();
-  //   }
-  // }
+  private _cleanCache() {
+    if (this.canvas) {
+      this._cacheCanvas?.width;
+      this._cacheContext?.clearRect(
+        this._cacheCanvas?.width as number,
+        this._cacheCanvas?.height as number,
+        (this._cacheCanvas?.width as number) * 2,
+        (this._cacheCanvas?.height as number) * 2
+      );
+      this.dirty = true;
+      this.canvas.renderAll();
+    }
+  }
 
   private _getControls() {
     //@ts-ignore
@@ -729,6 +736,31 @@ export class FabricTable extends fabric.Group {
     return false;
   }
 
+  override setCoords() {
+    fabric.Group.prototype.setCoords.call(this);
+    this._updateRowsAndColumnsControls();
+  }
+  // Updates the controls for rows and columns
+  private _updateRowsAndColumnsControls() {
+    if (!this.canvas || !this._rows) {
+      return;
+    }
+    let zoom = this.canvas.getZoom(),
+      h = this.height! * zoom * this.scaleY!,
+      w = this.width! * zoom * this.scaleX!;
+
+    for (let i = 0; i < this._rows.length; i++) {
+      let row = this._rows[i];
+      let control = this.controls["row" + i];
+      if (control) {
+        control.y = -1.5 + (row.top + row.height) / this.height!;
+        control.sizeX = w;
+        control.offsetX = w + 1;
+        control.offsetY = h;
+      }
+    }
+  }
+
   private _updateCellsGeometry = () => {
     if (!this._cells) {
       return;
@@ -788,6 +820,75 @@ export class FabricTable extends fabric.Group {
     this.canvas?.renderAll();
   };
 
+  //get current transformation column
+  private _getCurrentColumn(): TableColumn | null {
+    if (!this.canvas?._currentTransform) {
+      return null;
+    }
+    return this._cols[+this.canvas._currentTransform.corner.substring(3)];
+  }
+
+  // Ends the resizing process for a column
+  private columnResizingFinish() {
+    if (!this.canvas || !this._resizingXData) {
+      return;
+    }
+    let column = this._resizingXData.col;
+    if (this._resizingXData.initial !== column.width) {
+      this.fire("modified");
+      this.canvas.fire("object:modified", { target: this, column });
+    }
+    delete this._resizingXData;
+  }
+
+  // Initiates the column resizing process
+  private columnResizingBegin() {
+    let col = this._getCurrentColumn();
+    if (!col) {
+      return;
+    }
+    this._resizingXData = {
+      col,
+      min: col.left + this.minColumnWidth,
+      initial: col.width,
+    };
+  }
+
+  // Resizes a column during the resizing process
+  private columnResizing(
+    eventData: MouseEvent,
+    transform: fabric.Transform,
+    x: number,
+    y: number,
+    options: any = {}
+  ) {
+    if (!this.canvas || !this._resizingXData) {
+      return false;
+    }
+    let column = this._resizingXData.col;
+    let zoom = this.canvas.getZoom();
+    let newPoint = this.getLocalPoint(
+      transform,
+      transform.originX,
+      transform.originY,
+      x,
+      y
+    );
+    newPoint.x += this.scaleX! * this.width! * zoom;
+    let oldWidth = column.width;
+    column.width =
+      Math.max(newPoint.x / this.scaleX!, this._resizingXData.min) -
+      column.left;
+    this._updateColumns();
+    this._updateTableWidth();
+    this._updateCellsGeometry();
+    if (oldWidth !== column.width) {
+      this.fire("column");
+      return true;
+    }
+    return false;
+  }
+
   private _updateLines() {
     if (!this.canvas) {
       return;
@@ -804,7 +905,7 @@ export class FabricTable extends fabric.Group {
 
       if (!this.controls["row" + rowindex]) {
         this.controls["row" + rowindex] = new fabric.Control({
-          render: this._renderInvisible,
+          render: this._renderIconControl,
           x: -1,
           sizeY: this.resizerSize,
           cursorStyle: "ns-resize",
@@ -821,6 +922,33 @@ export class FabricTable extends fabric.Group {
         });
       }
     }
+
+    //vertical dividers
+    let left = -this.width! / 2;
+    for (let columnindex = 0; columnindex < this._cols.length; columnindex++) {
+      let column = this._cols[columnindex];
+      left += column.width;
+
+      if (!this.controls["col" + columnindex]) {
+        this.controls["col" + columnindex] = new fabric.Control({
+          render: this._renderInvisible,
+          y: -1,
+          sizeX: this.resizerSize,
+          cursorStyle: "ew-resize",
+          actionHandler: this.columnResizing.bind(this),
+          mouseDownHandler: () => {
+            this.columnResizingBegin();
+            return true;
+          },
+          mouseUpHandler: () => {
+            this.columnResizingFinish();
+            return true;
+          },
+          actionName: "column",
+        });
+      }
+    }
+    this.dirty = true;
   }
 
   // Unlocks movement in both X and Y directions
@@ -1127,7 +1255,7 @@ export class FabricTable extends fabric.Group {
   };
 
   private fireSelectionEvent(postfix: string) {
-    let data: CellsSelectionEvent = {
+    let data = {
       cells: this.selection,
       bounds: this._currentSelectionBounds,
       begin: this._selectionData?.begin,
@@ -1347,10 +1475,7 @@ export class FabricTable extends fabric.Group {
           e?.subTargets
         ) {
           let subtarget = e.subTargets[0] as fabric.Rect;
-          if (
-            ["rect", "i-text"].includes(subtarget?.type) &&
-            this._selectionData.begin
-          ) {
+          if (["rect"].includes(subtarget?.type) && this._selectionData.begin) {
             this._selectionProcess(this._cellsMap!.get(subtarget)!);
           }
         }
