@@ -202,16 +202,16 @@ export interface TableCellDataOptions {
   includeCoords?: boolean;
 }
 
-export interface CellsSelectionEvent {
-  target?: fabric.Table;
-  begin: fabric.TableCell;
-  end: fabric.TableCell;
-  bounds: { x1: number; x2: number; y1: number; y2: number };
-  cells: fabric.TableCell[];
-}
+// export interface CellsSelectionEvent {
+//   target?: fabric.Table;
+//   begin: fabric.TableCell;
+//   end: fabric.TableCell;
+//   bounds: { x1: number; x2: number; y1: number; y2: number };
+//   cells: fabric.TableCell[];
+// }
 
-export interface MergedEvent {
-  bounds: fabric.TableSelectionBounds;
-  merged: fabric.TableCell[];
-  cell: fabric.TableCell;
-}
+// export interface MergedEvent {
+//   bounds: fabric.TableSelectionBounds;
+//   merged: fabric.TableCell[];
+//   cell: fabric.TableCell;
+// }

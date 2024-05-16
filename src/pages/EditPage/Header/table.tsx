@@ -18,12 +18,12 @@ import {
 
 const mockOptions = {
   columns: [
-    { width: 110, header: true },
-    { width: 110 },
-    { width: 110 },
-    { width: 110 },
-    { width: 110 },
-    { width: 110 },
+    { width: 50, header: true },
+    { width: 50 },
+    { width: 50 },
+    { width: 50 },
+    { width: 50 },
+    { width: 50 },
   ],
   rows: [
     { height: 28, header: true },
@@ -95,8 +95,8 @@ const getInitTable = () => {
 };
 const defaultProperties: any = {
   noScaleCache: false,
-  // lockMovementX: true,
-  // lockMovementY: true,
+  lockMovementX: true,
+  lockMovementY: true,
   subTargetCheck: true,
   hoverCursor: "default",
   lockScalingFlip: true,
@@ -117,7 +117,7 @@ const defaultProperties: any = {
   /**
    * custom FabricJS properties
    */
-  fillHover: "#ffffff33",
+  fillHover: "blue",
   fillText: "#000000",
   cellPadding: 3,
   fontSize: 20,
@@ -137,8 +137,8 @@ export class FabricTable extends fabric.Group {
   resizerSize?: number = 6;
   fontSize?: number = 20;
   fillText?: string = "#000000";
-  fillActive?: string = "#ffffff66";
-  fillHover?: string = "#ffffff33";
+  fillActive?: string = "pink";
+  fillHover?: string = "blue";
 
   private _cellsmodified?: boolean;
   private _rowsmodified?: boolean;
@@ -152,8 +152,8 @@ export class FabricTable extends fabric.Group {
   rows: TableRowOptions[] = mockOptions.rows;
   cells: TableCellOptions[][] = mockOptions.cells;
 
-  minRowHeight: number = 100;
-  minColumnWidth: number = 100;
+  minRowHeight: number = 5;
+  minColumnWidth: number = 5;
 
   private _cellsMap: Map<fabric.Rect, TableCell> = new Map();
   private _textMap: Map<fabric.Text, TableCell> = new Map();
@@ -166,14 +166,7 @@ export class FabricTable extends fabric.Group {
     top: number,
     styleOverride: any,
     fabricObject: fabric.Object
-  ) {
-    let size = 25; //this.cornerSize;
-    ctx.save();
-    ctx.translate(left, top);
-    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle!));
-    ctx.drawImage(icons.add, -size / 2, -size / 2, size, size);
-    ctx.restore();
-  }
+  ) {}
 
   private _resizingXData?: {
     col: TableColumn;
@@ -203,15 +196,20 @@ export class FabricTable extends fabric.Group {
   constructor(mockOptions: any, options?: Partial<GroupProps>) {
     // 继承的过程
     const { objs } = getInitTable();
-    super(objs, {
-      backgroundColor: "#fff",
+    super([], {
+      backgroundColor: "pink",
       ...defaultProperties,
+      // width: 200,
+      // height: 200,
+      top: 200,
+      left: 100,
     });
 
     this.__setcolumns(this.columns);
     this.__setrows(this.rows);
-    this.__setcells(this.cells);
+    this._updateRows();
     this._updateColumns();
+    this.__setcells(this.cells);
     this._updateCellsGeometry();
 
     this.controls = this._getControls();
@@ -228,8 +226,6 @@ export class FabricTable extends fabric.Group {
     /** hover */
     this.enableHover();
     this.enableSelection();
-
-    console.log("===>", this.controls);
   }
 
   private _cleanCache() {
@@ -251,7 +247,7 @@ export class FabricTable extends fabric.Group {
     return {
       ...fabric.controlsUtils.createObjectDefaultControls(),
       drag: new fabric.Control({
-        x: -0.5,
+        x: 0,
         y: -0.5,
         offsetX: -13,
         offsetY: -13,
@@ -737,7 +733,7 @@ export class FabricTable extends fabric.Group {
   }
 
   override setCoords() {
-    fabric.Group.prototype.setCoords.call(this);
+    super.setCoords();
     this._updateRowsAndColumnsControls();
   }
   // Updates the controls for rows and columns
@@ -757,6 +753,16 @@ export class FabricTable extends fabric.Group {
         control.sizeX = w;
         control.offsetX = w + 1;
         control.offsetY = h;
+      }
+    }
+    for (let i = 0; i < this._cols.length; i++) {
+      let col = this._cols[i];
+      let control = this.controls["col" + i];
+      if (control) {
+        control.x = -1.5 + (col.left + col.width) / this.width!;
+        control.sizeY = h;
+        control.offsetX = w;
+        control.offsetY = h + 1;
       }
     }
   }
@@ -905,7 +911,7 @@ export class FabricTable extends fabric.Group {
 
       if (!this.controls["row" + rowindex]) {
         this.controls["row" + rowindex] = new fabric.Control({
-          render: this._renderIconControl,
+          render: this._renderInvisible,
           x: -1,
           sizeY: this.resizerSize,
           cursorStyle: "ns-resize",
@@ -968,39 +974,6 @@ export class FabricTable extends fabric.Group {
       lockMovementY: true,
     });
   }
-
-  // rowResizing = (
-  //   eventData: MouseEvent,
-  //   transform: fabric.Transform,
-  //   x: number,
-  //   y: number,
-  //   options: any = {}
-  // ) => {
-  //   if (!this.canvas || !this._resizingYData) {
-  //     return false;
-  //   }
-  //   let row = this._resizingYData.row;
-  //   let zoom = this.canvas.getZoom();
-  //   let newPoint = fabric.util.getLocalPoint(
-  //     transform,
-  //     transform.originX,
-  //     transform.originY,
-  //     x,
-  //     y
-  //   );
-  //   newPoint.y += this.scaleY! * this.height! * zoom;
-  //   let oldHeight = row.height;
-  //   row.height =
-  //     Math.max(newPoint.y / this.scaleY!, this._resizingYData.min) - row.top;
-  //   this._updateRows();
-  //   this._updateTableHeight();
-  //   this._updateCellsGeometry();
-  //   if (oldHeight !== row.height) {
-  //     this.fire("row");
-  //     return true;
-  //   }
-  //   return false;
-  // };
 
   // Initiates the row resizing process
   private rowResizingBegin = () => {
@@ -1139,21 +1112,6 @@ export class FabricTable extends fabric.Group {
     // this.dirty = true;
     // this.canvas?.renderAll();
   }
-
-  // init = () => {};
-
-  // _set(key: string, value: any) {
-  //   const prev = this[key as keyof this];
-  //   super._set(key, value);
-  //   if (key === "canvas" && prev !== value) {
-  //     (this._objects || []).forEach((object) => {
-  //       object._set(key, value);
-  //     });
-  //   }
-  //   return this;
-  // }
-
-  // override _set();
 
   changeSize = (
     eventData: Event,
