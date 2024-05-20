@@ -1,8 +1,6 @@
 import * as fabric from "fabric";
-import { classRegistry, FabricObject, GroupProps } from "fabric";
-// import {} from "fabric/es/";
+import { classRegistry, FabricObject, GroupProps, Textbox } from "fabric";
 import { icons } from "./Icons";
-
 import {
   TableColumn,
   TableRow,
@@ -14,131 +12,32 @@ import {
   TableCellDataOptions,
   TableCellOutput,
   TableSelectionBounds,
-} from "./tableTypes";
+} from "./interface/tableType";
 
-const mockOptions = {
-  columns: [
-    { width: 50, header: true },
-    { width: 50 },
-    { width: 50 },
-    { width: 50 },
-    { width: 50 },
-    { width: 50 },
-  ],
-  rows: [
-    { height: 28, header: true },
-    { height: 25, header: true },
-    { height: 25 },
-    { height: 25 },
-    { height: 25 },
-    { height: 25 },
-    { height: 23 },
-  ],
-  cells: [
-    [{ colspan: 6, text: "1" }],
-    [
-      { text: "2" },
-      { text: "3" },
-      { colspan: 2, text: "4" },
-      { text: "5" },
-      { text: "6" },
-    ],
-    [
-      { rowspan: 3, text: "7" },
-      { text: "A" },
-      { text: "B" },
-      { text: "C" },
-      { text: "D" },
-      { text: "E" },
-    ],
-    [{ text: "F" }, { text: "G" }, { text: "H" }, { text: "I" }, { text: "K" }],
-    [{ text: "L" }, { text: "M" }, { text: "N" }, { text: "O" }, { text: "P" }],
-    [
-      { rowspan: 2, text: "8" },
-      { text: "Q" },
-      { text: "R" },
-      { text: "S" },
-      { text: "T" },
-      { text: "U" },
-    ],
-    [{ text: "V" }, { text: "W" }, { text: "X" }, { text: "Y" }, { text: "Z" }],
-  ],
-};
-
-const rectTest = new fabric.Rect({
-  width: 10,
-  height: 10,
-  top: 50,
-  left: 50,
-  backgroundColor: "black",
-});
-
-const getInitTable = () => {
-  const rect1 = new fabric.Rect({
-    width: 10,
-    height: 10,
-    top: 10,
-    left: 20,
-    backgroundColor: "black",
-  });
-
-  const rect2 = new fabric.Rect({
-    width: 10,
-    height: 10,
-    top: 100,
-    left: 200,
-    backgroundColor: "black",
-  });
-  return {
-    objs: [rect1, rect2],
-  };
-};
-const defaultProperties: any = {
-  noScaleCache: false,
-  lockMovementX: true,
-  lockMovementY: true,
-  subTargetCheck: true,
-  hoverCursor: "default",
-  lockScalingFlip: true,
-  /**
-   * customizable FabricJS properties
-   */
-  transparentCorners: false,
-  originX: "left",
-  originY: "top",
-  stroke: "#000000",
-  strokeWidth: 2,
-  cornerColor: "#000000",
-  fill: "#00000022",
-  cornerSize: 8,
-  lockRotation: true,
-  strokeUniform: true,
-
-  /**
-   * custom FabricJS properties
-   */
-  fillHover: "blue",
-  fillText: "#000000",
-  cellPadding: 3,
-  fontSize: 20,
-  fillActive: "#ffffff66",
-  fillHeader: "#00000066",
-  minRowHeight: 5,
-  minColumnWidth: 5,
-  resizerSize: 6,
-};
+import { mockOptions } from "./mockdata";
+import { defaultTheme, defaultGroupProps } from "./defautTheme";
+import { theme } from "antd";
+import { ThemeType } from "./interface/theme";
+import { DataConfig } from "./interface/dataType";
 
 export class FabricTable extends fabric.Group {
   static type = "FabricTable";
 
   selection: TableCell[] = [];
 
+  columns: TableColumnOptions[] = [];
+  rows: TableRowOptions[] = [];
+  cells: TableCellOptions[][] = [];
+
   cellPadding: number = 3;
-  resizerSize?: number = 6;
-  fontSize?: number = 20;
-  fillText?: string = "#000000";
-  fillActive?: string = "pink";
-  fillHover?: string = "blue";
+  resizerSize: number = 6;
+  fontSize: number = 14;
+  fillText: string = "#000000";
+  fillActive: string = "pink";
+  fillHover: string = "#ffffff33";
+  fillHeader: string = "#00000066";
+  minRowHeight: number = 5;
+  minColumnWidth: number = 5;
 
   private _cellsmodified?: boolean;
   private _rowsmodified?: boolean;
@@ -148,15 +47,8 @@ export class FabricTable extends fabric.Group {
   private _rows: TableRow[] = [];
   private _cells: TableCellDefinition[][] = [];
 
-  columns: TableColumnOptions[] = mockOptions.columns;
-  rows: TableRowOptions[] = mockOptions.rows;
-  cells: TableCellOptions[][] = mockOptions.cells;
-
-  minRowHeight: number = 5;
-  minColumnWidth: number = 5;
-
   private _cellsMap: Map<fabric.Rect, TableCell> = new Map();
-  private _textMap: Map<fabric.Text, TableCell> = new Map();
+  private _textMap: Map<fabric.FabricText, TableCell> = new Map();
 
   private _hoverCell?: TableCell;
 
@@ -193,23 +85,19 @@ export class FabricTable extends fabric.Group {
 
   private _currentSelectionCells?: TableCell[];
 
-  constructor(mockOptions: any, options?: Partial<GroupProps>) {
+  constructor(dataconfig: DataConfig, theme?: ThemeType) {
     // 继承的过程
-    const { objs } = getInitTable();
     super([], {
-      backgroundColor: "pink",
-      ...defaultProperties,
-      // width: 200,
-      // height: 200,
-      top: 200,
-      left: 100,
+      ...defaultGroupProps,
+      // top: 100,
+      // left: 100,
     });
 
-    this.__setcolumns(this.columns);
-    this.__setrows(this.rows);
+    this.__setcolumns(mockOptions.columns);
+    this.__setrows(mockOptions.rows);
     this._updateRows();
     this._updateColumns();
-    this.__setcells(this.cells);
+    this.__setcells(mockOptions.cells);
     this._updateCellsGeometry();
 
     this.controls = this._getControls();
@@ -226,6 +114,15 @@ export class FabricTable extends fabric.Group {
     /** hover */
     this.enableHover();
     this.enableSelection();
+    this.enableDBClick();
+    // mousedblclick
+
+    this.set("top", 100);
+    this.set("left", 100);
+    this.set("subTargetCheck", true);
+    this.set("interactive", true);
+    // subTargetCheck: true,
+    // interactive: true   //  enables selecting subtargets
   }
 
   private _cleanCache() {
@@ -640,10 +537,26 @@ export class FabricTable extends fabric.Group {
       top: 0,
       width: 10,
       height: 10,
-      fill: "111",
+      fill: this.isHeaderCell(cellData) ? this.fillHeader : this.fill,
+      selectable: false,
+    });
+    cellData.t = new fabric.Textbox("", {
+      hasControls: false,
+      fontSize: this.fontSize,
+      fontFamily: "Arial",
+      originX: "left",
+      originY: "top",
+      left: 0,
+      top: 0,
+      padding: this.cellPadding,
+      hasBorders: false,
+      fill: this.fillText,
+      lockMovementX: true,
+      lockMovementY: true,
     });
     this._cellsMap.set(cellData.o, cellData);
     this.add(cellData.o);
+    this.add(cellData.t);
     if (cell.text) {
       this._setCellText(x, y, cell.text);
     }
@@ -661,7 +574,7 @@ export class FabricTable extends fabric.Group {
     cell.text = text;
     if (text) {
       if (!cell.t) {
-        cell.t = new fabric.IText(text, {
+        cell.t = new fabric.Textbox(text, {
           hasControls: false,
           fontSize: this.fontSize,
           fontFamily: "Arial",
@@ -670,10 +583,14 @@ export class FabricTable extends fabric.Group {
           left: 0,
           top: 0,
           padding: this.cellPadding,
+          hasBorders: false,
           fill: this.fillText,
+          lockMovementX: true,
+          lockMovementY: true,
+          // selectable: false,
         });
         this._textMap.set(cell.t, cell);
-        this.add(cell.t as any);
+        this.add(cell.t as unknown as Textbox);
       } else {
         cell.t.set({ text });
       }
@@ -811,8 +728,8 @@ export class FabricTable extends fabric.Group {
             cell.t.set({
               left: left - this.width! / 2 + this.cellPadding - 1,
               top: top - this.height! / 2 + this.cellPadding - 1,
-              width,
-              height,
+              width: width - 20,
+              height: height - 20,
             });
           }
         }
@@ -1437,6 +1354,14 @@ export class FabricTable extends fabric.Group {
             this._selectionProcess(this._cellsMap!.get(subtarget)!);
           }
         }
+      },
+    });
+  }
+
+  enableDBClick() {
+    this.on({
+      mousedblclick: (e) => {
+        console.log("===>", e, e.subTargets[0]?.type);
       },
     });
   }

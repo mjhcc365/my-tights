@@ -7,10 +7,12 @@ import TimeSection from "@/pages/EditPage/components/TimeSection";
 import Calender from "@/pages/EditPage/components/Calender";
 import ToolsSection from "@/pages/EditPage/components/ToolsSection";
 import PictureSection from "../components/PictureSection";
+import FabricTable from "@/pages/EditPage/components/FabricTable";
 import { menuConfig, MENUKEY } from "./types";
 
 const LeftSiderBox = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+
   const [curmenu, setMenu] = useState<MENUKEY>(
     (localStorage.getItem("mj-menu") as MENUKEY) || MENUKEY.temp
   );
@@ -61,6 +63,7 @@ const LeftSiderBox = () => {
         {curmenu === MENUKEY.size && <SizeSection />}
         {curmenu === MENUKEY.time && <TimeSection />}
         {/* {curmenu === MENUKEY.tools && <ToolsSection />} */}
+        {curmenu === MENUKEY.tools && <FabricTable />}
         {curmenu === MENUKEY.picture && <PictureSection />}
         {curmenu === MENUKEY.todos && <Calender />}
       </div>
