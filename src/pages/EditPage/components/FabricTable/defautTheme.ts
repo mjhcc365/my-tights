@@ -21,7 +21,7 @@ export const defaultGroupProps: Partial<GroupProps> = {
   cornerSize: 8,
   lockRotation: true,
   strokeUniform: true,
-  backgroundColor: "pink",
+  backgroundColor: "#fff",
   // opacity: 0.5,
 };
 

@@ -33,7 +33,7 @@ export class FabricTable extends fabric.Group {
   resizerSize: number = 6;
   fontSize: number = 14;
   fillText: string = "#000000";
-  fillActive: string = "pink";
+  fillActive: string = "#fff";
   fillHover: string = "#ffffff33";
   fillHeader: string = "#00000066";
   minRowHeight: number = 5;
@@ -89,14 +89,16 @@ export class FabricTable extends fabric.Group {
     // 继承的过程
     super([], {
       ...defaultGroupProps,
-      // top: 100,
-      // left: 100,
+      top: 100,
+      left: 100,
+      // width: 300,
+      // height: 200,
     });
-
     this.__setcolumns(mockOptions.columns);
     this.__setrows(mockOptions.rows);
     this._updateRows();
     this._updateColumns();
+
     this.__setcells(mockOptions.cells);
     this._updateCellsGeometry();
 
@@ -117,8 +119,6 @@ export class FabricTable extends fabric.Group {
     this.enableDBClick();
     // mousedblclick
 
-    this.set("top", 100);
-    this.set("left", 100);
     this.set("subTargetCheck", true);
     this.set("interactive", true);
     // subTargetCheck: true,
@@ -533,8 +533,10 @@ export class FabricTable extends fabric.Group {
       lockMovementY: true,
       originX: "left",
       originY: "top",
-      left: 0,
-      top: 0,
+      left: this.left,
+      top: this.top,
+      // left: 0,
+      // top: 0,
       width: 10,
       height: 10,
       fill: this.isHeaderCell(cellData) ? this.fillHeader : this.fill,
@@ -546,8 +548,10 @@ export class FabricTable extends fabric.Group {
       fontFamily: "Arial",
       originX: "left",
       originY: "top",
-      left: 0,
-      top: 0,
+      left: this.left,
+      top: this.top,
+      // left: 0,
+      // top: 0,
       padding: this.cellPadding,
       hasBorders: false,
       fill: this.fillText,
@@ -692,7 +696,6 @@ export class FabricTable extends fabric.Group {
       left: number,
       rowindex: number,
       columnindex: number;
-
     for (rowindex = 0; rowindex < this._rows.length; rowindex++) {
       left = 0;
       for (columnindex = 0; columnindex < this._cols.length; columnindex++) {
@@ -1169,7 +1172,6 @@ export class FabricTable extends fabric.Group {
   enableHover() {
     this.on({
       mousemove: (e: fabric.TEvent) => {
-        // console.log("===>mousemove", e);
         if (this.canvas!.getActiveObject() === this && e?.subTargets) {
           let subtarget = e.subTargets[0];
           const type = subtarget?.type;
@@ -1361,7 +1363,7 @@ export class FabricTable extends fabric.Group {
   enableDBClick() {
     this.on({
       mousedblclick: (e) => {
-        console.log("===>", e, e.subTargets[0]?.type);
+        // console.log("===>", e, e.subTargets[0]?.type);
       },
     });
   }
