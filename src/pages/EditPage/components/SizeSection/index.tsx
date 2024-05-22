@@ -178,10 +178,10 @@ const SizeSection = () => {
     store.canvasStore.canvas?.renderAll();
   };
 
-  useEffect(() => {
-    onChangeTexture();
-    onAddCircle();
-  }, []);
+  // useEffect(() => {
+  //   onChangeTexture();
+  //   onAddCircle();
+  // }, []);
 
   return (
     <div className="size-section">

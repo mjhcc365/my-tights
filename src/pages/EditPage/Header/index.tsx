@@ -4,6 +4,7 @@ import imgUrl from "@/assets/logo.png";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { ALL_FONTS } from "@/utils/fonts";
 import { download, downloadJson } from "@/utils/download";
+import { FabricRuler } from "@/app/fabricRuler";
 
 import "./index.less";
 
@@ -62,7 +63,11 @@ const MJHeader = () => {
     downloadJson(JSON.stringify(json));
   };
 
-  const handleTable = () => {};
+  const handleRule = () => {
+    new FabricRuler(store.canvasStore.canvas);
+
+    store.canvasStore.canvas?.renderAll();
+  };
 
   return (
     <div className="headerBox">
@@ -97,7 +102,7 @@ const MJHeader = () => {
           }}
           onChange={handleFontChange}
         />
-        <Button onClick={handleTable}>画表格</Button>
+        <Button onClick={handleRule}>画尺子</Button>
       </div>
     </div>
   );

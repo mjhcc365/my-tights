@@ -16,9 +16,7 @@ const Png = () => {
     <>
       <div
         className="grid grid-cols-3 cursor-pointer gap-2  h-full"
-        style={{
-          height: "calc(100vh - 200px)",
-        }}
+        style={{ height: "calc(100vh - 200px)", gridAutoRows: "max-content" }}
         onClick={handleAddPicture}
       >
         {mockpng.map((ele, index) => {
