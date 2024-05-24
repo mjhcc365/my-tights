@@ -32,6 +32,7 @@ const HomePage = () => {
           <Sider width={58} style={siderStyle}>
             <LeftSiderBox />
           </Sider>
+          <div style={{ width: 160, background: "#fff" }}>222</div>
           <Content style={contentStyle}>
             <MainContent />
           </Content>

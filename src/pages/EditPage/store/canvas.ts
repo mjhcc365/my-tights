@@ -1,5 +1,7 @@
 import { action, computed, makeAutoObservable, observable } from "mobx";
 import { Canvas, FabricObject } from "fabric";
+import { FabricRuler } from "@/app/fabricRuler";
+import { HoverBorders } from "@/app/hoverBorders";
 
 class CanvasStore {
   canvas: Canvas | null = null;
@@ -33,8 +35,11 @@ class CanvasStore {
   };
 
   @action
-  setCanvas = (canvas: Canvas | null) => {
+  initCanvas = (canvas: Canvas) => {
+    new FabricRuler(canvas); // 绑定尺子
+    new HoverBorders(canvas);
     this.canvas = canvas;
+    this.canvas.renderAll();
   };
 
   @action

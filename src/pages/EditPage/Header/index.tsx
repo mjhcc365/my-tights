@@ -65,7 +65,6 @@ const MJHeader = () => {
 
   const handleRule = () => {
     new FabricRuler(store.canvasStore.canvas);
-
     store.canvasStore.canvas?.renderAll();
   };
 

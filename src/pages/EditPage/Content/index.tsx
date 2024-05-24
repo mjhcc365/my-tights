@@ -6,7 +6,7 @@ import { stores as store } from "@/pages/EditPage/store/main";
 
 const MainContent = () => {
   const canvasBoxRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasEl = useRef<HTMLCanvasElement>(null);
 
   const handleEnter = () => {
     console.log("-->回车");
@@ -24,34 +24,25 @@ const MainContent = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    const wrapperWidth = canvasBoxRef.current?.width;
-    const wrapperHeight = canvasBoxRef.current?.height;
+    const wrapperWidth = canvasBoxRef.current?.getBoundingClientRect().width;
+    const wrapperHeight = canvasBoxRef.current?.getBoundingClientRect().height;
 
-    const cWidth = Math.floor(wrapperWidth || 80 * 5);
-    const cHeight = Math.floor(wrapperHeight || 120 * 5);
+    console.log("===>", canvasBoxRef.current, wrapperHeight, wrapperWidth);
 
     const options = {
-      backgroundColor: "#fff",
-      width: cWidth,
-      height: cHeight,
+      backgroundColor: "pink",
       absolutePositioned: true,
       selectable: false,
+      width: wrapperWidth,
+      height: wrapperHeight,
     };
-    const newCanvas = new fabric.Canvas(canvasRef.current as any, options);
 
-    newCanvas.on("mouse:down", () => {
-      store?.canvasStore.setActiveObj(
-        store.canvasStore.canvas?.getActiveObject()?.toObject()
-      );
-    });
-    store?.canvasStore.setCanvas(newCanvas);
-    store?.canvasStore.canvas?.renderAll();
-    store?.dexieStore.clear();
+    const canvas = new fabric.Canvas(canvasEl?.current, options);
+    store.canvasStore.initCanvas(canvas);
 
+    canvas.renderAll();
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      store.canvasStore.canvas?.dispose();
+      canvas.dispose();
     };
   }, []);
 
@@ -69,7 +60,7 @@ const MainContent = () => {
       ref={canvasBoxRef}
     >
       <TopTools />
-      <canvas ref={canvasRef} />
+      <canvas ref={canvasEl} />
     </div>
   );
 };
