@@ -97,7 +97,7 @@ export class fabricTable {
       //       });
       //     }, 1000)
       //   );
-      this.group.add(line);
+      // this.group.add(line);
     });
   };
 }

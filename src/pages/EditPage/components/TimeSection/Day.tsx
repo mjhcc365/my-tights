@@ -26,7 +26,7 @@ const Day = () => {
       fill: "rgb(0,0,0)",
       selectable: true,
     } as any);
-    store?.canvasStore.addObject(text);
+    store?.canvasStoreObject(text);
   };
 
   return (

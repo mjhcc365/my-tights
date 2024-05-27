@@ -7,7 +7,7 @@ const Png = () => {
     FabricImage.fromURL(mockpng[index]).then((img) => {
       img.scaleToWidth(200); // 设置图像宽度
       img.scaleToHeight(200); // 设置图像高度
-      store?.canvasStore.canvas?.add(img); // 添加图像到 Canvas
+      store?.canvasStore.addObject(img); // 添加图像到 Canvas
       store?.canvasStore.canvas?.renderAll(); // 渲染 Canvas
     });
   };

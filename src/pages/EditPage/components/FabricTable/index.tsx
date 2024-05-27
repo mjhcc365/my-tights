@@ -10,7 +10,7 @@ const Table = () => {
   const onAddTable = () => {
     const table = new FabricTable(s2DataConfig);
 
-    store.canvasStore.canvas?.add(table);
+    store.canvasStore.addObject(table);
     store.canvasStore.canvas?.renderAll();
   };
 
@@ -24,7 +24,6 @@ const Table = () => {
       fixedWidth: 100,
     });
     console.log("===>table", text);
-    store.canvasStore.canvas?.add(text);
     store.canvasStore.canvas?.renderAll();
   };
   return (

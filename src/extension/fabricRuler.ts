@@ -120,10 +120,6 @@ export class FabricRuler extends Disposable {
           }),
     };
     this.render({ ctx: this.canvas.contextContainer });
-    // computed(() => {
-    //   this.options.unit = unitName
-    //   this.render({ ctx: this.canvas.contextContainer })
-    // })
 
     this.canvasEvents = {
       "after:render": this.render.bind(this),

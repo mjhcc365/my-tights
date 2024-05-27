@@ -4,6 +4,7 @@ import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
 import { FabricRuler } from "@/extension/fabricRuler";
+import { FabricGuide } from "@/extension/fabricGuide";
 
 export interface IFabricState {
   wrapperRef: null | HTMLDivElement;
@@ -86,6 +87,7 @@ class FabricCanvas {
   @action
   initCanvas = (canvas: Canvas) => {
     new FabricRuler(canvas);
+    new FabricGuide(canvas);
     this.canvas = canvas;
     this.canvas.renderAll();
   };
@@ -106,13 +108,13 @@ class FabricCanvas {
   };
 
   @action
-  addObject = (obj: FabricObject[]) => {
+  addObject = (obj: FabricObject[] | FabricObject) => {
     if (Array.isArray(obj)) {
       obj.forEach((ele) => {
-        this.canvas.add(this.setDefaultAttr(ele));
+        this.canvas.add(this.setDefaultAttr(ele as any));
       });
     } else {
-      this.canvas.add(this.setDefaultAttr(obj));
+      this.canvas.add(this.setDefaultAttr(obj as any));
     }
   };
 

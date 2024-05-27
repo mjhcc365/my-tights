@@ -70,7 +70,7 @@ const Calender = () => {
       group.add(text);
     }
 
-    store.canvasStore.canvas?.add(group);
+    store.canvasStore.addObject(group);
     store.canvasStore.canvas?.renderAll();
   };
 
@@ -99,7 +99,7 @@ const Calender = () => {
       group.add(text);
     }
     group.set("left", 100);
-    store.canvasStore.canvas?.add(group);
+    store.canvasStore.addObject(group);
     store.canvasStore.canvas?.renderAll();
   };
   return (
