@@ -471,7 +471,7 @@ export const SetGroup = () => {
         interactive: false,
         subTargetCheck: true,
       } as any);
-      store?.canvasStore.canvas.add(group);
+      store?.canvasStore.addObject(group);
       store?.canvasStore.canvas.remove(...activeObjects);
       store?.canvasStore.canvas.renderAll();
     }

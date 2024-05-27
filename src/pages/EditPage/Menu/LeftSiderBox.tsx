@@ -11,7 +11,7 @@ import FabricTable from "@/pages/EditPage/components/FabricTable";
 import { menuConfig, MENUKEY } from "./types";
 
 const LeftSiderBox = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [curmenu, setMenu] = useState<MENUKEY>(
     (localStorage.getItem("mj-menu") as MENUKEY) || MENUKEY.temp

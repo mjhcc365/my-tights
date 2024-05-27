@@ -8,7 +8,7 @@ const Rule = () => {
   const onLoadJson = () => {
     if (!store?.canvasStore.canvas) return;
     const group = fabricRenderJson(testjson.objects || []);
-    store?.canvasStore.canvas.add(group);
+    store?.canvasStore.addObject(group);
     store?.canvasStore.canvas.renderAll();
   };
 

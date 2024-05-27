@@ -8,6 +8,9 @@ class MainPage {
   curTempIndex: number = 0; // 当前模板
   snapshots: any[] = [];
   fontFamily: string = "仓耳小丸子";
+  // todo 主题颜色
+  // recent-color    最近颜色
+
   constructor() {
     makeAutoObservable(this, {
       templates: observable,
@@ -15,6 +18,7 @@ class MainPage {
       snapshots: observable,
     });
   }
+
   @action
   addTemplates = (template: any) => {
     this.templates[this.templates.length] = template;

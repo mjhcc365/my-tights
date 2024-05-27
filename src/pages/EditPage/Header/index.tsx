@@ -4,7 +4,6 @@ import imgUrl from "@/assets/logo.png";
 import { stores as store } from "@/pages/EditPage/store/main";
 import { ALL_FONTS } from "@/utils/fonts";
 import { download, downloadJson } from "@/utils/download";
-import { FabricRuler } from "@/app/fabricRuler";
 
 import "./index.less";
 

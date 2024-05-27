@@ -26,7 +26,7 @@ export const useDraw = () => {
       // group.addWithUpdate(line);
     }
     // 竖线
-    store?.canvasStore.canvas.add(group);
+    store?.canvasStore.addObject(group);
     store?.canvasStore.canvas.renderAll();
   };
 

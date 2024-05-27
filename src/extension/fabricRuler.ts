@@ -1,46 +1,24 @@
+import { Canvas } from "fabric";
 import { Keybinding } from "./keybinding";
-// import { Disposable } from '@/utils/lifecycle'
-// import { computed, watchEffect } from "vue";
+import { Disposable } from "@/utils/lifecycle";
 // import { useThemes } from '@/hooks/useThemes'
-// import { DesignUnitMode } from "@/configs/background";
-// import { PiBy180, isMobile } from "@/utils/common";
+import { DesignUnitMode } from "@/configs/background";
+import { PiBy180, isMobile } from "@/utils/common";
 import {
   TAxis,
   Point,
   Rect as fabricRect,
-  FabricObject,
+  Object as FabricObject,
   TPointerEventInfo,
   TPointerEvent,
 } from "fabric";
 // import { useMainStore, useTemplatesStore } from "@/store";
 // import { storeToRefs } from "pinia";
-// import { px2mm } from "@/utils/image";
-// import { ElementNames } from "@/types/elements";
-import { FabricCanvas } from "./fabricCanvas";
-import { ReferenceLine } from "./ReferenceLine";
-// import { WorkSpaceDrawType } from "@/configs/canvas";
-
-export const WorkSpaceDrawType = "WorkSpaceDrawType";
-
-export const PiBy180 = Math.PI / 180;
-export const halfPI = Math.PI / 2;
-
-export const isMobile = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|HarmonyOS/i.test(
-    navigator.userAgent
-  );
-};
-
-export const DefaultRatio = 25.4;
-
-export const DesignUnitMode = [
-  { id: 0, name: "mm" },
-  { id: 1, name: "px" },
-];
-// px2mm
-export const px2mm = (value: number) => {
-  return (value / 300) * DefaultRatio;
-};
+import { px2mm } from "@/utils/image";
+import { ElementNames } from "@/types/elements";
+// import { FabricCanvas } from "./fabricCanvas";
+import { ReferenceLine } from "@/extension/object/ReferenceLine";
+import { WorkSpaceDrawType } from "@/configs/canvas";
 
 type Rect = { left: number; top: number; width: number; height: number };
 
@@ -93,7 +71,7 @@ export interface RulerOptions {
 
 export type HighlightRect = { skip?: TAxis } & Rect;
 
-export class FabricRuler {
+export class FabricRuler extends Disposable {
   private canvasEvents;
   public lastCursor: string;
   public workSpaceDraw?: fabricRect;
@@ -107,8 +85,8 @@ export class FabricRuler {
         y: HighlightRect[];
       };
 
-  constructor(private readonly canvas: FabricCanvas) {
-    // super();
+  constructor(private readonly canvas) {
+    super();
     this.lastCursor = this.canvas.defaultCursor;
     // 合并默认配置
     this.options = Object.assign({
@@ -121,30 +99,27 @@ export class FabricRuler {
     const isDark = false;
 
     // const { unitMode } = storeToRefs(useMainStore());
-    // watchEffect(() => {
-    //   const unitName = DesignUnitMode.filter(
-    //     (ele) => ele.id === unitMode.value
-    //   )[0].name;
-    //   this.options = {
-    //     ...this.options,
-    //     ...(isDark
-    //       ? {
-    //           backgroundColor: "#242424",
-    //           borderColor: "#555",
-    //           highlightColor: "#165dff3b",
-    //           textColor: "#ddd",
-    //           unitName: unitName,
-    //         }
-    //       : {
-    //           backgroundColor: "#fff",
-    //           borderColor: "#ccc",
-    //           highlightColor: "#165dff3b",
-    //           textColor: "#444",
-    //           unitName: unitName,
-    //         }),
-    //   };
-    //   this.render({ ctx: this.canvas.contextContainer });
-    // });
+    const unitName = DesignUnitMode.filter((ele) => ele.id === 0)[0].name;
+
+    this.options = {
+      ...this.options,
+      ...(isDark
+        ? {
+            backgroundColor: "#242424",
+            borderColor: "#555",
+            highlightColor: "#165dff3b",
+            textColor: "#ddd",
+            unitName: unitName,
+          }
+        : {
+            backgroundColor: "#fff",
+            borderColor: "#ccc",
+            highlightColor: "#165dff3b",
+            textColor: "#444",
+            unitName: unitName,
+          }),
+    };
+    this.render({ ctx: this.canvas.contextContainer });
     // computed(() => {
     //   this.options.unit = unitName
     //   this.render({ ctx: this.canvas.contextContainer })
@@ -232,11 +207,11 @@ export class FabricRuler {
         globalCompositeOperation: "difference",
       });
       this.canvas.add(this.tempReferenceLine);
-      // const templatesStore = useTemplatesStore();
-      // templatesStore.modifedElement();
-      this.canvas.setActiveObject(this.tempReferenceLine);
-      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
-      this.tempReferenceLine.fire("down", this.getCommonEventInfo(e));
+      //   const templatesStore = useTemplatesStore();
+      //   templatesStore.modifedElement();
+      //   this.canvas.setActiveObject(this.tempReferenceLine);
+      //   this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
+      //   this.tempReferenceLine.fire("down", this.getCommonEventInfo(e));
     }
   }
 
@@ -611,7 +586,7 @@ export class FabricRuler {
       this.objectRect = undefined;
       return;
     }
-    if (activeObjects[0].name.toLowerCase() === "referenceline") {
+    if (activeObjects[0].name.toLowerCase() === ElementNames.REFERENCELINE) {
       this.objectRect = undefined;
       return;
     }

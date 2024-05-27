@@ -2,13 +2,11 @@ import {
   FabricObject,
   Line,
   classRegistry,
-  //   TProps,
   Point,
   TPointerEventInfo,
   TPointerEvent,
 } from "fabric";
-// import { ReferenceLineProps } from "@/types/canvas"
-import { FabricCanvas } from "@/app/fabricCanvas";
+import { ReferenceLineProps } from "@/types/canvas";
 
 export class ReferenceLine extends Line {
   static type: string = "ReferenceLine";
@@ -47,7 +45,7 @@ export class ReferenceLine extends Line {
       }
     });
 
-    this.on("moving", (e: any) => {
+    this.on("moving", (e) => {
       if (this.isPointOnRuler(e.e)) {
         this.moveCursor = "not-allowed";
       } else {
@@ -98,7 +96,7 @@ export class ReferenceLine extends Line {
 
   isPointOnRuler(e: any) {
     const isHorizontal = this.isHorizontal();
-    const fabricCanvas = this.canvas as FabricCanvas;
+    const fabricCanvas = this.canvas;
     const hoveredRuler = fabricCanvas.ruler?.getPointHover(
       new Point(e.offsetX, e.offsetY)
     );

@@ -93,7 +93,7 @@ const Weather = () => {
       selectable: true,
       ...options,
     } as any);
-    store?.canvasStore.canvas.add(text);
+    store?.canvasStore.addObject(text);
   };
 
   const fetchWeather = () => {
