@@ -36,6 +36,9 @@ const HomePage = () => {
           <Content style={contentStyle}>
             <MainContent />
           </Content>
+          <Sider width={260} style={{ background: "#fff" }}>
+            工具库
+          </Sider>
         </Layout>
       </Layout>
     </div>

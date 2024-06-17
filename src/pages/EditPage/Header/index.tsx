@@ -63,7 +63,7 @@ const MJHeader = () => {
   };
 
   const handleRule = () => {
-    new FabricRuler(store.canvasStore.canvas);
+    // new FabricRuler(store.canvasStore.canvas);
     store.canvasStore.canvas?.renderAll();
   };
 
@@ -82,10 +82,33 @@ const MJHeader = () => {
         </Button>
       </div>
       <div className="btns-box">
-        <Button onClick={handleClickPic}>下载图片</Button>
-        <Button onClick={handleDownloadGroup}>下载Group</Button>
-        <Button onClick={handleClickJson}>下载JSON</Button>
-        <Button onClick={handleClickJson}>下载PDF</Button>
+        <Button>编组</Button>
+        <Button>解除编组</Button>
+        <Button
+          onClick={() => {
+            store.canvasStore.toggleClipLine();
+          }}
+        >
+          出血线
+        </Button>
+        <Button
+          onClick={() => {
+            store.canvasStore.toggleSafeLine();
+          }}
+        >
+          安全线
+        </Button>
+        <Button
+          onClick={() => {
+            store.canvasStore.toggleRuler();
+          }}
+        >
+          尺子
+        </Button>
+        {/* <Button onClick={handleClickPic}>下载图片</Button> */}
+        {/* <Button onClick={handleDownloadGroup}>下载Group</Button> */}
+        {/* <Button onClick={handleClickJson}>下载JSON</Button> */}
+        {/* <Button onClick={handleClickJson}>下载PDF</Button> */}
         {/* <Button onClick={handleOnSave}>暂存</Button> */}
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleReset}>保存</Button>
@@ -100,7 +123,6 @@ const MJHeader = () => {
           }}
           onChange={handleFontChange}
         />
-        <Button onClick={handleRule}>画尺子</Button>
       </div>
     </div>
   );

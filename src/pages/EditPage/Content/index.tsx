@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import * as fabric from "fabric";
 import TopTools from "./TopTools";
+import BottomTools from "./BottomTools";
 import { observer } from "mobx-react-lite";
 import { stores as store } from "@/pages/EditPage/store/main";
 // import { FabricCanvas } from "@/extension/fabricCanvas";
@@ -9,29 +10,25 @@ const MainContent = () => {
   const canvasBoxRef = useRef<HTMLInputElement>(null);
   const canvasEl = useRef<HTMLCanvasElement>(null);
 
-  const handleEnter = () => {
-    console.log("-->回车");
-  };
+  // const handleEnter = () => {
+  //   console.log("-->回车");
+  // };
 
-  const onKeyDown = (e: { code: any }) => {
-    const code = e.code;
-    switch (code) {
-      case "Enter":
-        handleEnter();
-        break;
-      default:
-        break;
-    }
-  };
+  // const onKeyDown = (e: { code: any }) => {
+  //   const code = e.code;
+  //   switch (code) {
+  //     case "Enter":
+  //       handleEnter();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   useEffect(() => {
     const wrapperWidth = canvasBoxRef.current?.getBoundingClientRect().width;
     const wrapperHeight = canvasBoxRef.current?.getBoundingClientRect().height;
-
-    console.log("===>", canvasBoxRef.current, wrapperHeight, wrapperWidth);
-
     const options = {
-      backgroundColor: "pink",
       absolutePositioned: true,
       selectable: false,
       width: wrapperWidth,
@@ -66,6 +63,7 @@ const MainContent = () => {
     >
       <TopTools />
       <canvas ref={canvasEl} />
+      <BottomTools />
     </div>
   );
 };
