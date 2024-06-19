@@ -110,6 +110,14 @@ class FabricCanvas {
     return this.activeObj?.id;
   }
 
+  @computed get activeLeft() {
+    return (this.activeObj as any)?.left - this.getWorkSpaceDraw()?.left;
+  }
+
+  @computed get activeTop() {
+    return (this.activeObj as any)?.top - this.getWorkSpaceDraw()?.top;
+  }
+
   @action
   setActiveObj = (activeObj: FabricObject | FabricObject[] | null) => {
     this.activeObj = Array.isArray(activeObj) ? activeObj[0] : activeObj;
@@ -126,11 +134,15 @@ class FabricCanvas {
   initCanvas = (canvas: Canvas) => {
     new FabricGuide(canvas);
     this.canvas = canvas;
-
     // todo 拖拽过程中 更新active参数
     this.canvas.on("mouse:down", (event) => {
       this.setActiveObj(event.target as any);
     });
+
+    const w = 400 * this.zoom;
+    const h = 600 * this.zoom;
+    const x = this.canvas.width * 0.5;
+    const y = this.canvas.height * 0.5;
 
     const rect = new Rect({
       id: WorkSpaceDrawType,
@@ -146,10 +158,10 @@ class FabricCanvas {
       type: "Rect",
       originX: "left",
       originY: "top",
-      left: 0,
-      top: 0,
-      width: this.canvas.width,
-      height: this.canvas.height,
+      left: x - w * 0.5,
+      top: Math.max(y - h * 0.5, 64),
+      width: w,
+      height: h,
     });
 
     this.canvas.add(rect);
@@ -204,6 +216,17 @@ class FabricCanvas {
     if (!target.id) {
       target.set({ id: nonid(8) });
     }
+
+    if (!target.top) {
+      const { y = 100 } = this.getCenterPoint();
+      target.set({ top: y - (target?.height || 100) * 0.5 });
+    }
+
+    if (!target.left) {
+      const { x = 100 } = this.getCenterPoint();
+      target.set({ left: x - (target?.width || 100) * 0.5 });
+    }
+
     if (check.isTextObject(target)) {
       target.set({ color: target.fill });
     }
@@ -236,17 +259,6 @@ class FabricCanvas {
       .getObjects()
       .filter((ele) => ele.id === WorkSpaceDrawType)[0];
     if (!workSpaceDraw) return;
-    // const fabricStore = useFabricStore();
-    // const templatesStore = useTemplatesStore()
-    // const { currentTemplate } = storeToRefs(templatesStore)
-
-    // this.canvas.remove(
-    //   ...this.canvas
-    //     .getObjects()
-    //     .filter((ele) => WorkSpaceThumbType.includes(ele.id))
-    // );
-    // const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
-    // const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
     const workWidth = workSpaceDraw.width,
       workHeight = workSpaceDraw.height;
     const PaddingHalf = Padding / 2;
@@ -433,6 +445,81 @@ class FabricCanvas {
     backend?.set({ fill: hex });
     this.canvas.renderAll();
   };
+
+  /** 获取画板的中心 */
+  getCenterPoint = (): { x: number; y: number } => {
+    return {
+      x: this.getWorkSpaceDraw()?.getCenterPoint().x || 100,
+      y: this.getWorkSpaceDraw()?.getCenterPoint().y || 100,
+    };
+  };
+
+  /** 获取背景板的top,left */
+  getBackTL = () => {
+    const backend = this.getWorkSpaceDraw();
+    return {
+      top: backend?.top,
+      left: backend?.left,
+    };
+  };
+
+  getWrapperRefCenter = (): { x: number; y: number } => {
+    return {
+      x: (this.wrapperRef?.getBoundingClientRect()?.width || 100) * 0.5,
+      y: (this.wrapperRef?.getBoundingClientRect()?.height || 100) * 0.5,
+    };
+  };
+
+  /** 设置背景的大小 */
+  setBackSize = (width = 100, height = 100) => {
+    const { x, y } = this.getCenterPoint();
+    const top = y - height * 0.5;
+    const left = x - height * 0.5;
+
+    this.canvas
+      .getObjects()
+      .filter((objects) => [WorkSpaceDrawType].includes((objects as any)?.id))
+      .map((rect) => {
+        rect.set({
+          top,
+          left,
+          width,
+          height,
+        });
+      });
+
+    const clipPX = (this.clip * DefaultDPI) / DefaultRatio;
+    const safePX = (2 * this.safe * DefaultDPI) / DefaultRatio;
+
+    this.canvas
+      .getObjects()
+      .filter((objects) => [WorkSpaceSafeType].includes((objects as any)?.id))
+      .map((rect) => {
+        rect.set({
+          left: left + safePX,
+          top: top + safePX,
+          width: width - 2 * safePX,
+          height: height - 2 * safePX,
+        });
+      });
+
+    this.canvas
+      .getObjects()
+      .filter((objects) => [WorkSpaceClipType].includes((objects as any)?.id))
+      .map((rect) => {
+        rect.set({
+          left: left + clipPX,
+          top: top + clipPX,
+          width: width - 2 * clipPX,
+          height: height - 2 * clipPX,
+        });
+      });
+
+    this.canvas.renderAll();
+  };
+
+  /** 等比例缩放 */
+  setZoom = () => {};
 }
 
 export default FabricCanvas;

@@ -1,7 +1,6 @@
-import { InputNumber, Select, ColorPicker, Flex, Switch, Button } from "antd";
-import { useEffect } from "react";
-import { Group, Circle } from "fabric";
-import { HBSType } from "@/pages/EditPage/config/paper";
+import { Select, ColorPicker, Flex, Switch, Button } from "antd";
+import { Group, Circle, FabricObject } from "fabric";
+import { HBSType } from "./type";
 import { stores as store } from "@/pages/EditPage/store/main";
 
 import usePaperStore, {
@@ -39,8 +38,6 @@ const SizeSection = () => {
     drawLineTexture,
     drawDotsTexture,
   } = usePaperStore();
-
-  const uselessFn = () => {};
 
   const onChangeBackColor = (v: any) => {
     const hex = v.toHexString();
@@ -105,17 +102,29 @@ const SizeSection = () => {
   };
 
   // 绘制活页孔
-  // const onToggleCircle = (v: boolean) => {
-  //   store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
-  //     if (ele.hbsType === HBSType.holes) {
-  //       ele.visible = v;
-  //     }
-  //   });
-  //   setPaperConfig((d) => {
-  //     d.showHole = v;
-  //   });
-  //   store.canvasStore.canvas?.renderAll();
-  // };
+  const onToggleCircle = (v: boolean) => {
+    if (
+      store.canvasStore.canvas
+        .getObjects()
+        .find((fabricObject) => (fabricObject as any).hbsType === HBSType.holes)
+    ) {
+      store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
+        if (ele.hbsType === HBSType.holes) {
+          ele.visible = v;
+        }
+      });
+
+      setPaperConfig((d) => {
+        d.showHole = v;
+      });
+    } else {
+      onAddCircle();
+      setPaperConfig((d) => {
+        d.showHole = true;
+      });
+    }
+    store.canvasStore.canvas?.renderAll();
+  };
 
   const onToggleBack = (v: boolean) => {
     store.canvasStore.canvas?.getObjects().forEach((ele: any) => {
@@ -130,8 +139,11 @@ const SizeSection = () => {
   };
 
   const onAddCircle = () => {
-    const cw = store.canvasStore.canvas?.getWidth() || 0;
-    const ch = store.canvasStore.canvas?.getHeight() || 0;
+    const { width, height, top, left } =
+      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+    const cw = width;
+    const ch = height;
+
     const middle = Math.floor(ch / 2);
     const LEFT_GAP = 8.5;
     const CIRCLE_R = 2.5;
@@ -139,15 +151,18 @@ const SizeSection = () => {
     const CIRCLE_GROUP_GAP = 19;
     const CIRCLR_LEFT = 2.5;
 
+    const selfZoom = 5;
+
     const circles = [];
     for (let i = 0; i <= 2; i++) {
       const c = new Circle({
-        radius: CIRCLE_R * store.canvasStore.zoom,
+        radius: CIRCLE_R * store.canvasStore.zoom * selfZoom,
         top:
           middle +
           (CIRCLE_GROUP_GAP / 2 - CIRCLE_R + CIRCLE_GAP * i) *
-            store.canvasStore.zoom,
-        left: CIRCLR_LEFT * store.canvasStore.zoom,
+            store.canvasStore.zoom *
+            selfZoom,
+        left: CIRCLR_LEFT * store.canvasStore.zoom * selfZoom,
         fill: "#F5F5F5",
       });
       circles.push(c);
@@ -155,18 +170,21 @@ const SizeSection = () => {
 
     for (let i = 0; i <= 2; i++) {
       const c = new Circle({
-        radius: CIRCLE_R * store.canvasStore.zoom,
+        radius: CIRCLE_R * store.canvasStore.zoom * selfZoom,
         top:
           middle -
           (CIRCLE_GROUP_GAP / 2 + CIRCLE_R + CIRCLE_GAP * i) *
-            store.canvasStore.zoom,
-        left: CIRCLR_LEFT * store.canvasStore.zoom,
+            store.canvasStore.zoom *
+            selfZoom,
+        left: CIRCLR_LEFT * store.canvasStore.zoom * selfZoom,
         fill: "#F5F5F5",
       });
       circles.push(c);
     }
 
     const group = new Group(circles, {
+      top,
+      left,
       selectable: false,
       hbsType: "holes",
     } as any);
@@ -175,11 +193,6 @@ const SizeSection = () => {
     store.canvasStore.canvas?.renderAll();
   };
 
-  useEffect(() => {
-    onChangeTexture();
-    onAddCircle();
-  }, []);
-
   return (
     <div className="size-section">
       <Flex vertical={true} gap="middle">
@@ -187,23 +200,14 @@ const SizeSection = () => {
         <Flex align="center" gap="small">
           <div>尺寸：</div>
           <Select
-            disabled
             value={paperConfig.curTempType}
             style={{ flex: 1 }}
-            onChange={uselessFn}
+            onChange={(tempType) => {
+              console.log("==>", tempType);
+            }}
             options={PaperTempOptions}
           />
         </Flex>
-        {/* <Flex gap="small">
-          <Flex align="center" gap="small">
-            <div>宽度:</div>
-            <InputNumber value={paperConfig.width} disabled />
-          </Flex>
-          <Flex align="center" gap="small">
-            <div>高度:</div>
-            <InputNumber value={paperConfig.height} disabled />
-          </Flex>
-        </Flex> */}
         <div className="section-title">
           背景颜色
           <Switch value={paperConfig.showBackColor} onChange={resetBackColor} />
@@ -220,7 +224,7 @@ const SizeSection = () => {
         </Flex>
         <div className="section-title">
           活页孔
-          {/* <Switch value={paperConfig.showHole} onChange={onToggleCircle} /> */}
+          <Switch value={paperConfig.showHole} onChange={onToggleCircle} />
         </div>
         <div className="section-title">
           画布填充
@@ -236,7 +240,7 @@ const SizeSection = () => {
                   {...ele}
                   isActive={paperConfig.backConfig === ele.value}
                   onClick={(v) => {
-                    onChangeTexture(v, null, null);
+                    onChangeTexture(v, null);
                     setPaperConfig((d) => {
                       d.backConfig = v;
                     });

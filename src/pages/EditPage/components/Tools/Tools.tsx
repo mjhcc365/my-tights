@@ -183,13 +183,16 @@ export const TextTools = observer(() => {
           return <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>;
         }}
         onChange={handleFontChange}
+        size="small"
       />
+
       <div>{(store?.canvasStore.activeObj as any)?.fontFamily}</div>
       <Select
         style={{ width: 75 }}
         value={(store?.canvasStore.activeObj as any)?.fontSize}
         onChange={handleChangeSize}
         options={ALL_SIZE}
+        size="small"
       />
       <Tooltip placement="bottom" title="加粗">
         <BoldOutlined onClick={handleChangeFontWight} />
@@ -235,6 +238,7 @@ export const LaylerSelect = () => {
       placeholder="图层"
       options={Layers}
       onChange={handleChangeLayer}
+      size="small"
     />
   );
 };
@@ -324,11 +328,13 @@ export const WHinfo = observer(() => {
         value={Math.floor(store?.canvasStore.activeObj?.width || 0)}
         prefix="W"
         onChange={changeObjWidth}
+        size="small"
       />
       <InputNumber
         value={Math.floor(store?.canvasStore.activeObj?.height || 0)}
         prefix="H"
         onChange={changeObjHeight}
+        size="small"
       />
     </>
   );
@@ -381,14 +387,16 @@ export const Position = observer(() => {
   return (
     <>
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeObj?.top || 0)}
+        value={Math.floor(store?.canvasStore.activeTop || 0)}
         prefix="T"
         onChange={changeObjTop}
+        size="small"
       />
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeObj?.left || 0)}
+        value={Math.floor(store?.canvasStore.activeLeft || 0)}
         prefix="L"
         onChange={changeObjLeft}
+        size="small"
       />
     </>
   );

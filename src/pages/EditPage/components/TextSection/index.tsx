@@ -10,8 +10,6 @@ const TextSectioin = () => {
     if (!store?.canvasStore.canvas) return;
     // TODO 双击修改文案
     const text = new Textbox(param, {
-      left: 150,
-      top: 150,
       fontSize: 20,
       fontFamily: store.mainStore.fontFamily,
       hbsId: nanoid(),

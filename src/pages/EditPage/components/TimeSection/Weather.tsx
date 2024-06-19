@@ -84,8 +84,6 @@ const Weather = () => {
     if (!store?.canvasStore.canvas) return;
     // TODO 双击修改文案
     const text = new Textbox(param, {
-      left: 150,
-      top: 150,
       fontSize: 16,
       fontFamily: store.mainStore.fontFamily,
       hbsType: "textbox",

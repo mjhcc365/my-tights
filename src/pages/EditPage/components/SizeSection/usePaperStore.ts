@@ -1,17 +1,12 @@
 import { useImmer } from "use-immer";
-import { Line, Group, Circle } from "fabric";
+import { Line, Group, Circle, FabricObject } from "fabric";
 import { nanoid } from "nanoid";
 
 import forDots from "@/assets/backicon/four-dots.svg";
 import lines from "@/assets/backicon/lines.svg";
 import rectangle from "@/assets/backicon/rectangle.svg";
-// import threeDots from "@/assets/backicon/three-dots.svg";
-// import note from "@/assets/backicon/note.svg";
-// import triangle from "@/assets/backicon/triangle.svg";
-// import hexagon from "@/assets/backicon/hexagon.svg";
-// import { useContext } from "react";
-import { HBSType } from "@/pages/EditPage/config/paper";
 import { stores as store } from "@/pages/EditPage/store/main";
+import { HBSType } from "./type";
 
 export enum PaperBackType {
   threeDots = "threeDots",
@@ -24,10 +19,6 @@ export enum PaperBackType {
 }
 
 export const PaperBackArray = [
-  // {
-  //     value: PaperBackType.threeDots,
-  //     src: threeDots
-  // },
   {
     value: PaperBackType.forDots,
     src: forDots,
@@ -40,27 +31,20 @@ export const PaperBackArray = [
     value: PaperBackType.rectangle,
     src: rectangle,
   },
-  // {
-  //     value: PaperBackType.triangle,
-  //     src: triangle
-  // },
-  // {
-  //     value: PaperBackType.note,
-  //     src: note
-  // },
-  // {
-  //     value: PaperBackType.hexagon,
-  //     src: hexagon
-  // }
 ];
+
 // 管理背景
 const usePaperStore = () => {
   const [paperConfig, setPaperConfig] = useImmer(A7TempConfig);
   // 画网格
   const drawGridTexture = (stroke: string) => {
-    const cWidth: number = store.canvasStore.canvas?.getWidth() || 0;
-    const cHeight: number = store.canvasStore.canvas?.getHeight() || 0;
-    const lineGap = paperConfig.lineConfig.gap * 5;
+    const { width, height, top, left } =
+      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+    const selfZoom = 3.5;
+    const lineGap =
+      paperConfig.lineConfig.gap * store.canvasStore.zoom * selfZoom;
     // 定义网格线的间距
     const lines = [];
     // 绘制横向网格线
@@ -79,6 +63,8 @@ const usePaperStore = () => {
       lines.push(vline);
     }
     const group = new Group(lines, {
+      top,
+      left,
       hbsId: nanoid(),
       hbsType: HBSType.back,
       selectable: false,
@@ -86,14 +72,16 @@ const usePaperStore = () => {
       lockMovementY: true,
     } as any);
 
-    // store.canvasStore.activeObj(group);
-    store.canvasStore.canvas?.sendObjectToBack(group);
+    store.canvasStore.addObject(group);
     store.canvasStore.canvas?.renderAll();
   };
   // 画横线
   const drawLineTexture = (stroke: string) => {
-    const cWidth: number = store.canvasStore.canvas?.getWidth() || 0;
-    const cHeight: number = store.canvasStore.canvas?.getHeight() || 0;
+    const { width, height, top, left } =
+      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+
     const lineGap = paperConfig.lineConfig.gap * 5;
     const lines = [];
     // 绘制横向网格线
@@ -104,7 +92,9 @@ const usePaperStore = () => {
       lines.push(cline);
     }
     const group = new Group(lines, {
-      hbsId: nanoid(),
+      top,
+      left,
+      id: nanoid(),
       hbsType: HBSType.back,
       selectable: false,
       lockMovementX: true,
@@ -116,8 +106,11 @@ const usePaperStore = () => {
 
   // 画点阵
   const drawDotsTexture = (stroke: string) => {
-    const cWidth: number = store.canvasStore.canvas?.getWidth() || 0;
-    const cHeight: number = store.canvasStore.canvas?.getHeight() || 0;
+    const { width, height, top, left } =
+      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+
     const lineGap = paperConfig.lineConfig.gap * 5;
     // 定义网格线的间距
     const dots = [];
@@ -133,6 +126,8 @@ const usePaperStore = () => {
       }
     }
     const group = new Group(dots, {
+      top,
+      left,
       hbsId: nanoid(),
       hbsType: HBSType.back,
       selectable: false,
@@ -140,9 +135,6 @@ const usePaperStore = () => {
       lockMovementY: true,
     } as any);
     store.canvasStore.addObject(group);
-    // group?.sendToBack(); // 置于底层
-    // group.senter
-    // group?.center();
     store.canvasStore.canvas?.renderAll();
   };
   // 画点阵

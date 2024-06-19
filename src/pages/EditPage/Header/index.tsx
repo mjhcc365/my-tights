@@ -45,26 +45,13 @@ const MJHeader = () => {
   };
   // 重做 下一步
   const redo = async () => {
-    const snapshot = await store.dexieStore.getNextSnapshot();
+    // const snapshot = await store.dexieStore.getNextSnapshot();
     store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor + 1);
-    console.log("==>snapshot", snapshot);
-    // await store.canvasStore.loadCanvasFormObj(snapshot);
     store.canvasStore.setActiveObj(null);
   };
 
   const handleFontChange = (v: string) => {
     store.mainStore.setFontFamily(v);
-  };
-
-  // 下载当前绘制的一个组
-  const handleDownloadGroup = () => {
-    const json = store.canvasStore.canvas?.getActiveObject()?.toJSON();
-    downloadJson(JSON.stringify(json));
-  };
-
-  const handleRule = () => {
-    // new FabricRuler(store.canvasStore.canvas);
-    store.canvasStore.canvas?.renderAll();
   };
 
   return (
@@ -84,11 +71,6 @@ const MJHeader = () => {
       <div className="btns-box">
         <Button>编组</Button>
         <Button>解除编组</Button>
-        {/* <Button onClick={handleClickPic}>下载图片</Button> */}
-        {/* <Button onClick={handleDownloadGroup}>下载Group</Button> */}
-        {/* <Button onClick={handleClickJson}>下载JSON</Button> */}
-        {/* <Button onClick={handleClickJson}>下载PDF</Button> */}
-        {/* <Button onClick={handleOnSave}>暂存</Button> */}
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleReset}>保存</Button>
         <Select

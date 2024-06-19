@@ -1,7 +1,6 @@
 import { Button } from "antd";
 import { Rect as FabricRect, Triangle, Circle, Ellipse } from "fabric";
 import { stores as store } from "@/pages/EditPage/store/main";
-// import { common } from "@/store/common"
 
 import "./index.less";
 import { observer } from "mobx-react-lite";
@@ -11,8 +10,6 @@ const Rect = () => {
     const rect = new FabricRect({
       width: 20,
       height: 20,
-      top: 100,
-      left: 100,
     });
     store?.canvasStore.addObject(rect);
   };
@@ -21,8 +18,6 @@ const Rect = () => {
     const triangle = new Triangle({
       width: 80, // 底边长度
       height: 100, // 底边到对角的距离
-      top: 100,
-      left: 100,
     });
     store?.canvasStore.addObject(triangle);
   };
@@ -31,8 +26,6 @@ const Rect = () => {
     // 创建圆形
     let circle = new Circle({
       radius: 50, // 半径
-      top: 100,
-      left: 100,
     });
     store?.canvasStore.addObject(circle);
   };
@@ -41,8 +34,6 @@ const Rect = () => {
     let ellipse = new Ellipse({
       rx: 50,
       ry: 30,
-      top: 100,
-      left: 100,
     });
     store?.canvasStore.addObject(ellipse);
   };

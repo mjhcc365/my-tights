@@ -24,13 +24,15 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
     const node: Element | null = document.querySelector(`.fa-${iconname}`);
     loadSVGFromString(node?.outerHTML || "").then((ele) => {
       const svgObjects = util.groupSVGElements(ele.objects, ele.options);
+      const { x = 100, y = 100 } = store.canvasStore.getCenterPoint();
       svgObjects.set({
-        left: 100,
-        top: 100,
-        scaleX: 0.5,
-        scaleY: 0.5,
+        scaleX: 0.05,
+        scaleY: 0.05,
+        top: y - 50,
+        left: x,
+        fill: "grey",
       });
-      store?.canvasStore.canvas?.add(svgObjects);
+      store?.canvasStore.addObject(svgObjects);
     });
   };
   const iconArray = useMemo(() => {
