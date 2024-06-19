@@ -29,7 +29,7 @@ const LeftSiderBox = () => {
         <menu className="flex absolute flex-col gap-4 px-1 z-20 ">
           {menuConfig.map((ele) => {
             return (
-              <li className="h-12   text-slate-500">
+              <li key={ele.key} className="h-12   text-slate-500">
                 <div
                   className={`w-12 h-12 
                   flex gap-1 flex-col items-center 

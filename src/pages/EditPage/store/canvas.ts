@@ -107,15 +107,21 @@ class FabricCanvas {
   }
 
   @computed get activeId() {
-    return this.activeObj?.id;
+    return (this.activeObj as FabricObject & { id: string })?.id;
   }
 
   @computed get activeLeft() {
-    return (this.activeObj as any)?.left - this.getWorkSpaceDraw()?.left;
+    return (
+      (this.activeObj as any)?.left -
+      (this.getWorkSpaceDraw() as FabricObject)?.left
+    );
   }
 
   @computed get activeTop() {
-    return (this.activeObj as any)?.top - this.getWorkSpaceDraw()?.top;
+    return (
+      (this.activeObj as any)?.top -
+      (this.getWorkSpaceDraw() as FabricObject)?.top
+    );
   }
 
   @action
@@ -155,7 +161,6 @@ class FabricCanvas {
       objectCaching: true,
       transparentCorners: false,
       hasBorders: true,
-      type: "Rect",
       originX: "left",
       originY: "top",
       left: x - w * 0.5,
