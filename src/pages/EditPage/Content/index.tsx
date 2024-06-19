@@ -10,21 +10,6 @@ const MainContent = () => {
   const canvasBoxRef = useRef<HTMLInputElement>(null);
   const canvasEl = useRef<HTMLCanvasElement>(null);
 
-  // const handleEnter = () => {
-  //   console.log("-->回车");
-  // };
-
-  // const onKeyDown = (e: { code: any }) => {
-  //   const code = e.code;
-  //   switch (code) {
-  //     case "Enter":
-  //       handleEnter();
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-
   useEffect(() => {
     const wrapperWidth = canvasBoxRef.current?.getBoundingClientRect().width;
     const wrapperHeight = canvasBoxRef.current?.getBoundingClientRect().height;
@@ -42,6 +27,7 @@ const MainContent = () => {
     store.canvasStore.initCanvas(canvas);
     store.canvasStore.setWrapperRef(canvasBoxRef.current as HTMLInputElement);
     store.canvasStore.setCanvasRef(canvasEl?.current as HTMLCanvasElement);
+
     canvas.renderAll();
     return () => {
       canvas.dispose();

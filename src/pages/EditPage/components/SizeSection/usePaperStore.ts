@@ -86,7 +86,7 @@ const usePaperStore = () => {
       lockMovementY: true,
     } as any);
 
-    store.canvasStore.activeObj(group);
+    // store.canvasStore.activeObj(group);
     store.canvasStore.canvas?.sendObjectToBack(group);
     store.canvasStore.canvas?.renderAll();
   };
@@ -111,8 +111,6 @@ const usePaperStore = () => {
       lockMovementY: true,
     } as any);
     store.canvasStore.addObject(group);
-    // group?.sendToBack(); // 置于底层
-    // group?.center();
     store.canvasStore.canvas?.renderAll();
   };
 

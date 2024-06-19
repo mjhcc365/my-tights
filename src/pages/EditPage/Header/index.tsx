@@ -40,7 +40,7 @@ const MJHeader = () => {
   const undo = async () => {
     const snapshot = await store.dexieStore.getPreSnapshot();
     store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor - 1);
-    store.canvasStore.loadCanvasFormObj(snapshot);
+    // store.canvasStore.loadCanvasFormObj(snapshot);
     store.canvasStore.setActiveObj(null);
   };
   // 重做 下一步
@@ -48,7 +48,7 @@ const MJHeader = () => {
     const snapshot = await store.dexieStore.getNextSnapshot();
     store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor + 1);
     console.log("==>snapshot", snapshot);
-    await store.canvasStore.loadCanvasFormObj(snapshot);
+    // await store.canvasStore.loadCanvasFormObj(snapshot);
     store.canvasStore.setActiveObj(null);
   };
 
@@ -84,27 +84,6 @@ const MJHeader = () => {
       <div className="btns-box">
         <Button>编组</Button>
         <Button>解除编组</Button>
-        <Button
-          onClick={() => {
-            store.canvasStore.toggleClipLine();
-          }}
-        >
-          出血线
-        </Button>
-        <Button
-          onClick={() => {
-            store.canvasStore.toggleSafeLine();
-          }}
-        >
-          安全线
-        </Button>
-        <Button
-          onClick={() => {
-            store.canvasStore.toggleRuler();
-          }}
-        >
-          尺子
-        </Button>
         {/* <Button onClick={handleClickPic}>下载图片</Button> */}
         {/* <Button onClick={handleDownloadGroup}>下载Group</Button> */}
         {/* <Button onClick={handleClickJson}>下载JSON</Button> */}

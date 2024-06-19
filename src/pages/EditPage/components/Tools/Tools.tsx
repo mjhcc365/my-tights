@@ -55,13 +55,11 @@ export const Copy = () => {
 export const Delete = () => {
   const handleDelEle = () => {
     if (!store?.canvasStore.canvas) return;
-    if (
-      store?.canvasStore.canvas?.getActiveObject() &&
-      store?.canvasStore.canvas
-    ) {
+    if (store?.canvasStore.canvas?.getActiveObject()) {
       store?.canvasStore.canvas?.remove(
         store?.canvasStore.canvas?.getActiveObject() as any
       );
+      store.canvasStore.setActiveObj(null);
       store?.canvasStore.canvas?.renderAll();
     }
   };
@@ -78,18 +76,7 @@ export const Delete = () => {
 export const Lock = () => {
   const handleLock = () => {
     if (!store?.canvasStore.canvas) return;
-    if (
-      store?.canvasStore.canvas.getActiveObject() &&
-      store?.canvasStore.canvas
-    ) {
-      // setActiveObject((d: any) => {
-      //     d.lockRotation = true;
-      //     d.lockMovementX = true;
-      //     d.lockMovementY = true;
-      //     d.lockScalingX = true;
-      //     d.lockScalingY = true;
-      // })
-      // store?.canvasStore.setActiveObj[locl]
+    if (store?.canvasStore.canvas.getActiveObject()) {
       store?.canvasStore.canvas.getActiveObject()?.set({
         lockRotation: true,
         lockMovementX: true,
@@ -114,18 +101,7 @@ export const Lock = () => {
 export const UnLock = () => {
   const handleUnLock = () => {
     if (!store?.canvasStore.canvas) return;
-    if (
-      store?.canvasStore.canvas?.getActiveObject() &&
-      store?.canvasStore.canvas
-    ) {
-      // setActiveObject((d: any) => {
-      //     d.lockRotation = false;
-      //     d.lockMovementX = false;
-      //     d.lockMovementY = false;
-      //     d.lockScalingX = false;
-      //     d.lockScalingY = false;
-      // })
-      // store.canvasStore.setActiveObj()
+    if (store?.canvasStore.canvas?.getActiveObject()) {
       store?.canvasStore.canvas?.getActiveObject()?.set({
         lockRotation: false,
         lockMovementX: false,
@@ -146,7 +122,7 @@ export const UnLock = () => {
   );
 };
 
-export const TextTools = () => {
+export const TextTools = observer(() => {
   // 加粗
   const handleChangeFontWight = () => {
     if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
@@ -154,13 +130,7 @@ export const TextTools = () => {
         (store?.canvasStore.activeObj as any)?.fontWeight === "bold"
           ? "normal"
           : "bold";
-      // setActiveObject((draft: any) => {
-      //     draft.fontWeight = nextValue
-      // })
-      store?.canvasStore.canvas
-        .getActiveObject()
-        ?.set({ fontWeight: nextValue } as any);
-      console.log("==>", store?.canvasStore.canvas.getActiveObject());
+      store.canvasStore.setActiveObjParam("fontWeight", nextValue);
       store?.canvasStore.canvas.renderAll();
     }
   };
@@ -171,13 +141,7 @@ export const TextTools = () => {
         (store?.canvasStore.activeObj as any)?.fontStyle === "italic"
           ? "normal"
           : "italic";
-      // setActiveObject((draft: any) => {
-      //     draft.fontStyle = nextValue
-      // })
-      store?.canvasStore.canvas
-        .getActiveObject()
-        ?.set({ fontStyle: nextValue } as any);
-      console.log("==>", store?.canvasStore.canvas.getActiveObject());
+      store.canvasStore.setActiveObjParam("fontStyle", nextValue);
       store?.canvasStore.canvas.renderAll();
     }
   };
@@ -185,12 +149,7 @@ export const TextTools = () => {
   // 下划线
   const handleChangeUnderline = () => {
     const nextValue = !(store?.canvasStore.activeObj as any).underline;
-    // setActiveObject((draft: any) => {
-    //     draft.underline = nextValue
-    // })
-    store?.canvasStore.canvas
-      ?.getActiveObject()
-      ?.set({ underline: nextValue } as any);
+    store.canvasStore.setActiveObjParam("underline", nextValue);
     store?.canvasStore.canvas?.renderAll();
   };
 
@@ -198,36 +157,20 @@ export const TextTools = () => {
   const handleChangeLinethrough = () => {
     if (!store?.canvasStore.canvas) return;
     const nextValue = !(store?.canvasStore.activeObj as any).linethrough;
-    // setActiveObject((draft: any) => {
-    //     draft.linethrough = nextValue
-    // })
-    store?.canvasStore.canvas
-      .getActiveObject()
-      ?.set({ linethrough: nextValue } as any);
+    store.canvasStore.setActiveObjParam("linethrough", nextValue);
     store?.canvasStore.canvas.renderAll();
   };
 
   const handleFontChange = (value: string) => {
     if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
-      // setActiveObject((draft: any) => {
-      //     draft.fontFamily = value
-      // })
-      store?.canvasStore.canvas
-        .getActiveObject()
-        ?.set({ fontFamily: value } as any);
+      store.canvasStore.setActiveObjParam("fontFamily", value);
       store?.canvasStore.canvas.renderAll();
     }
   };
 
   const handleChangeSize = (value: string) => {
     if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
-      // setActiveObject((draft: any) => {
-      //     draft.fontSize = parseInt(value)
-      // })
-      store?.canvasStore.canvas
-        .getActiveObject()
-        ?.set({ fontSize: parseInt(value) } as any);
-      store?.canvasStore.canvas.renderAll();
+      store.canvasStore.setActiveObjParam("fontSize", parseInt(value));
     }
   };
   return (
@@ -241,6 +184,7 @@ export const TextTools = () => {
         }}
         onChange={handleFontChange}
       />
+      <div>{(store?.canvasStore.activeObj as any)?.fontFamily}</div>
       <Select
         style={{ width: 75 }}
         value={(store?.canvasStore.activeObj as any)?.fontSize}
@@ -263,7 +207,7 @@ export const TextTools = () => {
       </Tooltip>
     </>
   );
-};
+});
 
 export const LaylerSelect = () => {
   const handleChangeLayer = (value: string) => {
@@ -298,11 +242,7 @@ export const LaylerSelect = () => {
 export const FillColor = () => {
   const handleChangeColor = (v: any) => {
     if (!store?.canvasStore.canvas) return;
-    // setActiveObject((draft: any) => {
-    //     draft.fill = v.toRgbString()
-    // })
-    store?.canvasStore.canvas.getActiveObject()?.set({ fill: v.toRgbString() });
-    store?.canvasStore.canvas.renderAll();
+    store?.canvasStore.setActiveObjParam("fill", v.toHexString());
   };
   return (
     <ColorPicker
@@ -372,12 +312,10 @@ export const StokeStyle = () => {
 export const WHinfo = observer(() => {
   const changeObjWidth = (v: number | null) => {
     store?.canvasStore.setActiveObjParam("width", v);
-    store.dexieStore.add(store.canvasStore.getCurCanvasObj());
   };
 
   const changeObjHeight = (v: number | null) => {
     store?.canvasStore.setActiveObjParam("height", v);
-    store.dexieStore.add(store.canvasStore.getCurCanvasObj());
   };
 
   return (
@@ -433,14 +371,13 @@ export const Position = observer(() => {
   const changeObjTop = (v: number | null) => {
     if (!v) return;
     store?.canvasStore.setActiveObjParam("top", v);
-    store.dexieStore.add(store.canvasStore.getCurCanvasObj());
   };
 
   const changeObjLeft = (v: number | null) => {
     if (!v) return;
     store?.canvasStore.setActiveObjParam("left", v);
-    store.dexieStore.add(store.canvasStore.getCurCanvasObj());
   };
+
   return (
     <>
       <InputNumber
@@ -615,24 +552,24 @@ export const GroupToolTypes = [ToolType.wh, ToolType.setGroup];
 export const PathToolType = [ToolType.wh, ToolType.fillcolor];
 
 export const getTools = (type: string) => {
-  switch (type) {
-    case "Text":
-    case "Textbox":
+  switch (type.toLowerCase()) {
+    case "text":
+    case "textbox":
       return TextToolTypes;
-    case "Image":
+    case "image":
       return ImageToolTypes;
-    case "Ellipse":
-    case "Circle":
-    case "Triangle":
-    case "Rect":
+    case "ellipse":
+    case "circle":
+    case "triangle":
+    case "rect":
       return ShapeToolTypes;
-    case "Path":
+    case "path":
       return PathToolType;
-    case "Group":
+    case "group":
       return GroupToolTypes;
-    case "ActiveSelection":
+    case "activeselection":
       return GroupToolTypes;
-    case "Line":
+    case "line":
       return LineToolsType;
     default:
       return null;

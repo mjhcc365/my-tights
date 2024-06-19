@@ -11,35 +11,40 @@ const Rect = () => {
     const rect = new FabricRect({
       width: 20,
       height: 20,
-      top: 20,
-      left: 20,
+      top: 100,
+      left: 100,
     });
-    store?.canvasStore.canvas?.add(rect);
-    store?.dexieStore.add(store.canvasStore.getCurCanvasObj());
+    store?.canvasStore.addObject(rect);
   };
 
   const onAddTriangle = () => {
     const triangle = new Triangle({
       width: 80, // 底边长度
       height: 100, // 底边到对角的距离
+      top: 100,
+      left: 100,
     });
-    store?.canvasStore.canvas?.add(triangle);
+    store?.canvasStore.addObject(triangle);
   };
 
   const onAddCircle = () => {
     // 创建圆形
     let circle = new Circle({
       radius: 50, // 半径
+      top: 100,
+      left: 100,
     });
-    store?.canvasStore.canvas?.add(circle);
+    store?.canvasStore.addObject(circle);
   };
 
   const onAddEllipse = () => {
     let ellipse = new Ellipse({
       rx: 50,
       ry: 30,
+      top: 100,
+      left: 100,
     });
-    store?.canvasStore.canvas?.add(ellipse);
+    store?.canvasStore.addObject(ellipse);
   };
 
   return (
@@ -48,7 +53,6 @@ const Rect = () => {
       <Button onClick={onAddTriangle}>三角形</Button>
       <Button onClick={onAddCircle}>圆形</Button>
       <Button onClick={onAddEllipse}>椭圆形</Button>
-      {/* <Button onClick={onAddRect}>添加一个椭圆形</Button> */}
     </div>
   );
 };

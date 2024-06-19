@@ -12,7 +12,7 @@ import {
 import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
-import { FabricRuler } from "@/extension/fabricRuler";
+// import { FabricRuler } from "@/extension/fabricRuler";
 import { FabricGuide } from "@/extension/fabricGuide";
 // import Hammer from "hammerjs";
 // import useCanvas from './useCanvas'
@@ -35,9 +35,7 @@ import {
 } from "@/configs/canvas";
 import { LineOption } from "@/types/canvas";
 import { TransparentFill } from "@/configs/background";
-// import useCanvas from "./useCanvas";
 import { ReferenceLine } from "@/extension/object/ReferenceLine";
-// import { stores } from "@/pages/EditPage/store/main";
 
 export interface IFabricState {
   wrapperRef: null | HTMLDivElement;
@@ -88,12 +86,11 @@ class FabricCanvas {
   elementCoords: Point[] = [];
   elementHover: string = "";
 
-  canvas: Canvas | null = null;
+  canvas!: Canvas;
   activeObj: FabricObject | null = null;
 
   showSafeLine: boolean = true;
   showClipLine: boolean = true;
-  ruler: any = null;
 
   constructor() {
     makeAutoObservable(this, {
@@ -102,7 +99,6 @@ class FabricCanvas {
       zoom: observable,
       showSafeLine: observable,
       showClipLine: observable,
-      ruler: observable,
     });
   }
 
@@ -110,27 +106,34 @@ class FabricCanvas {
     return this.activeObj?.type;
   }
 
+  @computed get activeId() {
+    return this.activeObj?.id;
+  }
+
   @action
-  setActiveObj = (activeObj: FabricObject | null) => {
-    this.activeObj = activeObj;
+  setActiveObj = (activeObj: FabricObject | FabricObject[] | null) => {
+    this.activeObj = Array.isArray(activeObj) ? activeObj[0] : activeObj;
   };
 
   @action
-  setActiveObjParam = (k: any, v: any) => {
-    this.activeObj[k] = v;
-    this.canvas?.getActiveObject()?.set({
-      [k]: v,
-    });
+  setActiveObjParam = (key: string | Record<string, any>, value?: any) => {
+    this.canvas?.getActiveObject()?.set({ [key as any]: value });
+    this.activeObj?.set({ [key as any]: value });
     this.canvas?.renderAll();
   };
 
   @action
   initCanvas = (canvas: Canvas) => {
-    new FabricRuler(canvas);
     new FabricGuide(canvas);
     this.canvas = canvas;
+
+    // todo 拖拽过程中 更新active参数
+    this.canvas.on("mouse:down", (event) => {
+      this.setActiveObj(event.target as any);
+    });
+
     const rect = new Rect({
-      id: "WorkSpaceDrawType",
+      id: WorkSpaceDrawType,
       name: "rect",
       fill: "#ffffff",
       selectable: false,
@@ -145,8 +148,8 @@ class FabricCanvas {
       originY: "top",
       left: 0,
       top: 0,
-      width: this.canvas.width - 100,
-      height: this.canvas.height - 40,
+      width: this.canvas.width,
+      height: this.canvas.height,
     });
 
     this.canvas.add(rect);
@@ -176,11 +179,23 @@ class FabricCanvas {
         this.canvas.add(this.setDefaultAttr(ele as any));
       });
     } else {
-      this.canvas.add(this.setDefaultAttr(obj as any));
+      const o = this.setDefaultAttr(obj as any);
+      this.canvas.add(o);
+      this.setActiveObj(
+        this.canvas.getObjects().filter((objects) => objects.id === o.id)
+      );
     }
   };
 
-  private setDefaultAttr(target: FabricObject & { name: string; id: string }) {
+  getWorkSpaceDraw = () => {
+    const workSpaceDraw = this.canvas
+      .getObjects()
+      .filter((ele) => (ele as any)?.id === WorkSpaceDrawType)[0];
+    if (!workSpaceDraw) return null;
+    return workSpaceDraw;
+  };
+
+  setDefaultAttr(target: FabricObject & { name: string; id: string }) {
     // 添加name
     if (!target.name) {
       target.set({ name: target.type });
@@ -267,23 +282,23 @@ class FabricCanvas {
       ...WorkSpaceCommonOption,
     });
 
-    const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
-      M${PaddingHalf + left} ${PaddingHalf + top} 
-      L${PaddingHalf + left} ${PaddingHalf + top + workHeight} 
-      L${PaddingHalf + left + workWidth} ${PaddingHalf + top + workHeight} 
-      L${PaddingHalf + left + workWidth} ${PaddingHalf + top} 
-      L${PaddingHalf + left} ${PaddingHalf + top} Z`;
+    // const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z
+    //   M${PaddingHalf + left} ${PaddingHalf + top}
+    //   L${PaddingHalf + left} ${PaddingHalf + top + workHeight}
+    //   L${PaddingHalf + left + workWidth} ${PaddingHalf + top + workHeight}
+    //   L${PaddingHalf + left + workWidth} ${PaddingHalf + top}
+    //   L${PaddingHalf + left} ${PaddingHalf + top} Z`;
 
-    const workSpaceMask = new Path(maskPath, {
-      left: -PaddingHalf,
-      top: -PaddingHalf,
-      fill: WorkSpaceMaskColor,
-      opacity: this.opacity,
-      id: WorkSpaceMaskType,
-      originX: "left",
-      originY: "top",
-      ...WorkSpaceCommonOption,
-    });
+    // const workSpaceMask = new Path(maskPath, {
+    //   left: -PaddingHalf,
+    //   top: -PaddingHalf,
+    //   fill: WorkSpaceMaskColor,
+    //   opacity: this.opacity,
+    //   id: WorkSpaceMaskType,
+    //   originX: "left",
+    //   originY: "top",
+    //   ...WorkSpaceCommonOption,
+    // });
     // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
     const diagonalHalfPX = diagonalPX / 2;
     const diagonals: LineOption[] = [
@@ -374,7 +389,7 @@ class FabricCanvas {
     this.canvas.add(workSpaceClip);
     this.canvas.add(workSpaceSafe);
     this.canvas.add(workLineGroup);
-    this.canvas.add(workSpaceMask);
+    // this.canvas.add(workSpaceMask);
     this.canvas.renderAll();
 
     this.canvas.getObjects("ReferenceLine").forEach((item) => {
@@ -411,9 +426,12 @@ class FabricCanvas {
     this.canvas?.renderAll();
   };
 
-  /** 隐藏|显示 标尺 */
-  toggleRuler = () => {
-    this.canvas.ruler.enabled = !this.canvas?.ruler?.enabled;
+  /** backend */
+  /** 设置背景 */
+  setBackColor = (hex: string) => {
+    const backend = this.getWorkSpaceDraw();
+    backend?.set({ fill: hex });
+    this.canvas.renderAll();
   };
 }
 

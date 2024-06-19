@@ -7,13 +7,14 @@ import "./TopTools.less";
 const TopTools = () => {
   return (
     <>
-      {/* {store?.canvasStore?.activeType ? (
+      {store?.canvasStore?.activeType ? (
         <div className="section-top-tool">
+          {store?.canvasStore?.activeType}
           <MainTools />
         </div>
-      ) : ( */}
-      <div className="section-top-tool">{store?.canvasStore?.activeType}</div>
-      {/* )} */}
+      ) : (
+        <div className="section-top-tool">{store?.canvasStore?.activeType}</div>
+      )}
     </>
   );
 };

@@ -11,8 +11,11 @@ const Emoji = () => {
   const onAddEmoji = (obj: { native: string }) => {
     const emoji = new FabricText(obj.native, {
       fontSize: 30,
+      top: 100,
+      left: 100,
     });
-    store?.canvasStore.canvas?.add(emoji);
+    store?.canvasStore.addObject(emoji);
+    store?.canvasStore.canvas.renderAll();
   };
 
   return (
