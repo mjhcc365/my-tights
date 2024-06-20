@@ -1,19 +1,19 @@
-import { useContext, useEffect, useState } from "react";
-import { Button } from "antd";
+import { useContext } from "react";
 import { FabricText } from "fabric";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import "./index.less";
 
 const Emoji = () => {
+  const store = useContext(CanvasStoreContext);
   const onAddEmoji = (obj: { native: string }) => {
     const emoji = new FabricText(obj.native, {
       fontSize: 30,
     });
-    store?.canvasStore.addObject(emoji);
-    store?.canvasStore.canvas.renderAll();
+    store.addObject(emoji);
+    store.canvas.renderAll();
   };
 
   return (
@@ -26,4 +26,4 @@ const Emoji = () => {
   );
 };
 
-export default Emoji;
+export default observer(Emoji);

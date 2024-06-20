@@ -2,8 +2,9 @@ import { Button } from "antd";
 import { Textbox } from "fabric";
 import fetchJsonp from "fetch-jsonp";
 
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 const zonghe =
   "https://api.caiyunapp.com/v2.6/p2Tk6q3dOepTkxUq/116.3176,39.9760/weather?alert=true&dailysteps=1&hourlysteps=24";
 
@@ -80,18 +81,19 @@ const getTemperatureByObj = (obj: {
 };
 
 const Weather = () => {
+  const store = useContext(CanvasStoreContext);
   const handleAddText = (param: string, options: any) => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     // TODO 双击修改文案
     const text = new Textbox(param, {
       fontSize: 16,
-      fontFamily: store.mainStore.fontFamily,
+      // fontFamily: store.mainStore.fontFamily,
       hbsType: "textbox",
       fill: "rgb(0,0,0)",
       selectable: true,
       ...options,
     } as any);
-    store?.canvasStore.addObject(text);
+    store.addObject(text);
   };
 
   const fetchWeather = () => {

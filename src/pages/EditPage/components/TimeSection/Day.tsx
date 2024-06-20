@@ -2,12 +2,16 @@ import { DatePicker, Button } from "antd";
 import { Textbox } from "fabric";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { FORMAT_MOCK } from "@/utils/date";
 import "./index.less";
 
 const Day = () => {
   const [date, setDate] = useState(dayjs());
+
+  const store = useContext(CanvasStoreContext);
 
   const onChangeTime = (v: any) => {
     setDate(() => {
@@ -16,7 +20,7 @@ const Day = () => {
   };
 
   const onDraw = (format: any) => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     const text = new Textbox(dayjs(date).format(format), {
       left: 50,
       top: 50,

@@ -1,15 +1,19 @@
 import { Button } from "antd";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { fabricRenderJson } from "@/utils/fabric";
 
 const testjson = require("@/mock/testjson.json");
 
 const Rule = () => {
+  const store = useContext(CanvasStoreContext);
+
   const onLoadJson = () => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     const group = fabricRenderJson(testjson.objects || []);
-    store?.canvasStore.addObject(group);
-    store?.canvasStore.canvas.renderAll();
+    store.addObject(group);
+    store.canvas.renderAll();
   };
 
   return (

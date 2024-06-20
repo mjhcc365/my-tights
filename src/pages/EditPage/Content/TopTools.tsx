@@ -1,19 +1,20 @@
 import { observer } from "mobx-react-lite";
 import { MainTools } from "@/pages/EditPage/components/Tools/Tools";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { useContext } from "react";
+import { CanvasStoreContext } from "@/store/canvas";
 import "./TopTools.less";
 
 const TopTools = () => {
+  const store = useContext(CanvasStoreContext);
+
   return (
     <>
-      {store?.canvasStore?.activeType ? (
+      {store.activeObj ? (
         <div className="section-top-tool">
-          {store?.canvasStore?.activeType}
           <MainTools />
         </div>
       ) : (
-        <div className="section-top-tool">{store?.canvasStore?.activeType}</div>
+        <div className="section-top-tool">{111}</div>
       )}
     </>
   );

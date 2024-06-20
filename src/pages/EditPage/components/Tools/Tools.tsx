@@ -20,26 +20,29 @@ import {
 } from "antd";
 import { util, Group } from "fabric";
 import { nanoid } from "nanoid";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { Layers, ALL_FONTS, ALL_SIZE } from "@/utils/fonts";
 
 import "./Tools.less";
 import Icon from "@/HbsUI/Icon";
-import { observer } from "mobx-react-lite";
+// import { observer } from "mobx-react-lite";
 
 export const Copy = () => {
+  const store = useContext(CanvasStoreContext);
   const handleCope = () => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     // const clonedRect = util.object.clone(
-    //   store?.canvasStore.canvas?.getActiveObject()
+    //   store?.canvas?.getActiveObject()
     // );
-    // store?.canvasStore.canvas?.add(clonedRect);
+    // store?.canvas?.add(clonedRect);
     // clonedRect.set({
-    //   left: (store?.canvasStore.canvas?.getActiveObject()?.left || 0) + 60,
-    //   top: (store?.canvasStore.canvas?.getActiveObject()?.top || 0) + 60,
+    //   left: (store?.canvas?.getActiveObject()?.left || 0) + 60,
+    //   top: (store?.canvas?.getActiveObject()?.top || 0) + 60,
     // });
-    // store?.canvasStore.canvas?.discardActiveObject();
-    // store?.canvasStore.canvas?.renderAll();
+    // store?.canvas?.discardActiveObject();
+    // store?.canvas?.renderAll();
   };
 
   return (
@@ -53,14 +56,13 @@ export const Copy = () => {
 };
 
 export const Delete = () => {
+  const store = useContext(CanvasStoreContext);
   const handleDelEle = () => {
-    if (!store?.canvasStore.canvas) return;
-    if (store?.canvasStore.canvas?.getActiveObject()) {
-      store?.canvasStore.canvas?.remove(
-        store?.canvasStore.canvas?.getActiveObject() as any
-      );
-      store.canvasStore.setActiveObj(null);
-      store?.canvasStore.canvas?.renderAll();
+    if (!store.canvas) return;
+    if (store.canvas?.getActiveObject()) {
+      store.canvas?.remove(store.canvas?.getActiveObject() as any);
+      store.setActiveObj(null);
+      store.canvas?.renderAll();
     }
   };
   return (
@@ -74,18 +76,19 @@ export const Delete = () => {
 };
 
 export const Lock = () => {
+  const store = useContext(CanvasStoreContext);
   const handleLock = () => {
-    if (!store?.canvasStore.canvas) return;
-    if (store?.canvasStore.canvas.getActiveObject()) {
-      store?.canvasStore.canvas.getActiveObject()?.set({
+    if (!store.canvas) return;
+    if (store.canvas.getActiveObject()) {
+      store.canvas.getActiveObject()?.set({
         lockRotation: true,
         lockMovementX: true,
         lockMovementY: true,
         lockScalingX: true,
         lockScalingY: true,
       });
-      store?.canvasStore.canvas.discardActiveObject();
-      store?.canvasStore.canvas.renderAll();
+      store.canvas.discardActiveObject();
+      store.canvas.renderAll();
     }
   };
   return (
@@ -99,17 +102,18 @@ export const Lock = () => {
 };
 
 export const UnLock = () => {
+  const store = useContext(CanvasStoreContext);
   const handleUnLock = () => {
-    if (!store?.canvasStore.canvas) return;
-    if (store?.canvasStore.canvas?.getActiveObject()) {
-      store?.canvasStore.canvas?.getActiveObject()?.set({
+    if (!store.canvas) return;
+    if (store.canvas?.getActiveObject()) {
+      store.canvas?.getActiveObject()?.set({
         lockRotation: false,
         lockMovementX: false,
         lockMovementY: false,
         lockScalingX: false,
         lockScalingY: false,
       });
-      store?.canvasStore.canvas?.renderAll();
+      store.canvas?.renderAll();
     }
   };
   return (
@@ -123,61 +127,58 @@ export const UnLock = () => {
 };
 
 export const TextTools = observer(() => {
+  const store = useContext(CanvasStoreContext);
   // 加粗
   const handleChangeFontWight = () => {
-    if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+    if (store.activeObj && store.canvas) {
       const nextValue =
-        (store?.canvasStore.activeObj as any)?.fontWeight === "bold"
-          ? "normal"
-          : "bold";
-      store.canvasStore.setActiveObjParam("fontWeight", nextValue);
-      store?.canvasStore.canvas.renderAll();
+        (store.activeObj as any)?.fontWeight === "bold" ? "normal" : "bold";
+      store.setActiveObjParam("fontWeight", nextValue);
+      store.canvas.renderAll();
     }
   };
   // 斜体
   const handleChangeFontStyle = () => {
-    if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
+    if (store.activeObj && store.canvas) {
       const nextValue =
-        (store?.canvasStore.activeObj as any)?.fontStyle === "italic"
-          ? "normal"
-          : "italic";
-      store.canvasStore.setActiveObjParam("fontStyle", nextValue);
-      store?.canvasStore.canvas.renderAll();
+        (store.activeObj as any)?.fontStyle === "italic" ? "normal" : "italic";
+      store.setActiveObjParam("fontStyle", nextValue);
+      store.canvas.renderAll();
     }
   };
 
   // 下划线
   const handleChangeUnderline = () => {
-    const nextValue = !(store?.canvasStore.activeObj as any).underline;
-    store.canvasStore.setActiveObjParam("underline", nextValue);
-    store?.canvasStore.canvas?.renderAll();
+    const nextValue = !(store.activeObj as any).underline;
+    store.setActiveObjParam("underline", nextValue);
+    store.canvas?.renderAll();
   };
 
   // 删除线
   const handleChangeLinethrough = () => {
-    if (!store?.canvasStore.canvas) return;
-    const nextValue = !(store?.canvasStore.activeObj as any).linethrough;
-    store.canvasStore.setActiveObjParam("linethrough", nextValue);
-    store?.canvasStore.canvas.renderAll();
+    if (!store.canvas) return;
+    const nextValue = !(store.activeObj as any).linethrough;
+    store.setActiveObjParam("linethrough", nextValue);
+    store.canvas.renderAll();
   };
 
   const handleFontChange = (value: string) => {
-    if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
-      store.canvasStore.setActiveObjParam("fontFamily", value);
-      store?.canvasStore.canvas.renderAll();
+    if (store.activeObj && store.canvas) {
+      store.setActiveObjParam("fontFamily", value);
+      store.canvas.renderAll();
     }
   };
 
   const handleChangeSize = (value: string) => {
-    if (store?.canvasStore.activeObj && store?.canvasStore.canvas) {
-      store.canvasStore.setActiveObjParam("fontSize", parseInt(value));
+    if (store.activeObj && store.canvas) {
+      store.setActiveObjParam("fontSize", parseInt(value));
     }
   };
   return (
     <>
       <Select
         style={{ width: 100 }}
-        value={(store?.canvasStore.activeObj as any)?.fontFamily}
+        value={(store.activeObj as any)?.fontFamily}
         options={ALL_FONTS}
         optionRender={(ele) => {
           return <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>;
@@ -186,10 +187,10 @@ export const TextTools = observer(() => {
         size="small"
       />
 
-      <div>{(store?.canvasStore.activeObj as any)?.fontFamily}</div>
+      <div>{(store.activeObj as any)?.fontFamily}</div>
       <Select
         style={{ width: 75 }}
-        value={(store?.canvasStore.activeObj as any)?.fontSize}
+        value={(store.activeObj as any)?.fontSize}
         onChange={handleChangeSize}
         options={ALL_SIZE}
         size="small"
@@ -213,20 +214,21 @@ export const TextTools = observer(() => {
 });
 
 export const LaylerSelect = () => {
+  const store = useContext(CanvasStoreContext);
   const handleChangeLayer = (value: string) => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     switch (value) {
       case "top":
-        // store?.canvasStore.canvas?.getActiveObject()?.bringToFront();
+        // store?.canvas?.getActiveObject()?.bringToFront();
         break;
       case "pre": //
-        // store?.canvasStore.canvas?.getActiveObject()?.bringForward();
+        // store?.canvas?.getActiveObject()?.bringForward();
         break;
       case "next": // 下一层
-        // store?.canvasStore.canvas?.getActiveObject()?.sendBackwards();
+        // store?.canvas?.getActiveObject()?.sendBackwards();
         break;
       case "bottom": // 底层
-        // store?.canvasStore.canvas?.getActiveObject()?.sendToBack();
+        // store?.canvas?.getActiveObject()?.sendToBack();
         break;
       default:
         return;
@@ -244,14 +246,15 @@ export const LaylerSelect = () => {
 };
 
 export const FillColor = () => {
+  const store = useContext(CanvasStoreContext);
   const handleChangeColor = (v: any) => {
-    if (!store?.canvasStore.canvas) return;
-    store?.canvasStore.setActiveObjParam("fill", v.toHexString());
+    if (!store.canvas) return;
+    store.setActiveObjParam("fill", v.toHexString());
   };
   return (
     <ColorPicker
       format="rgb"
-      value={(store?.canvasStore.activeObj as any)?.fill}
+      value={(store.activeObj as any)?.fill}
       onChange={handleChangeColor}
     />
   );
@@ -259,24 +262,25 @@ export const FillColor = () => {
 
 // 描边样式
 export const StokeStyle = () => {
+  const store = useContext(CanvasStoreContext);
   const onStrokeColorChange = (v: any) => {
     // setActiveObject((draft: any) => {
     //     draft.stroke = v.toHexString()
     // })
-    store?.canvasStore.canvas?.getActiveObject()?.set({
+    store.canvas?.getActiveObject()?.set({
       stroke: v.toHexString(),
     });
-    store?.canvasStore.canvas?.renderAll();
+    store.canvas?.renderAll();
   };
 
   const onStrokeWidthChange = (v: number) => {
     // setActiveObject((draft: any) => {
     //     draft.strokeWidth = v
     // })
-    store?.canvasStore.canvas?.getActiveObject()?.set({
+    store.canvas?.getActiveObject()?.set({
       strokeWidth: v,
     });
-    store?.canvasStore.canvas?.renderAll();
+    store.canvas?.renderAll();
   };
 
   const onRadiusChange = (v: any) => {
@@ -292,7 +296,7 @@ export const StokeStyle = () => {
         <div className="stroke-tools">
           <ColorPicker
             allowClear
-            value={store?.canvasStore.activeObj?.stroke}
+            value={store.activeObj?.stroke}
             onChange={onStrokeColorChange}
           />
           <div>
@@ -314,24 +318,25 @@ export const StokeStyle = () => {
 };
 
 export const WHinfo = observer(() => {
+  const store = useContext(CanvasStoreContext);
   const changeObjWidth = (v: number | null) => {
-    store?.canvasStore.setActiveObjParam("width", v);
+    store.setActiveObjParam("width", v);
   };
 
   const changeObjHeight = (v: number | null) => {
-    store?.canvasStore.setActiveObjParam("height", v);
+    store.setActiveObjParam("height", v);
   };
 
   return (
     <>
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeObj?.width || 0)}
+        value={Math.floor(store.activeObj?.width || 0)}
         prefix="W"
         onChange={changeObjWidth}
         size="small"
       />
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeObj?.height || 0)}
+        value={Math.floor(store.activeObj?.height || 0)}
         prefix="H"
         onChange={changeObjHeight}
         size="small"
@@ -341,14 +346,15 @@ export const WHinfo = observer(() => {
 });
 
 export const Opacity = () => {
+  const store = useContext(CanvasStoreContext);
   const handleOpacity = (v: any) => {
     // setActiveObject((draft: any) => {
     //     draft.opacity = v
     // })
-    store?.canvasStore.canvas?.getActiveObject()?.set({
+    store.canvas?.getActiveObject()?.set({
       opacity: v,
     });
-    store?.canvasStore.canvas?.renderAll();
+    store.canvas?.renderAll();
   };
 
   return (
@@ -356,7 +362,7 @@ export const Opacity = () => {
       placement="bottom"
       content={
         <Slider
-          value={store?.canvasStore.activeObj?.opacity}
+          value={store.activeObj?.opacity}
           onChange={handleOpacity}
           style={{ minWidth: 148 }}
           min={0}
@@ -374,26 +380,28 @@ export const Opacity = () => {
 };
 
 export const Position = observer(() => {
+  const store = useContext(CanvasStoreContext);
+
   const changeObjTop = (v: number | null) => {
     if (!v) return;
-    store?.canvasStore.setActiveObjParam("top", v);
+    store?.setActiveObjParam("top", v);
   };
 
   const changeObjLeft = (v: number | null) => {
     if (!v) return;
-    store?.canvasStore.setActiveObjParam("left", v);
+    store?.setActiveObjParam("left", v);
   };
 
   return (
     <>
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeTop || 0)}
+        value={Math.floor(store.activeObj?.top || 0)}
         prefix="T"
         onChange={changeObjTop}
         size="small"
       />
       <InputNumber
-        value={Math.floor(store?.canvasStore.activeLeft || 0)}
+        value={Math.floor(store.activeObj?.left || 0)}
         prefix="L"
         onChange={changeObjLeft}
         size="small"
@@ -403,80 +411,82 @@ export const Position = observer(() => {
 });
 
 export const SetGroup = () => {
+  const store = useContext(CanvasStoreContext);
+
   const handleCombineGroup = () => {
-    if (!store?.canvasStore.canvas) return;
-    var activeObjects = store?.canvasStore.canvas.getActiveObjects();
+    if (!store?.canvas) return;
+    var activeObjects = store?.canvas.getActiveObjects();
 
     if (activeObjects.length > 1) {
-      store?.canvasStore.setActiveObj(null);
-      store?.canvasStore.canvas.discardActiveObject();
+      store.setActiveObj(null);
+      store.canvas.discardActiveObject();
       const group = new Group(activeObjects, {
         id: nanoid(10),
         // name: ElementNames.GROUP,
         interactive: false,
         subTargetCheck: true,
       } as any);
-      store?.canvasStore.addObject(group);
-      store?.canvasStore.canvas.remove(...activeObjects);
-      store?.canvasStore.canvas.renderAll();
+      store.addObject(group);
+      store.canvas.remove(...activeObjects);
+      store.canvas.renderAll();
     }
   };
 
   const handleIntersectElements = () => {
-    if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as Group;
+    if (!store?.canvas) return;
+    const group = store?.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
-      store?.canvasStore.canvas?.add(ele);
+      store.canvas?.add(ele);
     });
-    store?.canvasStore.canvas.discardActiveObject();
+    store.canvas.discardActiveObject();
     // setActiveObject(() => null)
-    store?.canvasStore.canvas.remove(group);
-    store?.canvasStore.canvas.renderAll();
+    store.canvas.remove(group);
+    store.canvas.renderAll();
   };
 
   const handleLeft = () => {
-    if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as Group;
+    if (!store?.canvas) return;
+    const group = store?.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         left: -((group.width || 0) / 2),
       });
     });
-    store?.canvasStore.canvas.renderAll();
+    store?.canvas.renderAll();
   };
 
   const handleRight = () => {
-    if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as Group;
+    if (!store?.canvas) return;
+    const group = store?.canvas.getActiveObject() as Group;
 
     group.getObjects().forEach((ele) => {
       ele.set({
         left: (group?.width || 0) / 2 - (ele?.width || 0),
       });
     });
-    store?.canvasStore.canvas.renderAll();
+    store?.canvas.renderAll();
   };
 
   const handleTop = () => {
-    if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as Group;
+    if (!store?.canvas) return;
+    const group = store?.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         top: -((group.height || 0) / 2),
       });
     });
-    store?.canvasStore.canvas.renderAll();
+    store?.canvas.renderAll();
   };
 
   const handleBottom = () => {
-    if (!store?.canvasStore.canvas) return;
-    const group = store?.canvasStore.canvas.getActiveObject() as Group;
+    if (!store?.canvas) return;
+    const group = store?.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
       ele.set({
         top: (group?.height || 0) / 2 - (ele?.height || 0),
       });
     });
-    store?.canvasStore.canvas.renderAll();
+    store?.canvas.renderAll();
   };
 
   return (
@@ -585,9 +595,10 @@ export const getTools = (type: string) => {
 };
 
 export const MainTools = () => {
+  const store = useContext(CanvasStoreContext);
   return (
     <>
-      {store?.canvasStore.canvas?.getActiveObject()?.lockMovementX ? (
+      {store?.canvas?.getActiveObject()?.lockMovementX ? (
         <UnLock />
       ) : (
         <>
@@ -595,7 +606,7 @@ export const MainTools = () => {
             <Position />
           </div>
           <div className="tool-self-center">
-            {getTools(store?.canvasStore.activeObj?.type || "")?.map((ele) => {
+            {getTools(store?.activeObj?.type || "")?.map((ele) => {
               switch (ele) {
                 case ToolType.fillcolor:
                   return <FillColor />;

@@ -1,14 +1,13 @@
 import { loadSVGFromString, util } from "fabric";
 import { Input } from "antd";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas, IconPack } from "@fortawesome/free-solid-svg-icons"; // ES Module "as" syntax
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-// import { rilis } from "./calendar";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 
 library.add(fas, far, fab);
 
@@ -19,12 +18,13 @@ const libraryObj: Record<string, IconPack> = {
 };
 
 const SubIconArray = (props: { search: string; libraryName: string }) => {
+  const store = useContext(CanvasStoreContext);
   const { search, libraryName } = props;
   const onAddSVG = (iconname: any) => {
     const node: Element | null = document.querySelector(`.fa-${iconname}`);
     loadSVGFromString(node?.outerHTML || "").then((ele) => {
       const svgObjects = util.groupSVGElements(ele.objects, ele.options);
-      const { x = 100, y = 100 } = store.canvasStore.getCenterPoint();
+      const { x = 100, y = 100 } = store.getCenterPoint();
       svgObjects.set({
         scaleX: 0.05,
         scaleY: 0.05,
@@ -32,7 +32,7 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
         left: x,
         fill: "grey",
       });
-      store?.canvasStore.addObject(svgObjects);
+      store.addObject(svgObjects);
     });
   };
   const iconArray = useMemo(() => {
@@ -97,4 +97,4 @@ const IconEditor = () => {
   );
 };
 
-export default IconEditor;
+export default observer(IconEditor);

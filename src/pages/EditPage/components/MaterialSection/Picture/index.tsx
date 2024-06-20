@@ -1,7 +1,5 @@
-import { Button } from "antd";
-import { stores as store } from "@/pages/EditPage/store/main";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const img_keywords = [
   "black_and_white",

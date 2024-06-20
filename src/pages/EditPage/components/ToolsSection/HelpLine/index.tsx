@@ -1,8 +1,9 @@
 import { Flex, Button, ColorPicker, Radio } from "antd";
 import { Line, Group } from "fabric";
 import { useImmer } from "use-immer";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import "./index.less";
 
 export interface HelpLineType {
@@ -25,11 +26,12 @@ const initHelpLine = {
 
 const HelpLine = () => {
   const [helpLine, setHelpLine] = useImmer(initHelpLine);
+  const store = useContext(CanvasStoreContext);
 
   // 绘制横线
   const drawHline = () => {
-    const cw = store?.canvasStore.canvas?.getWidth() || 0;
-    const ch = store?.canvasStore.canvas?.getHeight() || 0;
+    const cw = store.canvas?.getWidth() || 0;
+    const ch = store.canvas?.getHeight() || 0;
     const item = ch / helpLine.portion;
     // 绘制横线
     const hLines = [];
@@ -43,14 +45,14 @@ const HelpLine = () => {
     }
 
     const group = new Group(hLines);
-    store?.canvasStore.canvas?.add(group);
+    store.canvas?.add(group);
     // group?.sendToBack(); // 置于底层
   };
 
   // 绘制竖线
   const drawVline = () => {
-    const cw = store?.canvasStore.canvas?.getWidth() || 0;
-    const ch = store?.canvasStore.canvas?.getHeight() || 0;
+    const cw = store.canvas?.getWidth() || 0;
+    const ch = store.canvas?.getHeight() || 0;
     const item = cw / helpLine.portion;
     const vLines = [];
     for (let i = 1; i < helpLine.portion; i++) {
@@ -64,7 +66,7 @@ const HelpLine = () => {
 
     const group = new Group(vLines);
 
-    store?.canvasStore.canvas?.add(group);
+    store.canvas?.add(group);
     // group?.sendToBack(); // 置于底层
   };
 
@@ -75,7 +77,7 @@ const HelpLine = () => {
     } else {
       drawVline();
     }
-    store?.canvasStore.canvas?.renderAll();
+    store.canvas?.renderAll();
   };
 
   return (

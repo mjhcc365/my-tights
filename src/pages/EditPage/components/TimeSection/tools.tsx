@@ -1,14 +1,17 @@
 import { Group, Line } from "fabric";
 import { nanoid } from "nanoid";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 export const useDraw = () => {
   // 画月份
   const drawMonth = () => {
-    if (!store?.canvasStore.canvas) return;
+    const store = useContext(CanvasStoreContext);
 
-    const cWidth = store?.canvasStore.canvas?.getWidth();
-    const cheight = store?.canvasStore.canvas?.getHeight();
+    if (!store.canvas) return;
+
+    const cWidth = store.canvas?.getWidth();
+    const cheight = store.canvas?.getHeight();
 
     const group = new Group([], {
       hbsId: nanoid(),
@@ -26,8 +29,8 @@ export const useDraw = () => {
       // group.addWithUpdate(line);
     }
     // 竖线
-    store?.canvasStore.addObject(group);
-    store?.canvasStore.canvas.renderAll();
+    store.addObject(group);
+    store.canvas.renderAll();
   };
 
   return {

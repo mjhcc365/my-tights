@@ -1,17 +1,13 @@
-import { stores as store } from "@/pages/EditPage/store/main";
 import { Button } from "antd";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { Rect, Group, IText, Textbox, Line } from "fabric";
 import dayjs from "dayjs";
-// import { fabricTable } from "./fabricTable";
 import { getDaysInMonth, getFirstDayOfMonth } from "./drawMonth";
-import { fabric } from "../../../TestPage/fabric/index";
 
-// TODO
-// 所有元素添加到一个Group里面。
-// 给Group 添加监听时间hover显示控制的句柄
-//
-
-const Calender = () => {
+const Calender = observer(() => {
+  const store = useContext(CanvasStoreContext);
   const handleClick = () => {
     // const table = new fabric.Table({
     //   strokeWidth: 2,
@@ -109,12 +105,12 @@ const Calender = () => {
       <Button onClick={handleMonth}>dd</Button>
       <Button onClick={timeline}>timeline</Button>
       {/* <FullCalendar
-        headerToolbar={false}
-        plugins={[dayGridPlugin]}
-        initialView="dayGridMonth"
-      /> */}
+          headerToolbar={false}
+          plugins={[dayGridPlugin]}
+          initialView="dayGridMonth"
+        /> */}
     </div>
   );
-};
+});
 
 export default Calender;

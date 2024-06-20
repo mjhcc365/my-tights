@@ -1,16 +1,19 @@
 import { Button, Select } from "antd";
-import { observer } from "mobx-react-lite";
 import imgUrl from "@/assets/logo.png";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { ALL_FONTS } from "@/utils/fonts";
 import { download, downloadJson } from "@/utils/download";
 
 import "./index.less";
 
 const MJHeader = () => {
+  const store = useContext(CanvasStoreContext);
+
   // 导出为图片
   const handleClickPic = () => {
-    var dataURL = store?.canvasStore.canvas?.toDataURL({
+    var dataURL = store.canvas?.toDataURL({
       format: "png", // 指定导出格式，可以是 'png', 'jpeg', 'webp' 等
       quality: 0.8,
     });
@@ -23,8 +26,8 @@ const MJHeader = () => {
   };
 
   const handleClickJson = () => {
-    if (!store?.canvasStore.canvas) return;
-    var jsonString = JSON.stringify(store?.canvasStore.canvas.toJSON());
+    if (!store.canvas) return;
+    var jsonString = JSON.stringify(store.canvas.toJSON());
     // 创建一个下载链接
     var downloadLink = document.createElement("a");
     downloadLink.href =
@@ -38,20 +41,20 @@ const MJHeader = () => {
   };
   // 撤销 上一步
   const undo = async () => {
-    const snapshot = await store.dexieStore.getPreSnapshot();
-    store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor - 1);
-    // store.canvasStore.loadCanvasFormObj(snapshot);
-    store.canvasStore.setActiveObj(null);
+    // const snapshot = await store.dexieStore.getPreSnapshot();
+    // store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor - 1);
+    // // store.canvasStore.loadCanvasFormObj(snapshot);
+    // store.canvasStore.setActiveObj(null);
   };
   // 重做 下一步
   const redo = async () => {
-    // const snapshot = await store.dexieStore.getNextSnapshot();
-    store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor + 1);
-    store.canvasStore.setActiveObj(null);
+    // // const snapshot = await store.dexieStore.getNextSnapshot();
+    // store.dexieStore.setSnapshotCursor(store.dexieStore.snapshotCursor + 1);
+    // store.canvasStore.setActiveObj(null);
   };
 
   const handleFontChange = (v: string) => {
-    store.mainStore.setFontFamily(v);
+    // store.mainStore.setFontFamily(v);
   };
 
   return (
@@ -61,19 +64,19 @@ const MJHeader = () => {
         <span style={{ color: "#1f1f1f" }}>胡百拾</span>
       </div>
       <div className="btns-box">
-        <Button disabled={store.dexieStore.disableUndo} onClick={undo}>
+        {/* <Button disabled={store.dexieStore.disableUndo} onClick={undo}>
           上一步
         </Button>
         <Button disabled={store.dexieStore.disableRedo} onClick={redo}>
           下一步
-        </Button>
+        </Button> */}
       </div>
       <div className="btns-box">
         <Button>编组</Button>
         <Button>解除编组</Button>
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleReset}>保存</Button>
-        <Select
+        {/* <Select
           style={{ width: 100 }}
           value={store?.mainStore.fontFamily}
           options={ALL_FONTS}
@@ -83,7 +86,7 @@ const MJHeader = () => {
             );
           }}
           onChange={handleFontChange}
-        />
+        /> */}
       </div>
     </div>
   );

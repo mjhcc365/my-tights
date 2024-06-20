@@ -1,3 +1,6 @@
+import { createContext } from "react";
+import { makeObservable } from "mobx";
+
 import { action, computed, makeAutoObservable, observable } from "mobx";
 import {
   Canvas,
@@ -12,16 +15,10 @@ import {
 import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
-// import { FabricRuler } from "@/extension/fabricRuler";
 import { FabricGuide } from "@/extension/fabricGuide";
-// import Hammer from "hammerjs";
-// import useCanvas from './useCanvas'
-// import { Point, Object as FabricObject, util } from 'fabric'
 
-// import { useFabricStore, useTemplatesStore } from "@/store";
 import { DefaultDPI, DefaultRatio } from "@/configs/size";
 import { Padding } from "@/configs/background";
-// import { storeToRefs } from "pinia"
 import {
   WorkSpaceClipType,
   WorkSpaceDrawType,
@@ -62,7 +59,7 @@ export interface IFabricState {
   scalePercentage: number;
 }
 
-class FabricCanvas {
+export class CanvasStore {
   wrapperRef: null | HTMLDivElement = null;
   canvasRef: null | HTMLCanvasElement = null;
   zoom: number = 1;
@@ -93,50 +90,31 @@ class FabricCanvas {
   showClipLine: boolean = true;
 
   constructor() {
-    makeAutoObservable(this, {
+    makeObservable(this, {
       canvas: observable,
       activeObj: observable,
       zoom: observable,
       showSafeLine: observable,
       showClipLine: observable,
+      setActiveObj: action,
+      setActiveObjParam: action,
+      initCanvas: action,
+      setWrapperRef: action,
+      setCanvasRef: action,
+      setZoomRodio: action,
     });
   }
 
-  @computed get activeType() {
-    return this.activeObj?.type;
-  }
-
-  @computed get activeId() {
-    return (this.activeObj as FabricObject & { id: string })?.id;
-  }
-
-  @computed get activeLeft() {
-    return (
-      (this.activeObj as any)?.left -
-      (this.getWorkSpaceDraw() as FabricObject)?.left
-    );
-  }
-
-  @computed get activeTop() {
-    return (
-      (this.activeObj as any)?.top -
-      (this.getWorkSpaceDraw() as FabricObject)?.top
-    );
-  }
-
-  @action
   setActiveObj = (activeObj: FabricObject | FabricObject[] | null) => {
     this.activeObj = Array.isArray(activeObj) ? activeObj[0] : activeObj;
   };
 
-  @action
   setActiveObjParam = (key: string | Record<string, any>, value?: any) => {
     this.canvas?.getActiveObject()?.set({ [key as any]: value });
     this.activeObj?.set({ [key as any]: value });
     this.canvas?.renderAll();
   };
 
-  @action
   initCanvas = (canvas: Canvas) => {
     new FabricGuide(canvas);
     this.canvas = canvas;
@@ -174,22 +152,18 @@ class FabricCanvas {
     this.canvas.renderAll();
   };
 
-  @action
   setWrapperRef = (ref: HTMLDivElement) => {
     this.wrapperRef = ref;
   };
 
-  @action
   setCanvasRef = (ref: HTMLCanvasElement) => {
     this.canvasRef = ref;
   };
 
-  @action
   setZoomRodio = (zoomRodio: number) => {
     this.zoom = zoomRodio;
   };
 
-  @action
   addObject = (obj: FabricObject[] | FabricObject) => {
     if (Array.isArray(obj)) {
       obj.forEach((ele) => {
@@ -199,7 +173,9 @@ class FabricCanvas {
       const o = this.setDefaultAttr(obj as any);
       this.canvas.add(o);
       this.setActiveObj(
-        this.canvas.getObjects().filter((objects) => objects.id === o.id)
+        this.canvas
+          .getObjects()
+          .filter((objects) => (objects as any).id === o.id)
       );
     }
   };
@@ -527,4 +503,6 @@ class FabricCanvas {
   setZoom = () => {};
 }
 
-export default FabricCanvas;
+export const CanvasStoreContext = createContext<CanvasStore>(
+  null as unknown as CanvasStore
+);

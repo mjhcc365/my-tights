@@ -1,17 +1,18 @@
 import { Button } from "antd";
 import * as fabric from "fabric";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { observer } from "mobx-react-lite";
+import { useContext } from "react";
+import { CanvasStoreContext } from "@/store/canvas";
 import { FabricTable } from "./fabrictable";
 
 import { s2DataConfig, s2Options } from "./mockdata";
 
 const Table = () => {
+  const store = useContext(CanvasStoreContext);
   const onAddTable = () => {
     const table = new FabricTable(s2DataConfig);
-
-    store.canvasStore.addObject(table);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(table);
+    store.canvas?.renderAll();
   };
 
   const onAddTextBox = () => {
@@ -24,14 +25,14 @@ const Table = () => {
       fixedWidth: 100,
     });
     console.log("===>table", text);
-    store.canvasStore.canvas?.renderAll();
+    store.canvas?.renderAll();
   };
   return (
-    <div>
+    <>
       <Button onClick={onAddTable}>添加表格</Button>
       <Button onClick={onAddTextBox}>添加Textbox</Button>
-    </div>
+    </>
   );
 };
 
-export default Table;
+export default observer(Table);

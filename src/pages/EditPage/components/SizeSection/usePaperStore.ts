@@ -5,7 +5,9 @@ import { nanoid } from "nanoid";
 import forDots from "@/assets/backicon/four-dots.svg";
 import lines from "@/assets/backicon/lines.svg";
 import rectangle from "@/assets/backicon/rectangle.svg";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { HBSType } from "./type";
 
 export enum PaperBackType {
@@ -36,15 +38,15 @@ export const PaperBackArray = [
 // 管理背景
 const usePaperStore = () => {
   const [paperConfig, setPaperConfig] = useImmer(A7TempConfig);
+  const store = useContext(CanvasStoreContext);
   // 画网格
   const drawGridTexture = (stroke: string) => {
     const { width, height, top, left } =
-      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+      store.getWorkSpaceDraw() as FabricObject;
     const cWidth = width;
     const cHeight = height;
     const selfZoom = 3.5;
-    const lineGap =
-      paperConfig.lineConfig.gap * store.canvasStore.zoom * selfZoom;
+    const lineGap = paperConfig.lineConfig.gap * store.zoom * selfZoom;
     // 定义网格线的间距
     const lines = [];
     // 绘制横向网格线
@@ -72,13 +74,13 @@ const usePaperStore = () => {
       lockMovementY: true,
     } as any);
 
-    store.canvasStore.addObject(group);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(group);
+    store.canvas?.renderAll();
   };
   // 画横线
   const drawLineTexture = (stroke: string) => {
     const { width, height, top, left } =
-      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+      store.getWorkSpaceDraw() as FabricObject;
     const cWidth = width;
     const cHeight = height;
 
@@ -100,14 +102,14 @@ const usePaperStore = () => {
       lockMovementX: true,
       lockMovementY: true,
     } as any);
-    store.canvasStore.addObject(group);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(group);
+    store.canvas?.renderAll();
   };
 
   // 画点阵
   const drawDotsTexture = (stroke: string) => {
     const { width, height, top, left } =
-      store.canvasStore.getWorkSpaceDraw() as FabricObject;
+      store.getWorkSpaceDraw() as FabricObject;
     const cWidth = width;
     const cHeight = height;
 
@@ -134,8 +136,8 @@ const usePaperStore = () => {
       lockMovementX: true,
       lockMovementY: true,
     } as any);
-    store.canvasStore.addObject(group);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(group);
+    store.canvas?.renderAll();
   };
   // 画点阵
   return {

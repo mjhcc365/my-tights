@@ -3,8 +3,8 @@ import { DatePicker, Button } from "antd";
 import dayjs from "dayjs";
 import { Group, Rect } from "fabric";
 import { useDraw } from "./tools";
-import { stores as store } from "@/pages/EditPage/store/main";
-
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import PenImg from "@/assets/pen.jpg";
 import LogoImg from "@/assets/logo.png";
 
@@ -22,7 +22,7 @@ const YearsTemp = [
 
 const Week = () => {
   const [showTool, setShowTool] = useState<boolean>(true);
-
+  const store = useContext(CanvasStoreContext);
   // const { drawMonth } = useDraw()
 
   const onDrawWeek = () => {
@@ -32,21 +32,15 @@ const Week = () => {
       for (let j = 1; j <= 2; j++) {
         const rect = new Rect({
           top: 100 * j, // 距离画布顶部距离
-          left:
-            (5 * store?.canvasStore.zoomRodio +
-              2 * store?.canvasStore.zoomRodio) *
-            i, // 距离画布左侧距离
-          width: 5 * store?.canvasStore.zoomRodio, // 矩形宽度
-          height: 5 * store?.canvasStore.zoomRodio, // 矩形高度
-          // fill: "#f5f5f5",
-          // stroke: ""
+          left: (5 * store.zoomRodio + 2 * store.zoomRodio) * i, // 距离画布左侧距离
+          width: 5 * store.zoomRodio, // 矩形宽度
+          height: 5 * store.zoomRodio, // 矩形高度
         });
         group.add(rect);
-        // group.addWithUpdate(rect);
       }
     }
-    store?.canvasStore.canvas?.add(group);
-    store?.canvasStore.canvas?.renderAll();
+    store.canvas?.add(group);
+    store.canvas?.renderAll();
   };
 
   const onChangeTime = () => {};

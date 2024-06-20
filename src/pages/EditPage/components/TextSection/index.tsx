@@ -1,24 +1,28 @@
 import { Textbox } from "fabric";
-import { stores as store } from "@/pages/EditPage/store/main";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
 import { nanoid } from "nanoid";
 import { WEB_FONTS } from "@/pages/EditPage/components/Tools/types";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 
 const TextSectioin = () => {
+  const store = useContext(CanvasStoreContext);
+
   const handleAddText = (param: string, options: any) => {
-    if (!store?.canvasStore.canvas) return;
+    if (!store.canvas) return;
     // TODO 双击修改文案
     const text = new Textbox(param, {
       fontSize: 20,
-      fontFamily: store.mainStore.fontFamily,
+      // fontFamily: store.mainStore.fontFamily,
       hbsId: nanoid(),
       hbsType: "textbox",
       fill: "rgb(0,0,0)",
       selectable: true,
       ...options,
     } as any);
-    store?.canvasStore.addObject(text);
+    store.addObject(text);
   };
 
   const items: TabsProps["items"] = [

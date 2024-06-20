@@ -1,17 +1,18 @@
 import { Button } from "antd";
 import { Rect as FabricRect, Triangle, Circle, Ellipse } from "fabric";
-import { stores as store } from "@/pages/EditPage/store/main";
-
-import "./index.less";
+import { useContext } from "react";
 import { observer } from "mobx-react-lite";
+import { CanvasStoreContext } from "@/store/canvas";
+import "./index.less";
 
 const Rect = () => {
+  const store = useContext(CanvasStoreContext);
   const onAddRect = () => {
     const rect = new FabricRect({
       width: 20,
       height: 20,
     });
-    store?.canvasStore.addObject(rect);
+    store.addObject(rect);
   };
 
   const onAddTriangle = () => {
@@ -19,7 +20,7 @@ const Rect = () => {
       width: 80, // 底边长度
       height: 100, // 底边到对角的距离
     });
-    store?.canvasStore.addObject(triangle);
+    store.addObject(triangle);
   };
 
   const onAddCircle = () => {
@@ -27,7 +28,7 @@ const Rect = () => {
     let circle = new Circle({
       radius: 50, // 半径
     });
-    store?.canvasStore.addObject(circle);
+    store.addObject(circle);
   };
 
   const onAddEllipse = () => {
@@ -35,7 +36,7 @@ const Rect = () => {
       rx: 50,
       ry: 30,
     });
-    store?.canvasStore.addObject(ellipse);
+    store.addObject(ellipse);
   };
 
   return (

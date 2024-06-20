@@ -2,13 +2,14 @@ import { useRef, useEffect } from "react";
 import * as fabric from "fabric";
 import TopTools from "./TopTools";
 import BottomTools from "./BottomTools";
+import { useContext } from "react";
 import { observer } from "mobx-react-lite";
-import { stores as store } from "@/pages/EditPage/store/main";
-// import { FabricCanvas } from "@/extension/fabricCanvas";
+import { CanvasStoreContext } from "@/store/canvas"; // import { FabricCanvas } from "@/extension/fabricCanvas";
 
 const MainContent = () => {
   const canvasBoxRef = useRef<HTMLInputElement>(null);
   const canvasEl = useRef<HTMLCanvasElement>(null);
+  const store = useContext(CanvasStoreContext);
 
   useEffect(() => {
     const wrapperWidth = canvasBoxRef.current?.getBoundingClientRect().width;
@@ -24,9 +25,9 @@ const MainContent = () => {
       canvasEl?.current as HTMLCanvasElement,
       options
     );
-    store.canvasStore.initCanvas(canvas);
-    store.canvasStore.setWrapperRef(canvasBoxRef.current as HTMLInputElement);
-    store.canvasStore.setCanvasRef(canvasEl?.current as HTMLCanvasElement);
+    store.initCanvas(canvas);
+    store.setWrapperRef(canvasBoxRef.current as HTMLInputElement);
+    store.setCanvasRef(canvasEl?.current as HTMLCanvasElement);
 
     canvas.renderAll();
     return () => {
