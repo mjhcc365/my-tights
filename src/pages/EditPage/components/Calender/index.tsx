@@ -42,8 +42,8 @@ const Calender = observer(() => {
       subTargetCheck: true,
       interactive: true, // 启用选择子目标
     });
-    store.canvasStore.canvas?.add(group);
-    store.canvasStore.canvas?.renderAll();
+    store.canvas.add(group);
+    store.canvas.renderAll();
   };
 
   const handleMonth = () => {
@@ -66,13 +66,13 @@ const Calender = observer(() => {
       group.add(text);
     }
 
-    store.canvasStore.addObject(group);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(group);
+    store.canvas?.renderAll();
   };
 
   const timeline = () => {
     const hoursInDay = 24;
-    const canvasHeight = store.canvasStore.canvas?.height || 200;
+    const canvasHeight = store.canvas?.height || 200;
     const group = new Group([]);
 
     for (let i = 6; i <= hoursInDay; i++) {
@@ -95,20 +95,15 @@ const Calender = observer(() => {
       group.add(text);
     }
     group.set("left", 100);
-    store.canvasStore.addObject(group);
-    store.canvasStore.canvas?.renderAll();
+    store.addObject(group);
+    store.canvas?.renderAll();
   };
   return (
     <div>
       <Button onClick={handleClick}>点击渲染到canvas上</Button>
       <Button onClick={handleGroup}>添加group</Button>
-      <Button onClick={handleMonth}>dd</Button>
+      <Button onClick={handleMonth}>Month</Button>
       <Button onClick={timeline}>timeline</Button>
-      {/* <FullCalendar
-          headerToolbar={false}
-          plugins={[dayGridPlugin]}
-          initialView="dayGridMonth"
-        /> */}
     </div>
   );
 });

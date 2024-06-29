@@ -11,7 +11,6 @@ export function getFirstDayOfMonth(date: any) {
 }
 
 function drawCalendar(date: any) {
-  //   let fabricCanvas = new fabric.Canvas("calendar");
   let daysInMonth = getDaysInMonth(date);
   let firstDayOfMonth = getFirstDayOfMonth(date);
 
@@ -26,7 +25,6 @@ function drawCalendar(date: any) {
       originX: "center",
       originY: "center",
     });
-    // fabricCanvas.add(text);
   }
 }
 
