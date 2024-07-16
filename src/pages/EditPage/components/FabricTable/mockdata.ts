@@ -23,7 +23,7 @@ export const getInitTable = () => {
 
 export const mockOptions = {
   columns: [
-    { width: 50, header: true },
+    { width: 50 },
     { width: 50 },
     { width: 50 },
     { width: 50 },
@@ -32,7 +32,7 @@ export const mockOptions = {
   ],
   rows: [
     { height: 28, header: true },
-    { height: 25, header: true },
+    { height: 25 },
     { height: 25 },
     { height: 25 },
     { height: 25 },
@@ -41,15 +41,9 @@ export const mockOptions = {
   ],
   cells: [
     [{ colspan: 6, text: "1" }],
+    [{ text: "2" }, { text: "3" }, { text: "4" }, { text: "5" }, { text: "6" }],
     [
-      { text: "2" },
-      { text: "3" },
-      { colspan: 2, text: "4" },
-      { text: "5" },
-      { text: "6" },
-    ],
-    [
-      { rowspan: 3, text: "7" },
+      { text: "7" },
       { text: "A" },
       { text: "B" },
       { text: "C" },

@@ -94,12 +94,12 @@ export class FabricTable extends fabric.Group {
       // width: 300,
       // height: 200,
     });
-    this.__setcolumns(mockOptions.columns);
-    this.__setrows(mockOptions.rows);
+    this.__setcolumns(dataconfig.columns);
+    this.__setrows(dataconfig.rows);
     this._updateRows();
     this._updateColumns();
 
-    this.__setcells(mockOptions.cells);
+    this.__setcells(dataconfig.cells);
     this._updateCellsGeometry();
 
     this.controls = this._getControls();
@@ -542,7 +542,7 @@ export class FabricTable extends fabric.Group {
       fill: this.isHeaderCell(cellData) ? this.fillHeader : this.fill,
       selectable: false,
     });
-    cellData.t = new fabric.Textbox("", {
+    cellData.t = new fabric.Textbox(cell.text || "", {
       hasControls: false,
       fontSize: this.fontSize,
       fontFamily: "Arial",
@@ -550,8 +550,6 @@ export class FabricTable extends fabric.Group {
       originY: "top",
       left: this.left,
       top: this.top,
-      // left: 0,
-      // top: 0,
       padding: this.cellPadding,
       hasBorders: false,
       fill: this.fillText,
@@ -575,7 +573,7 @@ export class FabricTable extends fabric.Group {
     if (cell.text === text) {
       return;
     }
-    cell.text = text;
+    // cell.t = text;
     if (text) {
       if (!cell.t) {
         cell.t = new fabric.Textbox(text, {
@@ -593,10 +591,13 @@ export class FabricTable extends fabric.Group {
           lockMovementY: true,
           // selectable: false,
         });
+        // this._textMap.set(cell.t, cell);
         this._textMap.set(cell.t, cell);
         this.add(cell.t as unknown as Textbox);
       } else {
-        cell.t.set({ text });
+        // console.log(cell.t);
+        // cell.t. = text;
+        // cell.t.set({ text });
       }
       this._updateCellsGeometry();
     } else {
@@ -728,12 +729,10 @@ export class FabricTable extends fabric.Group {
           });
           cell.o.setCoords();
           if (cell.t) {
-            cell.t.set({
-              left: left - this.width! / 2 + this.cellPadding - 1,
-              top: top - this.height! / 2 + this.cellPadding - 1,
-              width: width - 20,
-              height: height - 20,
-            });
+            cell.t.width = width - 20;
+            cell.t.height = height - 20;
+            cell.t.left = left - this.width! / 2 + this.cellPadding - 1;
+            cell.t.top = top - this.height! / 2 + this.cellPadding - 1;
           }
         }
         left += this._cols[columnindex].width;

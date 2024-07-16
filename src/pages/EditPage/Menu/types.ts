@@ -39,11 +39,11 @@ export const menuConfig = [
     key: MENUKEY.time,
     icon: "shijian",
   },
-  // {
-  //   label: "工具",
-  //   key: MENUKEY.tools,
-  //   icon: "sey-gongju-a",
-  // },
+  {
+    label: "工具",
+    key: MENUKEY.tools,
+    icon: "sey-gongju-a",
+  },
   {
     label: "打卡",
     key: MENUKEY.todos,
