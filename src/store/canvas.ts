@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createContext } from "react";
 import { makeObservable } from "mobx";
 
@@ -84,7 +85,7 @@ export class CanvasStore {
   elementHover: string = "";
 
   canvas!: Canvas;
-  activeObj: FabricObject | null = null;
+  activeObj: { [key: string]: any } | null = null;
 
   showSafeLine: boolean = true;
   showClipLine: boolean = true;
@@ -106,12 +107,25 @@ export class CanvasStore {
   }
 
   setActiveObj = (activeObj: FabricObject | FabricObject[] | null) => {
-    this.activeObj = Array.isArray(activeObj) ? activeObj[0] : activeObj;
+    if (!activeObj) {
+      this.activeObj = null;
+    } else {
+      const obj = Array.isArray(activeObj) ? activeObj[0] : activeObj;
+      const nextObj = {};
+      Object.keys(obj).map((key) => {
+        if (typeof obj[key] !== "function" && typeof obj[key] !== "object") {
+          nextObj[key] = obj[key];
+        }
+      });
+      nextObj.type = obj?.type;
+
+      this.activeObj = nextObj;
+    }
   };
 
-  setActiveObjParam = (key: string | Record<string, any>, value?: any) => {
+  setActiveObjParam = (key: string, value?: any) => {
     this.canvas?.getActiveObject()?.set({ [key as any]: value });
-    this.activeObj?.set({ [key as any]: value });
+    this.activeObj[key] = value;
     this.canvas?.renderAll();
   };
 

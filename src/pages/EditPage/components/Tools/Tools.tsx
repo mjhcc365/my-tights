@@ -186,8 +186,6 @@ export const TextTools = observer(() => {
         onChange={handleFontChange}
         size="small"
       />
-
-      <div>{(store.activeObj as any)?.fontFamily}</div>
       <Select
         style={{ width: 75 }}
         value={(store.activeObj as any)?.fontSize}
@@ -537,7 +535,7 @@ export enum ToolType {
   delete = "delete",
   layer = "layer",
   fillcolor = "fillcolor",
-  text = "text",
+  text = "textbox",
   stokeStyle = "stokeStyle",
   setGroup = "setGroup",
 }
