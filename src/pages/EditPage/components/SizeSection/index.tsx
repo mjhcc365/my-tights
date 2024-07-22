@@ -32,16 +32,11 @@ const IconImage = (props: {
 };
 
 const SizeSection = () => {
-  const {
-    paperConfig,
-    setPaperConfig,
-    drawGridTexture,
-    drawLineTexture,
-    drawDotsTexture,
-  } = usePaperStore();
+  const { paperConfig, setPaperConfig } = usePaperStore();
 
   const store = useContext(CanvasStoreContext);
 
+  /** change back color */
   const onChangeBackColor = (v: any) => {
     const hex = v.toHexString();
     setPaperConfig((d) => {
@@ -50,6 +45,7 @@ const SizeSection = () => {
     store.setBackColor(hex);
   };
 
+  /** reset back color */
   const resetBackColor = (v: boolean) => {
     const hex = v ? paperConfig.backgroundColor : "#fff";
     setPaperConfig((d) => {
@@ -58,6 +54,7 @@ const SizeSection = () => {
     store.setBackColor(hex);
   };
 
+  /** 清除背景纹理 */
   const onClearBackTexture = () => {
     store.canvas?.getObjects().forEach((ele) => {
       if ((ele as any).hbsType === HBSType.back) {
@@ -74,19 +71,20 @@ const SizeSection = () => {
     onClearBackTexture();
     switch (type) {
       case PaperBackType.forDots:
-        drawDotsTexture(hex);
+        store.drawDotsTexture(hex, paperConfig);
         break;
       case PaperBackType.lines:
-        drawLineTexture(hex);
+        store.drawLineTexture(hex, paperConfig);
         break;
       case PaperBackType.rectangle:
-        drawGridTexture(hex);
+        store.drawGridTexture(hex, paperConfig);
         break;
       default:
         break;
     }
   };
 
+  /** 改变背景纹理颜色 */
   const onChangeTextureColor = (v: any) => {
     const hex = v?.toHexString() || paperConfig.lineConfig.stroke;
     setPaperConfig((d) => {
@@ -104,7 +102,7 @@ const SizeSection = () => {
     store.canvas?.renderAll();
   };
 
-  // 绘制活页孔
+  /** 绘制活页孔 TODO */
   const onToggleCircle = (v: boolean) => {
     if (
       store.canvas
@@ -129,6 +127,7 @@ const SizeSection = () => {
     store.canvas?.renderAll();
   };
 
+  /** toggle背景纹理 */
   const onToggleBack = (v: boolean) => {
     store.canvas?.getObjects().forEach((ele: any) => {
       if (ele.hbsType === HBSType.back) {
@@ -141,6 +140,7 @@ const SizeSection = () => {
     store.canvas?.renderAll();
   };
 
+  /** 绘制活页孔 */
   const onAddCircle = () => {
     const { width, height, top, left } =
       store.getWorkSpaceDraw() as FabricObject;
@@ -206,7 +206,10 @@ const SizeSection = () => {
             value={paperConfig.curTempType}
             style={{ flex: 1 }}
             onChange={(tempType) => {
+              // store.setBackSize()
               console.log("==>", tempType);
+
+              // store.paperStore.updatePaperConfig
             }}
             options={PaperTempOptions}
           />

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createContext } from "react";
 import { makeObservable } from "mobx";
 
@@ -12,12 +11,14 @@ import {
   Group,
   Rect,
   Path,
+  Circle,
 } from "fabric";
+import { nanoid } from "nanoid";
 import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
 import { FabricGuide } from "@/extension/fabricGuide";
-
+import { HBSType } from "@/pages/EditPage/components/SizeSection/type.ts";
 import { DefaultDPI, DefaultRatio } from "@/configs/size";
 import { Padding } from "@/configs/background";
 import {
@@ -34,6 +35,12 @@ import {
 import { LineOption } from "@/types/canvas";
 import { TransparentFill } from "@/configs/background";
 import { ReferenceLine } from "@/extension/object/ReferenceLine";
+
+import { PaperStore } from "./paperStore";
+import {
+  A7TempConfig,
+  PaperConfig,
+} from "@/pages/EditPage/components/SizeSection/usePaperStore";
 
 export interface IFabricState {
   wrapperRef: null | HTMLDivElement;
@@ -63,7 +70,7 @@ export interface IFabricState {
 export class CanvasStore {
   wrapperRef: null | HTMLDivElement = null;
   canvasRef: null | HTMLCanvasElement = null;
-  zoom: number = 1;
+  zoom: number = 5;
   clip: number = 2; // 出血尺寸
   safe: number = 5; // 安全尺寸
   round: number = 0; // 圆角尺寸
@@ -87,6 +94,8 @@ export class CanvasStore {
   canvas!: Canvas;
   activeObj: { [key: string]: any } | null = null;
 
+  paperStore: PaperStore = null as unknown as PaperStore;
+
   showSafeLine: boolean = true;
   showClipLine: boolean = true;
 
@@ -106,6 +115,7 @@ export class CanvasStore {
     });
   }
 
+  /** 设置被选中元素 */
   setActiveObj = (activeObj: FabricObject | FabricObject[] | null) => {
     if (!activeObj) {
       this.activeObj = null;
@@ -123,6 +133,7 @@ export class CanvasStore {
     }
   };
 
+  /** 改变被选中元素属性 */
   setActiveObjParam = (key: string, value?: any) => {
     this.canvas?.getActiveObject()?.set({ [key as any]: value });
     this.activeObj[key] = value;
@@ -132,13 +143,14 @@ export class CanvasStore {
   initCanvas = (canvas: Canvas) => {
     new FabricGuide(canvas);
     this.canvas = canvas;
+    this.paperStore = new PaperStore(A7TempConfig);
     // todo 拖拽过程中 更新active参数
     this.canvas.on("mouse:down", (event) => {
       this.setActiveObj(event.target as any);
     });
 
-    const w = 400 * this.zoom;
-    const h = 600 * this.zoom;
+    const w = this.paperStore.paperConfig.width * this.zoom;
+    const h = this.paperStore.paperConfig.height * this.zoom;
     const x = this.canvas.width * 0.5;
     const y = this.canvas.height * 0.5;
 
@@ -417,7 +429,6 @@ export class CanvasStore {
     const obj = this.canvas
       .getObjects()
       .filter((ele) => ele?.id === "WorkSpaceSafeType");
-    console.log("===>obj", obj);
     obj.map((item) => item.set({ visible: !this.showSafeLine }));
     this.showSafeLine = !this.showSafeLine;
     this.canvas?.renderAll();
@@ -515,6 +526,116 @@ export class CanvasStore {
 
   /** 等比例缩放 */
   setZoom = () => {};
+
+  // 画网格
+  drawGridTexture = (stroke: string, paperConfig: PaperConfig) => {
+    const { width, height, top, left } =
+      this.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+    const selfZoom = 3.5;
+    const lineGap = paperConfig.lineConfig.gap * this.zoom * selfZoom;
+    // 定义网格线的间距
+    const lines = [];
+    // 绘制横向网格线
+    for (var i = 0; i <= cHeight; i += lineGap) {
+      const cline = new Line([0, i, cWidth, i], {
+        stroke: stroke || paperConfig.lineConfig.stroke,
+      });
+      lines.push(cline);
+    }
+    // 绘制纵向网格线
+    for (var j = 0; j <= cWidth; j += lineGap) {
+      const vline = new Line([j, 0, j, cHeight], {
+        stroke: paperConfig.lineConfig.stroke,
+        selectable: false,
+      });
+      lines.push(vline);
+    }
+    const group = new Group(lines, {
+      top,
+      left,
+      hbsId: nanoid(),
+      hbsType: HBSType.back,
+      selectable: false,
+      lockMovementX: true,
+      lockMovementY: true,
+    } as any);
+
+    this.addObject(group);
+    this.canvas?.renderAll();
+  };
+  // 画横线
+  drawLineTexture = (stroke: string, paperConfig: PaperConfig) => {
+    const { width, height, top, left } =
+      this.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+
+    const lineGap = paperConfig.lineConfig.gap * 5;
+    const lines = [];
+    // 绘制横向网格线
+    for (var i = 0; i <= cHeight; i += lineGap) {
+      const cline = new Line([0, i, cWidth, i], {
+        stroke: stroke,
+      });
+      lines.push(cline);
+    }
+    const group = new Group(lines, {
+      top,
+      left,
+      id: nanoid(),
+      hbsType: HBSType.back,
+      selectable: false,
+      lockMovementX: true,
+      lockMovementY: true,
+    } as any);
+    this.addObject(group);
+    this.canvas?.renderAll();
+  };
+
+  // 画点阵
+  drawDotsTexture = (stroke: string, paperConfig: PaperConfig) => {
+    const { width, height, top, left } =
+      this.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
+
+    const lineGap = paperConfig.lineConfig.gap * 5;
+    // 定义网格线的间距
+    const dots = [];
+    for (var i = 0; i <= cWidth; i += lineGap) {
+      for (var j = 0; j <= cHeight; j += lineGap) {
+        const dot = new Circle({
+          top: j,
+          left: i,
+          radius: 1,
+          stroke: stroke,
+        });
+        dots.push(dot);
+      }
+    }
+    const group = new Group(dots, {
+      top,
+      left,
+      hbsId: nanoid(),
+      hbsType: HBSType.back,
+      selectable: false,
+      lockMovementX: true,
+      lockMovementY: true,
+    } as any);
+    this.addObject(group);
+    this.canvas?.renderAll();
+  };
+
+  onClearBackTexture = () => {
+    this.canvas?.getObjects().forEach((ele) => {
+      if ((ele as any).hbsType === HBSType.back) {
+        this.canvas?.remove(ele);
+      }
+    });
+    this.canvas?.renderAll();
+  };
 }
 
 export const CanvasStoreContext = createContext<CanvasStore>(
