@@ -18,6 +18,8 @@ import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
 import { FabricGuide } from "@/extension/fabricGuide";
+import { initAligningGuidelines } from "@/app/aligning_guidelines";
+import { FabricRuler } from "@/extension/fabricRuler";
 import { HBSType } from "@/pages/EditPage/components/SizeSection/type";
 import { DefaultDPI, DefaultRatio } from "@/configs/size";
 import { Padding } from "@/configs/background";
@@ -143,8 +145,11 @@ export class CanvasStore {
 
   initCanvas = (canvas: Canvas) => {
     new FabricGuide(canvas);
+    new FabricRuler(canvas);
+
     this.canvas = canvas;
     this.paperStore = new PaperStore(A7TempConfig);
+
     // todo 拖拽过程中 更新active参数
     this.canvas.on("mouse:down", (event) => {
       this.setActiveObj(event.target as any);

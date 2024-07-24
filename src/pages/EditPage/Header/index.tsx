@@ -76,6 +76,14 @@ const MJHeader = () => {
         <Button>解除编组</Button>
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleReset}>保存</Button>
+        <Button onClick={handleClickPic}>导出为PNG</Button>
+        {/* <Button
+          onClick={() => {
+            // store.canvas.drawVerticalLine();
+          }}
+        >
+          添加辅助线
+        </Button> */}
         {/* <Select
           style={{ width: 100 }}
           value={store?.mainStore.fontFamily}

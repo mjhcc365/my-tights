@@ -592,10 +592,15 @@ export const getTools = (type: string) => {
   }
 };
 
-export const MainTools = () => {
+export const MainTools = observer(() => {
   const store = useContext(CanvasStoreContext);
+
+  if (!store?.activeObj) {
+    return <div></div>;
+  }
+
   return (
-    <>
+    <div className="section-top-tool">
       {store?.canvas?.getActiveObject()?.lockMovementX ? (
         <UnLock />
       ) : (
@@ -630,6 +635,6 @@ export const MainTools = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
-};
+});

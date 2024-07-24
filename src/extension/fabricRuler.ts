@@ -1,22 +1,15 @@
-import { Canvas } from "fabric";
-import { Keybinding } from "./keybinding";
 import { Disposable } from "@/utils/lifecycle";
-// import { useThemes } from '@/hooks/useThemes'
-import { DesignUnitMode } from "@/configs/background";
 import { PiBy180, isMobile } from "@/utils/common";
 import {
   TAxis,
   Point,
   Rect as fabricRect,
-  Object as FabricObject,
+  FabricObject,
   TPointerEventInfo,
   TPointerEvent,
 } from "fabric";
-// import { useMainStore, useTemplatesStore } from "@/store";
-// import { storeToRefs } from "pinia";
 import { px2mm } from "@/utils/image";
 import { ElementNames } from "@/types/elements";
-// import { FabricCanvas } from "./fabricCanvas";
 import { ReferenceLine } from "@/extension/object/ReferenceLine";
 import { WorkSpaceDrawType } from "@/configs/canvas";
 
@@ -85,7 +78,7 @@ export class FabricRuler extends Disposable {
         y: HighlightRect[];
       };
 
-  constructor(private readonly canvas) {
+  constructor(private readonly canvas: any) {
     super();
     this.lastCursor = this.canvas.defaultCursor;
     // 合并默认配置
@@ -95,29 +88,13 @@ export class FabricRuler extends Disposable {
       enabled: isMobile() ? false : true,
     });
 
-    // const { isDark } = useThemes()
-    const isDark = false;
-
-    // const { unitMode } = storeToRefs(useMainStore());
-    const unitName = DesignUnitMode.filter((ele) => ele.id === 0)[0].name;
-
     this.options = {
       ...this.options,
-      ...(isDark
-        ? {
-            backgroundColor: "#242424",
-            borderColor: "#555",
-            highlightColor: "#165dff3b",
-            textColor: "#ddd",
-            unitName: unitName,
-          }
-        : {
-            backgroundColor: "#fff",
-            borderColor: "#ccc",
-            highlightColor: "#165dff3b",
-            textColor: "#444",
-            unitName: unitName,
-          }),
+      backgroundColor: "#fff",
+      borderColor: "#ccc",
+      highlightColor: "#165dff3b",
+      textColor: "#444",
+      unitName: "mm",
     };
     this.render({ ctx: this.canvas.contextContainer });
 
@@ -159,13 +136,13 @@ export class FabricRuler extends Disposable {
   }
 
   private mouseMove(e: TPointerEventInfo<TPointerEvent>) {
-    if (!e.pointer) return;
-    if (this.tempReferenceLine && e.absolutePointer) {
+    if (!e.viewportPoint) return;
+    if (this.tempReferenceLine && e.scenePoint) {
       const pos: Partial<ReferenceLine> = {};
       if (this.tempReferenceLine.axis === "horizontal") {
-        pos.top = e.pointer.y;
+        pos.top = e.scenePoint.y;
       } else {
-        pos.left = e.pointer.x;
+        pos.left = e.scenePoint.x;
       }
       this.tempReferenceLine.set({ ...pos, visible: true });
       this.canvas.renderAll();
@@ -173,7 +150,7 @@ export class FabricRuler extends Disposable {
       this.canvas.fire("object:moving", event);
       this.tempReferenceLine.fire("moving", event);
     }
-    const status = this.getPointHover(e.absolutePointer);
+    const status = this.getPointHover(e.viewportPoint);
     this.canvas.defaultCursor = this.lastCursor;
     if (!status) return;
     this.lastCursor = this.canvas.defaultCursor;
@@ -182,12 +159,13 @@ export class FabricRuler extends Disposable {
   }
 
   private mouseDown(e: TPointerEventInfo<TPointerEvent>) {
-    const pointHover = this.getPointHover(e.absolutePointer);
+    const pointHover = this.getPointHover(e.viewportPoint);
     if (!pointHover) return;
     if (this.activeOn === "up") {
       this.canvas.selection = false;
       this.activeOn = "down";
-      const point = pointHover === "horizontal" ? e.pointer.y : e.pointer.x;
+      const point =
+        pointHover === "horizontal" ? e.viewportPoint.y : e.viewportPoint.x;
       this.tempReferenceLine = new ReferenceLine(point, {
         type: "ReferenceLine",
         axis: pointHover,
@@ -203,22 +181,20 @@ export class FabricRuler extends Disposable {
         globalCompositeOperation: "difference",
       });
       this.canvas.add(this.tempReferenceLine);
-      //   const templatesStore = useTemplatesStore();
-      //   templatesStore.modifedElement();
-      //   this.canvas.setActiveObject(this.tempReferenceLine);
-      //   this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
-      //   this.tempReferenceLine.fire("down", this.getCommonEventInfo(e));
+      this.canvas.setActiveObject(this.tempReferenceLine);
+      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
+      this.tempReferenceLine.fire("down", this.getCommonEventInfo(e));
     }
   }
 
   private getCommonEventInfo(e: TPointerEventInfo<TPointerEvent>) {
-    if (!this.tempReferenceLine || !e.absolutePointer) return;
+    if (!this.tempReferenceLine || !e.scenePoint) return;
     return {
       e: e.e,
       transform: this.tempReferenceLine.get("transform"),
       pointer: {
-        x: e.absolutePointer.x,
-        y: e.absolutePointer.y,
+        x: e.scenePoint.x,
+        y: e.scenePoint.y,
       },
       target: this.tempReferenceLine,
     };
@@ -242,27 +218,6 @@ export class FabricRuler extends Disposable {
   }
 
   public isRectOut(object: FabricObject, target: ReferenceLine): boolean {
-    // const { top, height, left, width } = object;
-
-    // if (top === undefined || height === undefined || left === undefined || width === undefined) {
-    //   return false;
-    // }
-
-    // const targetRect = target.getBoundingRect(true, true);
-    // const {
-    //   top: targetTop,
-    //   height: targetHeight,
-    //   left: targetLeft,
-    //   width: targetWidth,
-    // } = targetRect;
-
-    // if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
-    //   return true;
-    // }
-    // else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
-    //   return true;
-    // }
-
     return false;
   }
 
@@ -587,7 +542,7 @@ export class FabricRuler extends Disposable {
       return;
     }
     const allRect = activeObjects.reduce((rects, obj) => {
-      const rect: HighlightRect = obj.getBoundingRect(true);
+      const rect: HighlightRect = obj.getBoundingRect();
       rects.push(rect);
       return rects;
     }, [] as HighlightRect[]);

@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import * as fabric from "fabric";
-import TopTools from "./TopTools";
+import { MainTools } from "@/pages/EditPage/components/Tools/Tools";
 import BottomTools from "./BottomTools";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
@@ -48,7 +48,7 @@ const MainContent = () => {
       }}
       ref={canvasBoxRef}
     >
-      <TopTools />
+      <MainTools />
       <canvas ref={canvasEl} />
       <BottomTools />
     </div>
