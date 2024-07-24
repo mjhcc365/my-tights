@@ -17,24 +17,27 @@
     }
 
     .time-section-images {
-        display: flex;
+        display: grid;
         flex-wrap: wrap;
         flex-direction: row;
         row-gap: 8px;
         column-gap: 8px;
-        justify-content: center;
-
-        .time-section-img-box {
-            display: flex;
-            flex-direction: column;
-            height: 160px;
-
-            .time-section-img {
-                width: 125px;
-                height: 125px;
-            }
-
+        grid-template-columns: repeat(2, 1fr);
+        button{
+            overflow: hidden;
+            font-size: 12px;
         }
+
+        // .time-section-img-box {
+        //     display: flex;
+        //     flex-direction: column;
+        //     height: 160px;
+
+        //     .time-section-img {
+        //         width: 125px;
+        //         height: 125px;
+        //     }
+        // }
 
     }
 }

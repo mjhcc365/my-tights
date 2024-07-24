@@ -1,4 +1,4 @@
-import { Button, Select } from "antd";
+import { Button, Select, ColorPicker } from "antd";
 import imgUrl from "@/assets/logo.png";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
@@ -77,6 +77,28 @@ const MJHeader = () => {
         <Button onClick={handleReset}>清除</Button>
         <Button onClick={handleReset}>保存</Button>
         <Button onClick={handleClickPic}>导出为PNG</Button>
+        <Select
+          style={{ width: 100 }}
+          value={store?.defaultFont}
+          options={ALL_FONTS}
+          optionRender={(ele) => {
+            return (
+              <div style={{ fontFamily: `${ele.value}` }}>{ele.label}</div>
+            );
+          }}
+          onChange={(v) => {
+            store.setDefaultFont(v);
+          }}
+        />
+        <ColorPicker
+          style={{
+            flex: 1,
+          }}
+          value={store.defaultColor}
+          onChange={(v) => {
+            store.setDefaultColor(v.toHexString());
+          }}
+        />
         {/* <Button
           onClick={() => {
             // store.canvas.drawVerticalLine();

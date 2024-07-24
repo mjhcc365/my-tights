@@ -94,6 +94,9 @@ export class CanvasStore {
   elementCoords: Point[] = [];
   elementHover: string = "";
 
+  defaultFont: string = "Arial"; // 默认字体
+  defaultColor: string = "black"; // 默认颜色
+
   canvas!: Canvas;
   activeObj: { [key: string]: any } | null = null;
 
@@ -109,6 +112,8 @@ export class CanvasStore {
       zoom: observable,
       showSafeLine: observable,
       showClipLine: observable,
+      defaultFont: observable,
+      defaultColor: observable,
       setActiveObj: action,
       setActiveObjParam: action,
       initCanvas: action,
@@ -131,7 +136,6 @@ export class CanvasStore {
         }
       });
       nextObj.type = obj?.type;
-
       this.activeObj = nextObj;
     }
   };
@@ -140,7 +144,23 @@ export class CanvasStore {
   setActiveObjParam = (key: string, value?: any) => {
     this.canvas?.getActiveObject()?.set({ [key as any]: value });
     this.activeObj[key] = value;
+    if (key === "fontFamily") {
+      this.setDefaultFont(value);
+    }
+    if (key === "fill") {
+      this.setDefaultColor(value);
+    }
     this.canvas?.renderAll();
+  };
+
+  /** 设置全局默认颜色 */
+  setDefaultColor = (color: string) => {
+    this.defaultColor = color;
+  };
+
+  /** 设置全局默认字体 */
+  setDefaultFont = (font: string) => {
+    this.defaultFont = font;
   };
 
   initCanvas = (canvas: Canvas) => {

@@ -87,9 +87,9 @@ const Weather = () => {
     // TODO 双击修改文案
     const text = new Textbox(param, {
       fontSize: 16,
-      // fontFamily: store.mainStore.fontFamily,
+      fontFamily: store.defaultFont,
       hbsType: "textbox",
-      fill: "rgb(0,0,0)",
+      fill: store.defaultColor,
       selectable: true,
       ...options,
     } as any);
@@ -160,7 +160,7 @@ const Weather = () => {
 
   const getCurPosition = () => {
     if (navigator.geolocation) {
-      console.log("==>showmap", navigator.geolocation);
+      // console.log("==>showmap", navigator.geolocation);
       navigator.geolocation.getCurrentPosition(showmap, error);
     } else {
       alert("该浏览器不支持获取地理位置");

@@ -30,7 +30,7 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
         scaleY: 0.05,
         top: y - 50,
         left: x,
-        fill: "grey",
+        fill: store.defaultColor,
       });
       store.addObject(svgObjects);
     });
@@ -51,7 +51,7 @@ const SubIconArray = (props: { search: string; libraryName: string }) => {
               style={{
                 width: 32,
                 height: 28,
-                color: "grey",
+                color: store.defaultColor,
                 cursor: "pointer",
               }}
               icon={[

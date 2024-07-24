@@ -251,7 +251,7 @@ export const FillColor = () => {
   };
   return (
     <ColorPicker
-      format="rgb"
+      format="hex"
       value={(store.activeObj as any)?.fill}
       onChange={handleChangeColor}
     />

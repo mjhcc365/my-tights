@@ -11,7 +11,7 @@ import FabricTable from "@/pages/EditPage/components/FabricTable";
 import { menuConfig, MENUKEY } from "./types";
 
 const LeftSiderBox = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const [curmenu, setMenu] = useState<MENUKEY>(
     (localStorage.getItem("mj-menu") as MENUKEY) || MENUKEY.temp
@@ -58,7 +58,7 @@ const LeftSiderBox = () => {
         }}
       >
         {/* {curmenu === MENUKEY.temp && isOpen && <TemplatesSectioin />} */}
-        {curmenu === MENUKEY.text && isOpen && <TextSectioin />}
+        {curmenu === MENUKEY.text && <TextSectioin />}
         {curmenu === MENUKEY.material && <MaterialSection />}
         {curmenu === MENUKEY.size && <SizeSection />}
         {curmenu === MENUKEY.time && <TimeSection />}
@@ -70,11 +70,12 @@ const LeftSiderBox = () => {
       <div
         style={{
           left: isOpen ? 344 : 58,
+          display: "none",
         }}
         className="absolute top-36 z-30 bg-slate-200 h-16 w-5 rounded-r-2xl"
-        onClick={() => {
-          setIsOpen((preValue) => !preValue);
-        }}
+        // onClick={() => {
+        //   setIsOpen((preValue) => !preValue);
+        // }}
       >
         {/* {isOpen ? "关" : "开"} */}
       </div>

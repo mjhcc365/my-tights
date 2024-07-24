@@ -1,5 +1,4 @@
-import { Layout } from "antd";
-import { useEffect } from "react";
+import { Layout, Select } from "antd";
 import { observer } from "mobx-react-lite";
 
 import MJHeader from "./Header";
@@ -24,7 +23,10 @@ const HomePage = () => {
             <Sider width={58} style={siderStyle}>
               <LeftSiderBox />
             </Sider>
-            <div style={{ width: 160, background: "#fff" }}>222</div>
+            <div
+              className="w-72"
+              // style={{ width: 160, background: "#fff" }}
+            ></div>
             <Content style={contentStyle}>
               <MainContent />
             </Content>

@@ -21,16 +21,18 @@ const Day = () => {
 
   const onDraw = (format: any) => {
     if (!store.canvas) return;
+    const { x, y } = store.getCenterPoint();
     const text = new Textbox(dayjs(date).format(format), {
-      left: 50,
-      top: 50,
-      fontSize: 20,
-      fontFamily: store.mainStore.fontFamily,
+      left: x,
+      top: y,
+      fontSize: 14,
+      fontFamily: store.defaultFont,
       hbsType: "textbox",
-      fill: "rgb(0,0,0)",
+      fill: store.defaultColor,
       selectable: true,
     } as any);
-    store?.canvasStoreObject(text);
+
+    store.addObject(text);
   };
 
   return (
@@ -54,7 +56,7 @@ const Day = () => {
                 onDraw(ele.format);
               }}
             >
-              {ele.format}
+              {dayjs(date).format(ele.format)}
             </Button>
           );
         })}

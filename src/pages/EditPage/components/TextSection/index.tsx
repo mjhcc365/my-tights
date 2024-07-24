@@ -15,10 +15,10 @@ const TextSectioin = () => {
     // TODO 双击修改文案
     const text = new Textbox(param, {
       fontSize: 20,
-      // fontFamily: store.mainStore.fontFamily,
+      fontFamily: store.defaultFont,
       hbsId: nanoid(),
       hbsType: "textbox",
-      fill: "rgb(0,0,0)",
+      fill: store.defaultColor,
       selectable: true,
       ...options,
     } as any);
@@ -42,7 +42,7 @@ const TextSectioin = () => {
             return (
               <div
                 onClick={() => {
-                  handleAddText(`TO DO LIST`, {
+                  handleAddText(`DONE LIST`, {
                     fontFamily: `${ele.value}`,
                   });
                 }}
@@ -54,7 +54,7 @@ const TextSectioin = () => {
                   fontFamily: `${ele.value}`,
                 }}
               >
-                TO DO LIST
+                DONE LIST
               </div>
             );
           })}
@@ -70,36 +70,25 @@ const TextSectioin = () => {
 
   return (
     <div className="flex flex-col gap-4 pt-4 cursor-pointer">
-      <div
-        className="text-3xl"
-        onClick={() => {
-          handleAddText("点击添加标题文字", {
-            fontSize: 20,
-          });
-        }}
-      >
-        点击添加标题文字
-      </div>
-      <h4
-        className="text-2xl"
-        onClick={() => {
-          handleAddText("点击添加副标题文字", {
-            fontSize: 16,
-          });
-        }}
-      >
-        点击添加副标题文字
-      </h4>
-      <div
-        className="text-xl"
-        onClick={() => {
-          handleAddText("点击添加正文", {
-            fontSize: 14,
-          });
-        }}
-      >
-        点击添加正文
-      </div>
+      <>
+        {[14, 16, 20].reverse().map((size: number) => {
+          return (
+            <div
+              style={{
+                fontSize: size,
+                fontFamily: store.defaultFont,
+                color: store.defaultColor,
+              }}
+              onClick={() => {
+                handleAddText(`点击添加标题文字`, { fontSize: size });
+              }}
+            >
+              点击添加标题文字
+            </div>
+          );
+        })}
+      </>
+
       <Tabs defaultActiveKey="1" items={items} />
     </div>
   );
