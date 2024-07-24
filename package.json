@@ -18,7 +18,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@umijs/plugin-electron": "^0.2.4",
-    "antd": "^5.12.8",
+    "antd": "^5.13.0",
     "axios": "^1.6.8",
     "clipboard": "^2.0.11",
     "clipper-lib": "^6.4.2",

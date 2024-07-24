@@ -18,7 +18,7 @@ import { nonid } from "@/utils/common";
 import { check } from "@/utils/check";
 import { verticalLine, horizontalLine } from "@/types/elements";
 import { FabricGuide } from "@/extension/fabricGuide";
-import { HBSType } from "@/pages/EditPage/components/SizeSection/type.ts";
+import { HBSType } from "@/pages/EditPage/components/SizeSection/type";
 import { DefaultDPI, DefaultRatio } from "@/configs/size";
 import { Padding } from "@/configs/background";
 import {
@@ -41,6 +41,7 @@ import {
   A7TempConfig,
   PaperConfig,
 } from "@/pages/EditPage/components/SizeSection/usePaperStore";
+export const DEFAULT_ZOOM = 5;
 
 export interface IFabricState {
   wrapperRef: null | HTMLDivElement;
@@ -85,8 +86,8 @@ export class CanvasStore {
   isCtrlKey: boolean = false;
   isModifed: boolean = false;
   isChecked: boolean = false;
-  scalePercentage: number = 75;
   verticalLines: verticalLine[] = [];
+  scalePercentage: number = 1;
   horizontalLines: horizontalLine[] = [];
   elementCoords: Point[] = [];
   elementHover: string = "";
@@ -111,7 +112,7 @@ export class CanvasStore {
       initCanvas: action,
       setWrapperRef: action,
       setCanvasRef: action,
-      setZoomRodio: action,
+      setZoom: action,
     });
   }
 
@@ -186,10 +187,6 @@ export class CanvasStore {
     this.canvasRef = ref;
   };
 
-  setZoomRodio = (zoomRodio: number) => {
-    this.zoom = zoomRodio;
-  };
-
   addObject = (obj: FabricObject[] | FabricObject) => {
     if (Array.isArray(obj)) {
       obj.forEach((ele) => {
@@ -247,6 +244,8 @@ export class CanvasStore {
 
   setCanvasPercentage = (val: number) => {
     this.scalePercentage = val;
+    const { x, y } = this.getCenterPoint();
+    this.canvas.zoomToPoint(new Point({ x, y }), val);
   };
 
   getWidth = () => {
@@ -454,6 +453,7 @@ export class CanvasStore {
 
   /** 获取画板的中心 */
   getCenterPoint = (): { x: number; y: number } => {
+    console.log(this.canvas);
     return {
       x: this.getWorkSpaceDraw()?.getCenterPoint().x || 100,
       y: this.getWorkSpaceDraw()?.getCenterPoint().y || 100,
@@ -469,6 +469,7 @@ export class CanvasStore {
     };
   };
 
+  /** 获取背景板的宽高 */
   getWrapperRefCenter = (): { x: number; y: number } => {
     return {
       x: (this.wrapperRef?.getBoundingClientRect()?.width || 100) * 0.5,
@@ -480,7 +481,7 @@ export class CanvasStore {
   setBackSize = (width = 100, height = 100) => {
     const { x, y } = this.getCenterPoint();
     const top = y - height * 0.5;
-    const left = x - height * 0.5;
+    const left = x - width * 0.5;
 
     this.canvas
       .getObjects()
@@ -525,7 +526,9 @@ export class CanvasStore {
   };
 
   /** 等比例缩放 */
-  setZoom = () => {};
+  setZoom = (nextZoom: number) => {
+    this.zoom = nextZoom;
+  };
 
   // 画网格
   drawGridTexture = (stroke: string, paperConfig: PaperConfig) => {
@@ -628,6 +631,7 @@ export class CanvasStore {
     this.canvas?.renderAll();
   };
 
+  /** 清除画板背景 */
   onClearBackTexture = () => {
     this.canvas?.getObjects().forEach((ele) => {
       if ((ele as any).hbsType === HBSType.back) {

@@ -8,6 +8,7 @@ import usePaperStore, {
   PaperTempOptions,
   PaperBackType,
   PaperBackArray,
+  paperConfigMap,
 } from "@/pages/EditPage/components/SizeSection/usePaperStore";
 
 import "./index.less";
@@ -206,10 +207,11 @@ const SizeSection = () => {
             value={paperConfig.curTempType}
             style={{ flex: 1 }}
             onChange={(tempType) => {
-              // store.setBackSize()
-              console.log("==>", tempType);
-
-              // store.paperStore.updatePaperConfig
+              const { width, height } = paperConfigMap[tempType];
+              store.setBackSize(width * store.zoom, height * store.zoom);
+              setPaperConfig((d) => {
+                d.curTempType = tempType;
+              });
             }}
             options={PaperTempOptions}
           />
