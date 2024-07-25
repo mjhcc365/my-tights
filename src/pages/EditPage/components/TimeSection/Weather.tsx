@@ -9,7 +9,6 @@ const zonghe =
   "https://api.caiyunapp.com/v2.6/p2Tk6q3dOepTkxUq/116.3176,39.9760/weather?alert=true&dailysteps=1&hourlysteps=24";
 
 import "./Image.less";
-import "./index.less";
 
 const WeatherTypes: any = {
   1: "台风",
@@ -84,7 +83,6 @@ const Weather = () => {
   const store = useContext(CanvasStoreContext);
   const handleAddText = (param: string, options: any) => {
     if (!store.canvas) return;
-    // TODO 双击修改文案
     const text = new Textbox(param, {
       fontSize: 16,
       fontFamily: store.defaultFont,
@@ -169,9 +167,9 @@ const Weather = () => {
 
   return (
     <div className="time-section-class">
-      <div className="time-section-images">
+      {/* <div className="time-section-images">
         <Button onClick={getCurPosition}>获取当前经纬度</Button>
-      </div>
+      </div> */}
       <div className="time-section-images">
         <Button onClick={onDrawPhenomena}>天气</Button>
         <Button onClick={onDrawTemperature}>温度</Button>

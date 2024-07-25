@@ -45,8 +45,7 @@ const HelpLine = () => {
     }
 
     const group = new Group(hLines);
-    store.canvas?.add(group);
-    // group?.sendToBack(); // 置于底层
+    store.addObject(group);
   };
 
   // 绘制竖线
@@ -63,11 +62,8 @@ const HelpLine = () => {
       });
       vLines.push(line);
     }
-
     const group = new Group(vLines);
-
-    store.canvas?.add(group);
-    // group?.sendToBack(); // 置于底层
+    store.addObject(group);
   };
 
   const onHelpLineChange = () => {

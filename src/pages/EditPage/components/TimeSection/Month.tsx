@@ -1,59 +1,49 @@
 import { useContext } from "react";
+import { FabricObject } from "fabric";
 import { DatePicker, Button } from "antd";
 import dayjs from "dayjs";
-// import PenImg from "@/assets/pen.jpg";
-// import LogoImg from "@/assets/logo.png";
 
 import { Group, Line } from "fabric";
 import { nanoid } from "nanoid";
 import { CanvasStoreContext } from "@/store/canvas";
 
 import "./Image.less";
-import "./index.less";
-
-// const YearsTemp = [
-//   {
-//     src: PenImg,
-//   },
-//   {
-//     src: LogoImg,
-//   },
-// ];
 
 const Month = () => {
   const store = useContext(CanvasStoreContext);
 
   const drawMonth = () => {
-    const cWidth = store.canvas?.getWidth();
-    const cheight = store.canvas?.getHeight();
+    const { width, height, top, left } =
+      store.getWorkSpaceDraw() as FabricObject;
+    const cWidth = width;
+    const cHeight = height;
 
     const group = new Group([], {
       hbsId: nanoid(),
     } as any);
-    // 横线
-    for (let i = 1; i < 6; i++) {
-      const top = Math.floor(i) * (cheight / 6);
-      const line = new Line([0, top, cWidth, top], {
-        fill: store.defaultColor, // 填充颜色（可选，如果不需要填充可以省略）
-        stroke: "blue", // 边框颜色
-        strokeWidth: 2, // 边框宽度
-      });
+    // 横线 7等分
+    for (let i = 1; i < 7; i++) {
+      const line = new Line(
+        [
+          left,
+          top + Math.floor(i) * (cHeight / 7),
+          left + cWidth,
+          top + Math.floor(i) * (cHeight / 7),
+        ],
+        {
+          stroke: store.defaultColor, // 边框颜色
+          strokeWidth: 1, // 边框宽度
+        }
+      );
       group.add(line);
     }
     store.addObject(group);
-  };
-
-  const onChangeTime = () => {};
-
-  const onDrawMonth = () => {
-    drawMonth();
   };
 
   return (
     <div className="time-section-class">
       <div className="time-section-tool">
         <DatePicker
-          onChange={onChangeTime}
           style={{ width: "50%" }}
           allowClear={false}
           defaultValue={dayjs()}
@@ -61,8 +51,14 @@ const Month = () => {
         />
       </div>
       <div className="time-section-images">
-        <Button onClick={onDrawMonth}>样式1</Button>
-        <Button onClick={onDrawMonth}>样式2</Button>
+        <Button
+          onClick={() => {
+            drawMonth();
+          }}
+        >
+          7等分线
+        </Button>
+        <Button onClick={() => {}}>月历</Button>
       </div>
     </div>
   );

@@ -99,7 +99,7 @@ const Table = () => {
         { width: 50 },
       ],
     });
-    store.canvas.add(table);
+    store.addObject(table);
   };
 
   return (

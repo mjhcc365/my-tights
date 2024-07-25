@@ -3,10 +3,8 @@ import { Textbox } from "fabric";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useContext } from "react";
-import { observer } from "mobx-react-lite";
 import { CanvasStoreContext } from "@/store/canvas";
 import { FORMAT_MOCK } from "@/utils/date";
-import "./index.less";
 
 const Day = () => {
   const [date, setDate] = useState(dayjs());
@@ -14,17 +12,18 @@ const Day = () => {
   const store = useContext(CanvasStoreContext);
 
   const onChangeTime = (v: any) => {
-    setDate(() => {
-      return v;
-    });
+    console.log("===>", v);
+    // setDate(() => {
+    //   return v;
+    // });
   };
 
   const onDraw = (format: any) => {
     if (!store.canvas) return;
-    const { x, y } = store.getCenterPoint();
+    const { x } = store.getCenterPoint();
     const text = new Textbox(dayjs(date).format(format), {
       left: x,
-      top: y,
+      top: 100,
       fontSize: 14,
       fontFamily: store.defaultFont,
       hbsType: "textbox",
@@ -43,7 +42,6 @@ const Day = () => {
           onChange={onChangeTime}
           style={{ width: "50%" }}
           allowClear={false}
-          defaultValue={dayjs()}
           picker="date"
         />
       </div>

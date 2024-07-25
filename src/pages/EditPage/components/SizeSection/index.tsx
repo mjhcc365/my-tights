@@ -193,8 +193,7 @@ const SizeSection = () => {
       hbsType: "holes",
     } as any);
 
-    store.canvas?.add(group);
-    store.canvas?.renderAll();
+    store.addObject(group);
   };
 
   return (

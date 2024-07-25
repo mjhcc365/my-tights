@@ -26,7 +26,8 @@
     "fetch-jsonp": "^1.3.0",
     "lodash-es": "^4.17.21",
     "number-precision": "^1.6.0",
-    "raphael": "^2.3.0"
+    "raphael": "^2.3.0",
+    "weekOfYear": "link:dayjs/plugin/weekOfYear"
   },
   "devDependencies": {
     "@tsconfig/node14": "^14.1.0",

@@ -8,43 +8,6 @@ import { getDaysInMonth, getFirstDayOfMonth } from "./drawMonth";
 
 const Calender = observer(() => {
   const store = useContext(CanvasStoreContext);
-  const handleClick = () => {
-    // const table = new fabric.Table({
-    //   strokeWidth: 2,
-    //   cornerSize: 8,
-    //   lockRotation: true,
-    //   left: 1000,
-    //   top: 100,
-    //   rows: [{ height: 50 }, { height: 50 }],
-    //   columns: [{ width: 100 }, { width: 100 }],
-    // });
-    // console.log("==>", table);
-    // // console.log("===>",store.canvasStore.canvas);
-    // store.canvasStore.canvas?.add(table);
-    // store.canvasStore;
-    // const tabel = new fabricTable();
-    // store.canvasStore.canvas?.add(tabel.group);
-    // store.canvasStore.canvas?.renderAll();
-  };
-
-  const handleGroup = () => {
-    const rect = new Rect({
-      width: 100,
-      height: 100,
-      top: 100,
-      left: 100,
-    });
-
-    const text = new IText("123", {
-      // editable: true
-    });
-    const group = new Group([text, rect], {
-      subTargetCheck: true,
-      interactive: true, // 启用选择子目标
-    });
-    store.canvas.add(group);
-    store.canvas.renderAll();
-  };
 
   const handleMonth = () => {
     const group = new Group([]);
@@ -100,8 +63,8 @@ const Calender = observer(() => {
   };
   return (
     <div>
-      <Button onClick={handleClick}>点击渲染到canvas上</Button>
-      <Button onClick={handleGroup}>添加group</Button>
+      {/* <Button onClick={handleClick}>点击渲染到canvas上</Button> */}
+      {/* <Button onClick={handleGroup}>添加group</Button> */}
       <Button onClick={handleMonth}>Month</Button>
       <Button onClick={timeline}>timeline</Button>
     </div>

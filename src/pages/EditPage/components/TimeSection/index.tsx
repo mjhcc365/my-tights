@@ -4,27 +4,27 @@ import type { TabsProps } from "antd";
 import Week from "./WeekTool";
 import Month from "./Month";
 import Day from "./Day";
-import Weather from "./Weather";
+// import Weather from "./Weather";
 
 const items: TabsProps["items"] = [
-  {
-    key: "1",
-    label: "天气",
-    children: <Weather />,
-  },
+  // {
+  //   key: "1",
+  //   label: "天气",
+  //   children: <Weather />,
+  // },
   {
     key: "2",
-    label: "月",
+    label: "月计划",
     children: <Month />,
   },
   {
     key: "3",
-    label: "周",
+    label: "周计划",
     children: <Week />,
   },
   {
     key: "4",
-    label: "日",
+    label: "日计划",
     children: <Day />,
   },
 ];

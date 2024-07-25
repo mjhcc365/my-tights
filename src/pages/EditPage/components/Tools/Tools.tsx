@@ -18,7 +18,7 @@ import {
   InputNumber,
   Tooltip,
 } from "antd";
-import { util, Group } from "fabric";
+import { util, Group, FabricObject } from "fabric";
 import { nanoid } from "nanoid";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
@@ -27,22 +27,19 @@ import { Layers, ALL_FONTS, ALL_SIZE } from "@/utils/fonts";
 
 import "./Tools.less";
 import Icon from "@/HbsUI/Icon";
-// import { observer } from "mobx-react-lite";
 
 export const Copy = () => {
   const store = useContext(CanvasStoreContext);
-  const handleCope = () => {
+  const handleCope = async () => {
     if (!store.canvas) return;
-    // const clonedRect = util.object.clone(
-    //   store?.canvas?.getActiveObject()
-    // );
-    // store?.canvas?.add(clonedRect);
-    // clonedRect.set({
-    //   left: (store?.canvas?.getActiveObject()?.left || 0) + 60,
-    //   top: (store?.canvas?.getActiveObject()?.top || 0) + 60,
-    // });
-    // store?.canvas?.discardActiveObject();
-    // store?.canvas?.renderAll();
+    const clonedRect = (await store?.canvas
+      ?.getActiveObject()
+      ?.clone()) as FabricObject;
+    clonedRect.set({
+      left: (store?.canvas?.getActiveObject()?.left || 0) + 60,
+      top: (store?.canvas?.getActiveObject()?.top || 0) + 60,
+    });
+    store.addObject(clonedRect as FabricObject);
   };
 
   return (
@@ -65,6 +62,7 @@ export const Delete = () => {
       store.canvas?.renderAll();
     }
   };
+
   return (
     <Tooltip placement="bottom" title="删除">
       <DeleteOutlined
@@ -434,7 +432,7 @@ export const SetGroup = () => {
     if (!store?.canvas) return;
     const group = store?.canvas.getActiveObject() as Group;
     group.getObjects().forEach((ele) => {
-      store.canvas?.add(ele);
+      store.addObject(ele);
     });
     store.canvas.discardActiveObject();
     // setActiveObject(() => null)

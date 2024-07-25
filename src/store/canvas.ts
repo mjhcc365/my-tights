@@ -94,8 +94,8 @@ export class CanvasStore {
   elementCoords: Point[] = [];
   elementHover: string = "";
 
-  defaultFont: string = "Arial"; // 默认字体
-  defaultColor: string = "black"; // 默认颜色
+  defaultFont: string = "素材集市康康体"; // 默认字体
+  defaultColor: string = "#545454"; // 默认颜色
 
   canvas!: Canvas;
   activeObj: { [key: string]: any } | null = null;
@@ -272,14 +272,6 @@ export class CanvasStore {
     const { x, y } = this.getCenterPoint();
     this.canvas.zoomToPoint(new Point({ x, y }), val);
   };
-
-  getWidth = () => {
-    return this.wrapperRef?.offsetWidth || window.innerWidth - 420;
-  };
-
-  getHeight() {
-    return this.wrapperRef?.offsetHeight || window.innerHeight - 40;
-  }
 
   getCurCanvasObj = () => {
     return this.canvas?.toObject();
@@ -478,7 +470,7 @@ export class CanvasStore {
 
   /** 获取画板的中心 */
   getCenterPoint = (): { x: number; y: number } => {
-    console.log(this.canvas);
+    // console.log(this.canvas);
     return {
       x: this.getWorkSpaceDraw()?.getCenterPoint().x || 100,
       y: this.getWorkSpaceDraw()?.getCenterPoint().y || 100,
@@ -653,6 +645,8 @@ export class CanvasStore {
       lockMovementY: true,
     } as any);
     this.addObject(group);
+    this.canvas.sendObjectToBack(group);
+    this.canvas.bringObjectForward(group);
     this.canvas?.renderAll();
   };
 

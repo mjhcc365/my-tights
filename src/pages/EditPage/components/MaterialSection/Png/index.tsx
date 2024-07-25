@@ -11,7 +11,6 @@ const Png = () => {
       img.scaleToWidth(100); // 设置图像宽度
       img.scaleToHeight(100); // 设置图像高度
       store.addObject(img); // 添加图像到 Canvas
-      store.canvas?.renderAll(); // 渲染 Canvas
     });
   };
 
