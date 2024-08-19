@@ -24,10 +24,12 @@
     "clipper-lib": "^6.4.2",
     "fabric": "6.0.0",
     "fetch-jsonp": "^1.3.0",
+    "localeData": "link:dayjs/plugin/localeData",
     "lodash-es": "^4.17.21",
     "number-precision": "^1.6.0",
     "raphael": "^2.3.0",
-    "weekOfYear": "link:dayjs/plugin/weekOfYear"
+    "weekOfYear": "link:dayjs/plugin/weekOfYear",
+    "weekday": "link:dayjs/plugin/weekday"
   },
   "devDependencies": {
     "@tsconfig/node14": "^14.1.0",

@@ -39,7 +39,7 @@ const Day = () => {
       <div className="time-section-tool">
         <DatePicker
           value={date}
-          onChange={onChangeTime}
+          onChange={() => {}}
           style={{ width: "50%" }}
           allowClear={false}
           picker="date"

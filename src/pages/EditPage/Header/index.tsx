@@ -15,7 +15,7 @@ const MJHeader = () => {
   const handleClickPic = () => {
     var dataURL = store.canvas?.toDataURL({
       format: "png", // 指定导出格式，可以是 'png', 'jpeg', 'webp' 等
-      quality: 0.8,
+      quality: 100,
     });
     download(dataURL, "fabric_image.png");
   };
