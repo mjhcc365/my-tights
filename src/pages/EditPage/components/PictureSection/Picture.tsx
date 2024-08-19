@@ -1,7 +1,16 @@
-import { useLayoutEffect, useState, useRef, useEffect } from "react";
+import {
+  useLayoutEffect,
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+} from "react";
+import { FabricImage } from "fabric";
 import { debounce } from "lodash";
+import { CanvasStoreContext } from "@/store/canvas";
 import { LoadUnsplashHelper, LoadCollectionsHelper } from "./loadHelp";
 
+/** 瀑布流 */
 const PictureWaterfalls = (props: {
   viewmore: boolean;
   keyword: string | undefined;
@@ -71,14 +80,21 @@ const PictureWaterfalls = (props: {
   );
 };
 
-const PictureCollections = (props: {
-  viewmore: boolean;
-  onViewMore: (k: string) => void;
-}) => {
-  const { onViewMore, viewmore } = props;
+/** 图集 */
+const PictureCollections = () => {
   const domRef = useRef(null);
 
   const [collections, setCollections] = useState([]);
+
+  const store = useContext(CanvasStoreContext);
+
+  const handleAddPicture = async (url: string) => {
+    FabricImage.fromURL(url, { crossOrigin: "anonymous" }).then((img) => {
+      img.scaleToWidth(100); // 设置图像宽度
+      img.scaleToHeight(100); // 设置图像高度
+      store.addObject(img); // 添加图像到 Canvas
+    });
+  };
 
   const loadCollectionsHelper = new LoadCollectionsHelper();
 
@@ -87,6 +103,8 @@ const PictureCollections = (props: {
       setCollections((preValue) => preValue.concat(res?.data || []));
     });
   }, 2000);
+
+  // const onAddPicture = () => {};
 
   const onScroll = () => {
     const top = (domRef.current as any)?.getBoundingClientRect().top;
@@ -121,9 +139,6 @@ const PictureCollections = (props: {
                 aspectRatio: 10 / 7,
               }}
               className="col-span-2 grid grid-rows-3 cursor-pointer"
-              onClick={() => {
-                onViewMore(id);
-              }}
             >
               <div
                 style={{
@@ -134,14 +149,26 @@ const PictureCollections = (props: {
                 <img
                   src={preview_photos[0]?.urls?.thumb}
                   className="col-span-2 row-span-2 h-full w-full object-cover"
+                  onClick={() => {
+                    // onViewMore(id);
+                    handleAddPicture(preview_photos[0]?.urls?.thumb);
+                  }}
                 />
                 <img
                   src={preview_photos[1]?.urls?.thumb}
                   className="col-span-1 row-span-1 h-full w-full object-cover"
+                  onClick={() => {
+                    // onViewMore(id);
+                    handleAddPicture(preview_photos[1]?.urls?.thumb);
+                  }}
                 />
                 <img
                   src={preview_photos[2]?.urls?.thumb}
                   className="col-span-1 row-span-1 h-full w-full object-cover"
+                  onClick={() => {
+                    // onViewMore(id);
+                    handleAddPicture(preview_photos[2]?.urls?.thumb);
+                  }}
                 />
               </div>
               <div className="row-span-1  ">
@@ -167,6 +194,7 @@ const PictureCollections = (props: {
   );
 };
 
+/** 图片组件 */
 const Picture = () => {
   const [isMore, setIsMore] = useState<boolean>(false);
   const [curKeyword, setCurKeyword] = useState<string | undefined>(undefined);
@@ -178,9 +206,7 @@ const Picture = () => {
 
   return (
     <div>
-      {!isMore && (
-        <PictureCollections viewmore={isMore} onViewMore={onViewMore} />
-      )}
+      {!isMore && <PictureCollections />}
       {isMore && (
         <PictureWaterfalls
           onCloseViewMore={() => {
